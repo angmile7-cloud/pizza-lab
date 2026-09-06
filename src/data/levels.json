@@ -1,0 +1,680 @@
+{
+  "gameTitle": "Maestro Pizzero",
+  "pointsPerCorrect": 10,
+  "levels": [
+    {
+      "id": 1,
+      "type": "trivia",
+      "title": "Ingredientes",
+      "theme": "ingredientes",
+      "description": "Conoce los ingredientes básicos que hacen posible una pizza.",
+      "questions": [
+        {
+          "id": "1-1",
+          "prompt": "¿Cuáles son los cuatro ingredientes clásicos de una pizza Margherita?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Masa, salsa de tomate, mozzarella y albahaca"
+            },
+            {
+              "id": "b",
+              "text": "Masa, ketchup, cheddar y orégano"
+            },
+            {
+              "id": "c",
+              "text": "Pan, crema, jamón y piña"
+            },
+            {
+              "id": "d",
+              "text": "Masa, pesto, gorgonzola y rúcula"
+            }
+          ],
+          "correctOptionId": "a",
+          "explanation": "La Margherita combina masa, tomate, mozzarella y albahaca: los colores de la bandera italiana."
+        },
+        {
+          "id": "1-2",
+          "prompt": "¿Qué ingrediente da estructura y elasticidad a la masa?",
+          "options": [
+            {
+              "id": "a",
+              "text": "El aceite de oliva"
+            },
+            {
+              "id": "b",
+              "text": "El gluten de la harina"
+            },
+            {
+              "id": "c",
+              "text": "El orégano"
+            },
+            {
+              "id": "d",
+              "text": "El azúcar"
+            }
+          ],
+          "correctOptionId": "b",
+          "explanation": "El gluten se forma al hidratar y amasar la harina; es la red que atrapa el gas y da elasticidad."
+        },
+        {
+          "id": "1-3",
+          "prompt": "¿Por qué se usa sal en la receta de pizza, además del sabor?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Solo para que se vea brillante"
+            },
+            {
+              "id": "b",
+              "text": "Para colorear la masa de verde"
+            },
+            {
+              "id": "c",
+              "text": "Ayuda a controlar la fermentación y fortalecer el gluten"
+            },
+            {
+              "id": "d",
+              "text": "Para que la pizza no necesite horno"
+            }
+          ],
+          "correctOptionId": "c",
+          "explanation": "La sal regula la levadura y refuerza la red de gluten, además de sazonar."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "trivia",
+      "title": "Masa",
+      "theme": "masa",
+      "description": "Aprende harinas, hidratación, amasado y fermentación.",
+      "questions": [
+        {
+          "id": "2-1",
+          "prompt": "¿Qué tipo de harina se asocia más con la pizza napolitana tradicional?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Harina de maíz"
+            },
+            {
+              "id": "b",
+              "text": "Harina de trigo tipo 00"
+            },
+            {
+              "id": "c",
+              "text": "Harina de avena"
+            },
+            {
+              "id": "d",
+              "text": "Harina de almendra"
+            }
+          ],
+          "correctOptionId": "b",
+          "explanation": "La tipo 00 es fina y permite una masa elástica, típica de la pizza napolitana."
+        },
+        {
+          "id": "2-2",
+          "prompt": "¿Qué es la “hidratación” de una masa?",
+          "options": [
+            {
+              "id": "a",
+              "text": "El porcentaje de agua respecto a la harina"
+            },
+            {
+              "id": "b",
+              "text": "Cuántas veces se lava la pizza"
+            },
+            {
+              "id": "c",
+              "text": "El tiempo que la pizza está en el refrigerador ya cocida"
+            },
+            {
+              "id": "d",
+              "text": "La cantidad de aceite que se pinta al final"
+            }
+          ],
+          "correctOptionId": "a",
+          "explanation": "Si usas 650 g de agua por 1000 g de harina, la hidratación es del 65%."
+        },
+        {
+          "id": "2-3",
+          "prompt": "¿Para qué sirve fermentar la masa (dejarla reposar)?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Para que se seque y quede dura"
+            },
+            {
+              "id": "b",
+              "text": "Para que la levadura produzca gas y desarrolle sabor"
+            },
+            {
+              "id": "c",
+              "text": "Para quitarle toda la sal"
+            },
+            {
+              "id": "d",
+              "text": "Para que no se pueda estirar"
+            }
+          ],
+          "correctOptionId": "b",
+          "explanation": "Durante la fermentación la levadura genera CO₂ y aromas; la masa sube y sabe mejor."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "trivia",
+      "title": "Salsas",
+      "theme": "salsas",
+      "description": "Elige y aplica salsas sin empapar la base.",
+      "questions": [
+        {
+          "id": "3-1",
+          "prompt": "¿Qué salsa es la más clásica para una pizza de tomate?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Salsa bechamel muy líquida"
+            },
+            {
+              "id": "b",
+              "text": "Puré o salsa de tomate (a veces solo tomate triturado y sal)"
+            },
+            {
+              "id": "c",
+              "text": "Salsa de chocolate"
+            },
+            {
+              "id": "d",
+              "text": "Salsa de soya"
+            }
+          ],
+          "correctOptionId": "b",
+          "explanation": "Muchas pizzerías usan tomate de calidad con sal (y a veces aceite o hierbas), sin cocinar demasiado."
+        },
+        {
+          "id": "3-2",
+          "prompt": "¿Qué pasa si pones demasiada salsa?",
+          "options": [
+            {
+              "id": "a",
+              "text": "La masa se cocina más rápido y queda crocante"
+            },
+            {
+              "id": "b",
+              "text": "Nada: no hay límite"
+            },
+            {
+              "id": "c",
+              "text": "La base puede quedar húmeda y difícil de cocinar"
+            },
+            {
+              "id": "d",
+              "text": "El queso desaparece"
+            }
+          ],
+          "correctOptionId": "c",
+          "explanation": "El exceso de líquido impide que el centro de la masa se cueza bien."
+        },
+        {
+          "id": "3-3",
+          "prompt": "Una pizza “bianca” se caracteriza por…",
+          "options": [
+            {
+              "id": "a",
+              "text": "No llevar salsa de tomate (aceite, ricotta, ajo, etc.)"
+            },
+            {
+              "id": "b",
+              "text": "Llevar solo chocolate blanco"
+            },
+            {
+              "id": "c",
+              "text": "Ser siempre dulce"
+            },
+            {
+              "id": "d",
+              "text": "Cocinarse sin horno"
+            }
+          ],
+          "correctOptionId": "a",
+          "explanation": "Bianca significa “blanca”: sin tomate, con aceite, quesos suaves u otras bases claras."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "trivia",
+      "title": "Quesos",
+      "theme": "quesos",
+      "description": "Elige quesos que fundan bien y no inunden la pizza.",
+      "questions": [
+        {
+          "id": "4-1",
+          "prompt": "¿Qué queso es el más usado por su fundido elástico en pizza?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Mozzarella"
+            },
+            {
+              "id": "b",
+              "text": "Roquefort exclusivamente"
+            },
+            {
+              "id": "c",
+              "text": "Queso crema sin hornear"
+            },
+            {
+              "id": "d",
+              "text": "Parmesano en un bloque entero"
+            }
+          ],
+          "correctOptionId": "a",
+          "explanation": "La mozzarella funde de forma elástica y es el estándar en casi todo el mundo."
+        },
+        {
+          "id": "4-2",
+          "prompt": "Si usas mozzarella fresca en agua, ¿qué conviene hacer antes?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Ponerla congelada sobre la pizza"
+            },
+            {
+              "id": "b",
+              "text": "Escurrirla y secarla un poco para quitar suero"
+            },
+            {
+              "id": "c",
+              "text": "Freírla 20 minutos"
+            },
+            {
+              "id": "d",
+              "text": "Mezclarla con azúcar"
+            }
+          ],
+          "correctOptionId": "b",
+          "explanation": "El suero extra añade agua y puede dejar charcos en el centro."
+        },
+        {
+          "id": "4-3",
+          "prompt": "¿Para qué se usa a menudo el parmesano o pecorino en pizza?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Como única capa gruesa que no funde"
+            },
+            {
+              "id": "b",
+              "text": "En ralladura, para dar umami y un toque salado"
+            },
+            {
+              "id": "c",
+              "text": "Para sustituir toda la masa"
+            },
+            {
+              "id": "d",
+              "text": "Solo como decoración que no se come"
+            }
+          ],
+          "correctOptionId": "b",
+          "explanation": "Los quesos duros rallados aportan sabor intenso; suelen ir en poca cantidad."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "trivia",
+      "title": "Toppings",
+      "theme": "toppings",
+      "description": "Combina toppings sin sobrecargar ni mojar la pizza.",
+      "questions": [
+        {
+          "id": "5-1",
+          "prompt": "¿Qué regla ayuda al elegir toppings?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Cuantos más, mejor: cubre hasta el borde"
+            },
+            {
+              "id": "b",
+              "text": "Pocos ingredientes bien distribuidos, sin montañas"
+            },
+            {
+              "id": "c",
+              "text": "Solo ingredientes crudos que no se cocinen nunca"
+            },
+            {
+              "id": "d",
+              "text": "Todo debe ir debajo de la masa"
+            }
+          ],
+          "correctOptionId": "b",
+          "explanation": "Menos es más: el horno cocina mejor una capa fina y pareja."
+        },
+        {
+          "id": "5-2",
+          "prompt": "Vegetales muy acuosos (como zucchini o champiñones) conviene…",
+          "options": [
+            {
+              "id": "a",
+              "text": "Ponerlos crudos en gran cantidad"
+            },
+            {
+              "id": "b",
+              "text": "Saltearlos o secarlos un poco antes, o usarlos con moderación"
+            },
+            {
+              "id": "c",
+              "text": "Congelarlos con hielo sobre la pizza"
+            },
+            {
+              "id": "d",
+              "text": "Sustituir toda la salsa por ellos"
+            }
+          ],
+          "correctOptionId": "b",
+          "explanation": "Suelta agua en el horno; precocinar o secar evita una pizza aguada."
+        },
+        {
+          "id": "5-3",
+          "prompt": "Ingredientes delicados como albahaca fresca o rúcula suelen…",
+          "options": [
+            {
+              "id": "a",
+              "text": "Agregarse al final, al salir del horno"
+            },
+            {
+              "id": "b",
+              "text": "Hornearse 30 minutos a fuego máximo"
+            },
+            {
+              "id": "c",
+              "text": "Mezclarse en la masa cruda"
+            },
+            {
+              "id": "d",
+              "text": "Usarse solo como harina"
+            }
+          ],
+          "correctOptionId": "a",
+          "explanation": "Las hojas frescas se queman o se oscurecen; van mejor como toque final."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "type": "trivia",
+      "title": "Armado",
+      "theme": "armado",
+      "description": "El orden de capas importa tanto como los ingredientes.",
+      "questions": [
+        {
+          "id": "6-1",
+          "prompt": "¿Cuál es un orden clásico de armado?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Queso, masa, salsa, toppings"
+            },
+            {
+              "id": "b",
+              "text": "Masa estirada → salsa → queso → toppings"
+            },
+            {
+              "id": "c",
+              "text": "Toppings, luego masa enrollada encima"
+            },
+            {
+              "id": "d",
+              "text": "Salsa debajo de la mesa, pizza arriba"
+            }
+          ],
+          "correctOptionId": "b",
+          "explanation": "La base, una capa fina de salsa, queso y luego toppings es el esquema más habitual."
+        },
+        {
+          "id": "6-2",
+          "prompt": "¿Por qué no conviene dejar la pizza armada mucho tiempo antes de hornear?",
+          "options": [
+            {
+              "id": "a",
+              "text": "La salsa y el queso humedecen la masa y se pega o se rompe"
+            },
+            {
+              "id": "b",
+              "text": "La harina se convierte en azúcar sola"
+            },
+            {
+              "id": "c",
+              "text": "El horno se apaga por magia"
+            },
+            {
+              "id": "d",
+              "text": "Los toppings se vuelven más crocantes"
+            }
+          ],
+          "correctOptionId": "a",
+          "explanation": "Arma y hornea seguido: la humedad viaja hacia la masa cruda."
+        },
+        {
+          "id": "6-3",
+          "prompt": "Al pasar la pizza a la pala o piedra, ¿qué ayuda a que no se pegue?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Mojar la pala con salsa"
+            },
+            {
+              "id": "b",
+              "text": "Sémola, harina o un poco de sémola en la pala, y un movimiento decidido"
+            },
+            {
+              "id": "c",
+              "text": "Dejarla 1 hora sobre la pala ya armada"
+            },
+            {
+              "id": "d",
+              "text": "No usar nunca harina"
+            }
+          ],
+          "correctOptionId": "b",
+          "explanation": "Un lecho fino de sémola/harina y lanzar rápido evitan que se adhiera."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "type": "trivia",
+      "title": "Cocción y temperatura",
+      "theme": "coccion",
+      "description": "Tiempo, calor y señales de que la pizza está lista.",
+      "questions": [
+        {
+          "id": "7-1",
+          "prompt": "Una pizza napolitana tradicional se cuece a temperatura…",
+          "options": [
+            {
+              "id": "a",
+              "text": "Muy alta (cerca de 400–500 °C) durante poco más de un minuto"
+            },
+            {
+              "id": "b",
+              "text": "Muy baja (80 °C) durante 2 horas"
+            },
+            {
+              "id": "c",
+              "text": "En agua hirviendo, no en horno"
+            },
+            {
+              "id": "d",
+              "text": "Solo con el calor de las manos"
+            }
+          ],
+          "correctOptionId": "a",
+          "explanation": "El horno de leña muy caliente cocina en ~60–90 segundos y deja el borde inflado."
+        },
+        {
+          "id": "7-2",
+          "prompt": "En un horno casero (alrededor de 250 °C), ¿qué suele pasar?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Se cocina igual de rápido que en uno de leña"
+            },
+            {
+              "id": "b",
+              "text": "Tarda varios minutos; conviene piedra o acero bien precalentados"
+            },
+            {
+              "id": "c",
+              "text": "No se puede hacer pizza"
+            },
+            {
+              "id": "d",
+              "text": "Hay que usar siempre microondas"
+            }
+          ],
+          "correctOptionId": "b",
+          "explanation": "Sin 450 °C, necesitas más tiempo y una superficie que transfiera mucho calor."
+        },
+        {
+          "id": "7-3",
+          "prompt": "¿Qué señal indica que la pizza va bien?",
+          "options": [
+            {
+              "id": "a",
+              "text": "La masa sigue blanca y húmeda en el centro"
+            },
+            {
+              "id": "b",
+              "text": "Borde dorado, queso fundido y base con manchas tostadas"
+            },
+            {
+              "id": "c",
+              "text": "Humo negro continuo y olor a quemado fuerte"
+            },
+            {
+              "id": "d",
+              "text": "El queso no se movió ni fundió"
+            }
+          ],
+          "correctOptionId": "b",
+          "explanation": "Color dorado, leopard spotting en la base y queso fundido son buenas pistas."
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "type": "builder",
+      "title": "Crea tu propia pizza",
+      "theme": "armado-final",
+      "description": "Usa lo aprendido: elige masa, salsa, queso y toppings. No hay preguntas.",
+      "builder": {
+        "slots": [
+          {
+            "id": "masa",
+            "label": "Masa",
+            "multiple": false,
+            "choices": [
+              {
+                "id": "napolitana",
+                "name": "Napolitana (harina 00, borde alto)"
+              },
+              {
+                "id": "fina",
+                "name": "Fina y crocante"
+              },
+              {
+                "id": "integral",
+                "name": "Integral"
+              }
+            ]
+          },
+          {
+            "id": "salsa",
+            "label": "Salsa",
+            "multiple": false,
+            "choices": [
+              {
+                "id": "tomate",
+                "name": "Tomate clásico"
+              },
+              {
+                "id": "bianca",
+                "name": "Bianca (aceite y ajo)"
+              },
+              {
+                "id": "pesto",
+                "name": "Pesto"
+              }
+            ]
+          },
+          {
+            "id": "queso",
+            "label": "Queso",
+            "multiple": false,
+            "choices": [
+              {
+                "id": "mozzarella",
+                "name": "Mozzarella"
+              },
+              {
+                "id": "mix",
+                "name": "Mozzarella + parmesano"
+              },
+              {
+                "id": "sin-queso",
+                "name": "Sin queso"
+              }
+            ]
+          },
+          {
+            "id": "toppings",
+            "label": "Toppings",
+            "multiple": true,
+            "maxSelections": 4,
+            "choices": [
+              {
+                "id": "albahaca",
+                "name": "Albahaca (al final)"
+              },
+              {
+                "id": "pepperoni",
+                "name": "Pepperoni"
+              },
+              {
+                "id": "champinones",
+                "name": "Champiñones"
+              },
+              {
+                "id": "aceitunas",
+                "name": "Aceitunas"
+              },
+              {
+                "id": "jamon",
+                "name": "Jamón"
+              },
+              {
+                "id": "rucula",
+                "name": "Rúcula (al final)"
+              },
+              {
+                "id": "cebolla",
+                "name": "Cebolla"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "pointsPerWrong": 10,
+  "minCorrectToUnlock": 2,
+  "questionsPerTriviaLevel": 3
+}
