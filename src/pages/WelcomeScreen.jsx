@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
 
 export default function WelcomeScreen() {
+
+  // Renderizado del componente
   return (
     <section className="menu">
       <div className="menu-top">
@@ -9,7 +11,7 @@ export default function WelcomeScreen() {
       </div>
       <img
         className="menu-pizza"
-        src="/welcome-pizza.png"
+        src="/Inicio/welcome-pizza.png"
         alt="Pizza de Dodo's Pizza Lab"
       />
       <div className="menu-actions">

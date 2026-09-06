@@ -130,7 +130,7 @@ label {
 .menu-title {
   margin: 0;
   color: var(--ink);
-  font-weight: 800;
+  font-weight: 1000;
   font-size: clamp(1.55rem, 7.2vw, 2.05rem);
   line-height: 1.15;
   letter-spacing: 0.01em;
@@ -198,4 +198,103 @@ label {
 .auth-back {
   color: var(--ink);
   font-size: 0.95rem;
+}
+
+.chat-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.chat-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.chat-heading h1 {
+  margin: 0;
+}
+
+.chat-heading p {
+  margin: 0.35rem 0 0;
+}
+
+.chat-status {
+  flex-shrink: 0;
+  color: #34733b;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.chat-messages {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+  overflow-y: auto;
+}
+
+.chat-message {
+  align-self: flex-start;
+  max-width: 85%;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid #d7b39e;
+  border-radius: 14px 14px 14px 4px;
+  background: #fff;
+}
+
+.chat-message-user {
+  align-self: flex-end;
+  border-color: var(--yellow);
+  border-radius: 14px 14px 4px 14px;
+  background: #fff4b8;
+}
+
+.chat-message strong {
+  font-size: 0.8rem;
+}
+
+.chat-message p {
+  margin: 0.2rem 0 0;
+  overflow-wrap: anywhere;
+}
+
+.chat-form {
+  margin-top: auto;
+}
+
+.chat-form label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.chat-input-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.chat-input-row input {
+  min-width: 0;
+  flex: 1;
+  font: inherit;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid #d7b39e;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.chat-send {
+  width: auto;
+  padding: 0.75rem 1rem;
+  letter-spacing: 0;
+}
+
+.chat-back {
+  display: inline-block;
+  margin-top: 1rem;
 }
