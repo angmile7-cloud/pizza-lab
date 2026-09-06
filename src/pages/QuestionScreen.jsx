@@ -51,9 +51,9 @@ export default function QuestionScreen() {
   }
 
   return (
-    <section>
+    <section className="page">
       <p>
-        <Link to="/">Inicio</Link>
+        <Link to="/jugar">Inicio</Link>
       </p>
       <h1>
         Nivel {level.id}: {level.title}

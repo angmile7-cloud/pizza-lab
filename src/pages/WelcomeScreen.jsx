@@ -1,61 +1,25 @@
 import { Link } from 'react-router-dom'
-import {
-  GAME_TITLE,
-  getLevel,
-  getMaxTriviaScore,
-  LEVELS,
-  levelPath,
-  MIN_CORRECT_TO_UNLOCK,
-} from '../game/gameUtils'
-import { useGame } from '../game/useGame'
 
 export default function WelcomeScreen() {
-  const { score, currentLevel, unlockedLevel, restartGame } = useGame()
-  const continueLevel = getLevel(currentLevel)
-
   return (
-    <section>
-      <p>Juego educativo</p>
-      <h1>{GAME_TITLE}</h1>
-      <p>
-        Trivia por niveles sobre cómo se hace una pizza, al estilo de Preguntados.
-        Completa 7 niveles de preguntas y termina creando tu propia pizza.
-      </p>
-      <p>
-        En cada nivel hay 3 preguntas: necesitas al menos {MIN_CORRECT_TO_UNLOCK}{' '}
-        aciertos para desbloquear el siguiente. Si no llegas, reintenta el nivel.
-        Un error resta puntos; el acumulado nunca baja de 0.
-      </p>
-      <p>
-        Puntaje acumulado: {score} / {getMaxTriviaScore()} · Nivel actual:{' '}
-        {Math.min(currentLevel, 8)} · Desbloqueado hasta:{' '}
-        {Math.min(unlockedLevel, 8)}
-      </p>
-      <p>
-        <Link to={levelPath(continueLevel)}>Continuar nivel {currentLevel}</Link>
-        {' · '}
-        <button type="button" onClick={restartGame}>
-          Reiniciar partida
-        </button>
-      </p>
-      <ol>
-        {LEVELS.map((level) => {
-          const locked = level.id > unlockedLevel
-          return (
-            <li key={level.id}>
-              {locked ? (
-                <span>
-                  Nivel {level.id}: {level.title} (bloqueado)
-                </span>
-              ) : (
-                <Link to={levelPath(level)}>
-                  Nivel {level.id}: {level.title}
-                </Link>
-              )}
-            </li>
-          )
-        })}
-      </ol>
+    <section className="menu">
+      <div className="menu-top">
+        <h1 className="menu-title">DODO&apos;S PIZZA LAB</h1>
+        <p className="menu-welcome">¡Bienvenidos!</p>
+      </div>
+      <img
+        className="menu-pizza"
+        src="/welcome-pizza.png"
+        alt="Pizza de Dodo's Pizza Lab"
+      />
+      <div className="menu-actions">
+        <Link className="btn-yellow" to="/registro">
+          Crear cuenta
+        </Link>
+        <Link className="btn-yellow" to="/login">
+          Iniciar sesión
+        </Link>
+      </div>
     </section>
   )
 }

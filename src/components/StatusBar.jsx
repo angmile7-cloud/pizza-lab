@@ -1,17 +1,24 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useGame } from '../game/useGame'
 import { getMaxTriviaScore } from '../game/gameUtils'
 
+const HIDDEN_ON = new Set(['/', '/registro', '/login'])
+
 export default function StatusBar() {
+  const { pathname } = useLocation()
   const { score, currentLevel } = useGame()
 
+  if (HIDDEN_ON.has(pathname)) {
+    return null
+  }
+
   return (
-    <p>
-      <Link to="/">Maestro Pizzero</Link>
+    <p className="status-bar">
+      <Link to="/jugar">Dodo&apos;s Pizza Lab</Link>
       {' · '}
-      Puntaje acumulado: {score} / {getMaxTriviaScore()}
+      Puntos: {score} / {getMaxTriviaScore()}
       {' · '}
-      Nivel actual: {Math.min(currentLevel, 8)} de 8
+      Nivel {Math.min(currentLevel, 8)}/8
     </p>
   )
 }

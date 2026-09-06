@@ -47,9 +47,9 @@ export default function LevelResultScreen() {
   }
 
   return (
-    <section>
+    <section className="page">
       <p>
-        <Link to="/">Inicio</Link>
+        <Link to="/jugar">Inicio</Link>
       </p>
       <h1>Resultado · Nivel {level.id}</h1>
       <h2>{level.title}</h2>
@@ -80,7 +80,7 @@ export default function LevelResultScreen() {
           </p>
         ) : (
           <p>
-            <Link to="/">Volver al inicio</Link>
+            <Link to="/jugar">Volver al inicio</Link>
           </p>
         )
       ) : (

@@ -64,9 +64,9 @@ export default function PizzaBuilderScreen() {
 
   if (submitted && pizza) {
     return (
-      <section>
+      <section className="page">
         <p>
-          <Link to="/">Inicio</Link>
+          <Link to="/jugar">Inicio</Link>
         </p>
         <h1>¡Pizza lista!</h1>
         <p>Nivel 8 · {level.title}</p>
@@ -88,16 +88,16 @@ export default function PizzaBuilderScreen() {
           masa, salsa, queso, toppings, armado y cocción.
         </p>
         <p>
-          <Link to="/">Volver al inicio</Link>
+          <Link to="/jugar">Volver al inicio</Link>
         </p>
       </section>
     )
   }
 
   return (
-    <section>
+    <section className="page">
       <p>
-        <Link to="/">Inicio</Link>
+        <Link to="/jugar">Inicio</Link>
       </p>
       <h1>
         Nivel {level.id}: {level.title}
