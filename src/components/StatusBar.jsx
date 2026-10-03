@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { useGame } from '../game/useGame'
 import { getMaxTriviaScore } from '../game/gameUtils'
 
-const HIDDEN_ON = new Set(['/', '/registro', '/login'])
+const HIDDEN_ON = new Set(['/', '/registro', '/login', '/jugar'])
 
 export default function StatusBar() {
   const { pathname } = useLocation()

@@ -1,10 +1,12 @@
 // Imports de React y React Router
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useGame } from '../game/useGame'
 
 // Componente de pantalla de autenticación
 export default function AuthScreen({ mode }) {
   const navigate = useNavigate()
+  const { userName, setUserName } = useGame()
   const isRegister = mode === 'register'
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -13,6 +15,7 @@ export default function AuthScreen({ mode }) {
   // Función para manejar el envío del formulario
   function handleSubmit(event) {
     event.preventDefault()
+    setUserName(isRegister ? name.trim() : userName || email.split('@')[0])
     navigate('/jugar')
   }
 

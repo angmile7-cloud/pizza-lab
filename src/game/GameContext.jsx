@@ -9,18 +9,38 @@ import {
 } from './gameUtils'
 
 export const GameContext = createContext(null)
+const USER_NAME_KEY = 'pizza-lab:userName'
+
+function readUserName() {
+  try {
+    return window.localStorage.getItem(USER_NAME_KEY)?.trim() ?? ''
+  } catch {
+    return ''
+  }
+}
 
 function answerKey(levelId, questionId) {
   return `${levelId}:${questionId}`
 }
 
 export function GameProvider({ children }) {
+  const [userName, setUserNameState] = useState(readUserName)
   const [score, setScore] = useState(0)
   const [currentLevel, setCurrentLevel] = useState(1)
   const [unlockedLevel, setUnlockedLevel] = useState(1)
   const [answersByLevel, setAnswersByLevel] = useState({})
   const [createdPizza, setCreatedPizza] = useState(null)
   const scoredKeysRef = useRef(new Set())
+
+  const setUserName = useCallback((name) => {
+    const nextName = typeof name === 'string' ? name.trim() : ''
+    setUserNameState(nextName)
+    try {
+      window.localStorage.setItem(USER_NAME_KEY, nextName)
+    } catch {
+      // Keep the in-memory name if storage is unavailable.
+    }
+  }, [])
 
   const recordAnswer = useCallback((levelId, question, selectedOptionId) => {
     const key = answerKey(levelId, question.id)
@@ -117,6 +137,8 @@ export function GameProvider({ children }) {
 
   const value = useMemo(
     () => ({
+      userName,
+      setUserName,
       score,
       currentLevel,
       unlockedLevel,
@@ -130,6 +152,8 @@ export function GameProvider({ children }) {
       canAccessLevel,
     }),
     [
+      userName,
+      setUserName,
       score,
       currentLevel,
       unlockedLevel,
