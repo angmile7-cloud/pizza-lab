@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { useGame } from '../game/useGame'
 import { getLevel, MIN_CORRECT_TO_UNLOCK } from '../game/gameUtils'
+import LevelScene from '../components/LevelScene'
 
 export default function QuestionScreen() {
   const { levelId } = useParams()
@@ -51,54 +52,56 @@ export default function QuestionScreen() {
   }
 
   return (
-    <section className="page">
-      <p>
-        <Link to="/jugar">Inicio</Link>
-      </p>
-      <h1>
-        Nivel {level.id}: {level.title}
-      </h1>
-      <p>
-        Pregunta {questionIndex + 1} de {total} · Avanzas con al menos{' '}
-        {MIN_CORRECT_TO_UNLOCK} aciertos
-      </p>
-      <h2>{question.prompt}</h2>
-      <ul>
-        {question.options.map((option) => (
-          <li key={option.id}>
-            <label>
-              <input
-                type="radio"
-                name={question.id}
-                value={option.id}
-                checked={selectedOptionId === option.id}
-                disabled={Boolean(feedback)}
-                onChange={() => setSelectedOptionId(option.id)}
-              />{' '}
-              {option.text}
-            </label>
-          </li>
-        ))}
-      </ul>
-      {!feedback ? (
-        <button type="button" onClick={handleConfirm} disabled={!selectedOptionId}>
-          Confirmar
-        </button>
-      ) : (
-        <div>
-          <p>
-            {feedback.correct
-              ? `¡Correcto! +${feedback.appliedDelta} puntos`
-              : feedback.appliedDelta === 0
-                ? 'Respuesta incorrecta. El puntaje no baja de 0.'
-                : `Respuesta incorrecta. ${feedback.appliedDelta} puntos.`}
-          </p>
-          <p>{question.explanation}</p>
-          <button type="button" onClick={handleNext}>
-            {questionIndex + 1 >= total ? 'Ver resultado del nivel' : 'Siguiente pregunta'}
+    <LevelScene>
+      <section className="page level-page level-question">
+        <p className="level-nav">
+          <Link to="/jugar">Inicio</Link>
+        </p>
+        <h1>
+          Nivel {level.id}: {level.title}
+        </h1>
+        <p className="level-progress">
+          Pregunta {questionIndex + 1} de {total} · Avanzas con al menos{' '}
+          {MIN_CORRECT_TO_UNLOCK} aciertos
+        </p>
+        <h2 className="level-question__prompt">{question.prompt}</h2>
+        <ul className="level-options">
+          {question.options.map((option) => (
+            <li key={option.id}>
+              <label>
+                <input
+                  type="radio"
+                  name={question.id}
+                  value={option.id}
+                  checked={selectedOptionId === option.id}
+                  disabled={Boolean(feedback)}
+                  onChange={() => setSelectedOptionId(option.id)}
+                />{' '}
+                {option.text}
+              </label>
+            </li>
+          ))}
+        </ul>
+        {!feedback ? (
+          <button className="btn-yellow level-action" type="button" onClick={handleConfirm} disabled={!selectedOptionId}>
+            Confirmar
           </button>
-        </div>
-      )}
-    </section>
+        ) : (
+          <div className={`level-feedback ${feedback.correct ? 'is-correct' : 'is-incorrect'}`}>
+            <p className="level-feedback__result">
+              {feedback.correct
+                ? `¡Correcto! +${feedback.appliedDelta} puntos`
+                : feedback.appliedDelta === 0
+                  ? 'Respuesta incorrecta. El puntaje no baja de 0.'
+                  : `Respuesta incorrecta. ${feedback.appliedDelta} puntos.`}
+            </p>
+            <p>{question.explanation}</p>
+            <button className="btn-yellow level-action" type="button" onClick={handleNext}>
+              {questionIndex + 1 >= total ? 'Ver resultado del nivel' : 'Siguiente pregunta'}
+            </button>
+          </div>
+        )}
+      </section>
+    </LevelScene>
   )
 }

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { useGame } from '../game/useGame'
 import { getLevel } from '../game/gameUtils'
+import LevelScene from '../components/LevelScene'
 
 function emptySelection(slots) {
   return Object.fromEntries(
@@ -64,87 +65,91 @@ export default function PizzaBuilderScreen() {
 
   if (submitted && pizza) {
     return (
-      <section className="page">
-        <p>
-          <Link to="/jugar">Inicio</Link>
-        </p>
-        <h1>¡Pizza lista!</h1>
-        <p>Nivel 8 · {level.title}</p>
-        <p>Puntuación de trivia: {score}</p>
-        <ul>
-          {slots.map((slot) => (
-            <li key={slot.id}>
-              <strong>{slot.label}:</strong>{' '}
-              {slot.multiple
-                ? pizza[slot.id]?.length
-                  ? pizza[slot.id].map((id) => choiceName(slot.id, id)).join(', ')
-                  : 'Sin toppings extra'
-                : choiceName(slot.id, pizza[slot.id])}
-            </li>
-          ))}
-        </ul>
-        <p>
-          Completaste Maestro Pizzero. Ya puedes explicar el proceso: ingredientes,
-          masa, salsa, queso, toppings, armado y cocción.
-        </p>
-        <p>
-          <Link to="/jugar">Volver al inicio</Link>
-        </p>
-      </section>
+      <LevelScene>
+        <section className="page level-page level-builder level-builder--complete">
+          <p className="level-nav">
+            <Link to="/jugar">Inicio</Link>
+          </p>
+          <h1>¡Pizza lista!</h1>
+          <p>Nivel 8 · {level.title}</p>
+          <p>Puntuación de trivia: {score}</p>
+          <ul>
+            {slots.map((slot) => (
+              <li key={slot.id}>
+                <strong>{slot.label}:</strong>{' '}
+                {slot.multiple
+                  ? pizza[slot.id]?.length
+                    ? pizza[slot.id].map((id) => choiceName(slot.id, id)).join(', ')
+                    : 'Sin toppings extra'
+                  : choiceName(slot.id, pizza[slot.id])}
+              </li>
+            ))}
+          </ul>
+          <p>
+            Completaste Maestro Pizzero. Ya puedes explicar el proceso: ingredientes,
+            masa, salsa, queso, toppings, armado y cocción.
+          </p>
+          <p>
+            <Link className="btn-yellow level-action" to="/jugar">Volver al inicio</Link>
+          </p>
+        </section>
+      </LevelScene>
     )
   }
 
   return (
-    <section className="page">
-      <p>
-        <Link to="/jugar">Inicio</Link>
-      </p>
-      <h1>
-        Nivel {level.id}: {level.title}
-      </h1>
-      <p>{level.description}</p>
-      {slots.map((slot) => (
-        <fieldset key={slot.id}>
-          <legend>{slot.label}</legend>
-          {slot.choices.map((choice) => {
-            const inputId = `${slot.id}-${choice.id}`
-            if (slot.multiple) {
+    <LevelScene>
+      <section className="page level-page level-builder">
+        <p className="level-nav">
+          <Link to="/jugar">Inicio</Link>
+        </p>
+        <h1>
+          Nivel {level.id}: {level.title}
+        </h1>
+        <p>{level.description}</p>
+        {slots.map((slot) => (
+          <fieldset key={slot.id}>
+            <legend>{slot.label}</legend>
+            {slot.choices.map((choice) => {
+              const inputId = `${slot.id}-${choice.id}`
+              if (slot.multiple) {
+                return (
+                  <div className="level-builder__choice" key={choice.id}>
+                    <label htmlFor={inputId}>
+                      <input
+                        id={inputId}
+                        type="checkbox"
+                        checked={(selection[slot.id] ?? []).includes(choice.id)}
+                        onChange={() => handleMultiple(slot, choice.id)}
+                      />{' '}
+                      {choice.name}
+                    </label>
+                  </div>
+                )
+              }
               return (
-                <div key={choice.id}>
+                <div className="level-builder__choice" key={choice.id}>
                   <label htmlFor={inputId}>
                     <input
                       id={inputId}
-                      type="checkbox"
-                      checked={(selection[slot.id] ?? []).includes(choice.id)}
-                      onChange={() => handleMultiple(slot, choice.id)}
+                      type="radio"
+                      name={slot.id}
+                      checked={selection[slot.id] === choice.id}
+                      onChange={() => handleSingle(slot.id, choice.id)}
                     />{' '}
                     {choice.name}
                   </label>
                 </div>
               )
-            }
-            return (
-              <div key={choice.id}>
-                <label htmlFor={inputId}>
-                  <input
-                    id={inputId}
-                    type="radio"
-                    name={slot.id}
-                    checked={selection[slot.id] === choice.id}
-                    onChange={() => handleSingle(slot.id, choice.id)}
-                  />{' '}
-                  {choice.name}
-                </label>
-              </div>
-            )
-          })}
-        </fieldset>
-      ))}
-      <p>
-        <button type="button" onClick={handleSave} disabled={!ready}>
-          Hornear pizza
-        </button>
-      </p>
-    </section>
+            })}
+          </fieldset>
+        ))}
+        <p>
+          <button className="btn-yellow level-action" type="button" onClick={handleSave} disabled={!ready}>
+            Hornear pizza
+          </button>
+        </p>
+      </section>
+    </LevelScene>
   )
 }

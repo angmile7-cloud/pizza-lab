@@ -8,6 +8,7 @@ import {
   levelPath,
   MIN_CORRECT_TO_UNLOCK,
 } from '../game/gameUtils'
+import LevelScene from '../components/LevelScene'
 
 export default function LevelResultScreen() {
   const { levelId } = useParams()
@@ -47,52 +48,57 @@ export default function LevelResultScreen() {
   }
 
   return (
-    <section className="page">
-      <p>
-        <Link to="/jugar">Inicio</Link>
-      </p>
-      <h1>Resultado · Nivel {level.id}</h1>
-      <h2>{level.title}</h2>
-      <p>
-        Aciertos: {correctCount} / {expected} (necesitas {MIN_CORRECT_TO_UNLOCK}{' '}
-        para avanzar)
-      </p>
-      <p>
-        Puntos aplicados en este intento:{' '}
-        {answers.reduce((total, answer) => total + answer.appliedDelta, 0)}
-      </p>
-      <p>Puntaje acumulado: {score}</p>
-      <ul>
-        {answers.map((answer, index) => (
-          <li key={answer.questionId}>
-            {index + 1}. {answer.correct ? 'Bien' : 'Mal'} (
-            {answer.appliedDelta > 0 ? '+' : ''}
-            {answer.appliedDelta}) — {answer.prompt}
-          </li>
-        ))}
-      </ul>
-      {passed ? (
-        nextLevel ? (
-          <p>
-            <Link to={levelPath(nextLevel)}>
-              Siguiente: nivel {nextLevel.id} · {nextLevel.title}
-            </Link>
-          </p>
+    <LevelScene>
+      <section className="page level-page level-result">
+        <p className="level-nav">
+          <Link to="/jugar">Inicio</Link>
+        </p>
+        <h1>Resultado · Nivel {level.id}</h1>
+        <h2>{level.title}</h2>
+        <p>
+          Aciertos: {correctCount} / {expected} (necesitas {MIN_CORRECT_TO_UNLOCK}{' '}
+          para avanzar)
+        </p>
+        <p>
+          Puntos aplicados en este intento:{' '}
+          {answers.reduce((total, answer) => total + answer.appliedDelta, 0)}
+        </p>
+        <p>Puntaje acumulado: {score}</p>
+        <ul className="level-result__answers">
+          {answers.map((answer, index) => (
+            <li key={answer.questionId}>
+              <strong className={answer.correct ? 'is-correct' : 'is-incorrect'}>
+                {index + 1}. {answer.correct ? 'Bien' : 'Mal'} (
+                {answer.appliedDelta > 0 ? '+' : ''}
+                {answer.appliedDelta})
+              </strong>{' '}
+              {answer.prompt}
+            </li>
+          ))}
+        </ul>
+        {passed ? (
+          nextLevel ? (
+            <p>
+              <Link className="btn-yellow level-action" to={levelPath(nextLevel)}>
+                Siguiente: nivel {nextLevel.id} · {nextLevel.title}
+              </Link>
+            </p>
+          ) : (
+            <p>
+              <Link className="btn-yellow level-action" to="/jugar">Volver al inicio</Link>
+            </p>
+          )
         ) : (
           <p>
-            <Link to="/jugar">Volver al inicio</Link>
+            No alcanzaste el mínimo. Puedes reintentar este nivel. El puntaje
+            acumulado se mantiene.
+            <br />
+            <button className="btn-yellow level-action" type="button" onClick={handleRetry}>
+              Reintentar nivel {level.id}
+            </button>
           </p>
-        )
-      ) : (
-        <p>
-          No alcanzaste el mínimo. Puedes reintentar este nivel. El puntaje
-          acumulado se mantiene.
-          <br />
-          <button type="button" onClick={handleRetry}>
-            Reintentar nivel {level.id}
-          </button>
-        </p>
-      )}
-    </section>
+        )}
+      </section>
+    </LevelScene>
   )
 }

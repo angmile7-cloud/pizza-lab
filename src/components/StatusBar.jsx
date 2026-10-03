@@ -8,7 +8,7 @@ export default function StatusBar() {
   const { pathname } = useLocation()
   const { score, currentLevel } = useGame()
 
-  if (HIDDEN_ON.has(pathname)) {
+  if (HIDDEN_ON.has(pathname) || pathname.startsWith('/nivel/')) {
     return null
   }
 

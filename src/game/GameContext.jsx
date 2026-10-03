@@ -25,12 +25,15 @@ function answerKey(levelId, questionId) {
 
 export function GameProvider({ children }) {
   const [userName, setUserNameState] = useState(readUserName)
-  const [score, setScore] = useState(0)
-  const [currentLevel, setCurrentLevel] = useState(1)
-  const [unlockedLevel, setUnlockedLevel] = useState(1)
-  const [answersByLevel, setAnswersByLevel] = useState({})
-  const [createdPizza, setCreatedPizza] = useState(null)
+  const [gameState, setGameState] = useState(createInitialGameState)
+  const { score, currentLevel, unlockedLevel, answersByLevel, createdPizza } =
+    gameState
   const scoredKeysRef = useRef(new Set())
+
+  const resetProgress = useCallback(() => {
+    setGameState(createInitialGameState())
+    scoredKeysRef.current = new Set()
+  }, [])
 
   const setUserName = useCallback((name) => {
     const nextName = typeof name === 'string' ? name.trim() : ''
@@ -41,6 +44,17 @@ export function GameProvider({ children }) {
       // Keep the in-memory name if storage is unavailable.
     }
   }, [])
+
+  const startNewGame = useCallback((name) => {
+    resetProgress()
+    const nextName = typeof name === 'string' ? name.trim() : ''
+    setUserNameState(nextName)
+    try {
+      window.localStorage.setItem(USER_NAME_KEY, nextName)
+    } catch {
+      // Keep the in-memory name if storage is unavailable.
+    }
+  }, [resetProgress])
 
   const recordAnswer = useCallback((levelId, question, selectedOptionId) => {
     const key = answerKey(levelId, question.id)
@@ -68,13 +82,19 @@ export function GameProvider({ children }) {
       appliedDelta,
     }
 
-    setScore((currentScore) => clampScore(currentScore + pointsDelta))
-    setAnswersByLevel((current) => {
-      const previous = current[levelId] ?? []
+    setGameState((current) => {
+      const previous = current.answersByLevel[levelId] ?? []
       if (previous.some((answer) => answer.questionId === question.id)) {
         return current
       }
-      return { ...current, [levelId]: [...previous, { ...entry }] }
+      return {
+        ...current,
+        score: clampScore(current.score + pointsDelta),
+        answersByLevel: {
+          ...current.answersByLevel,
+          [levelId]: [...previous, { ...entry }],
+        },
+      }
     })
 
     return entry
@@ -88,8 +108,11 @@ export function GameProvider({ children }) {
       const passed = didPassLevel(answers, level.questions.length)
       if (passed) {
         const nextId = Number(levelId) + 1
-        setUnlockedLevel((current) => Math.max(current, nextId))
-        setCurrentLevel((current) => Math.max(current, nextId))
+        setGameState((current) => ({
+          ...current,
+          unlockedLevel: Math.max(current.unlockedLevel, nextId),
+          currentLevel: Math.max(current.currentLevel, nextId),
+        }))
       }
       return passed
     },
@@ -97,34 +120,29 @@ export function GameProvider({ children }) {
   )
 
   const retryLevel = useCallback((levelId) => {
-    setAnswersByLevel((current) => {
-      const answers = current[levelId] ?? current[Number(levelId)] ?? []
+    setGameState((current) => {
+      const answers = current.answersByLevel[levelId] ?? current.answersByLevel[Number(levelId)] ?? []
       answers.forEach((answer) => {
         scoredKeysRef.current.delete(answerKey(levelId, answer.questionId))
         scoredKeysRef.current.delete(answerKey(Number(levelId), answer.questionId))
       })
-      const next = { ...current }
+      const next = { ...current.answersByLevel }
       delete next[Number(levelId)]
       delete next[levelId]
-      return next
+      return { ...current, answersByLevel: next }
     })
   }, [])
 
   const savePizza = useCallback((pizza) => {
-    setCreatedPizza(pizza)
-    setUnlockedLevel((current) => Math.max(current, 9))
-    setCurrentLevel(8)
+    setGameState((current) => ({
+      ...current,
+      createdPizza: pizza,
+      unlockedLevel: Math.max(current.unlockedLevel, 9),
+      currentLevel: 8,
+    }))
   }, [])
 
-  const restartGame = useCallback(() => {
-    const initial = createInitialGameState()
-    scoredKeysRef.current = new Set()
-    setScore(initial.score)
-    setCurrentLevel(initial.currentLevel)
-    setUnlockedLevel(initial.unlockedLevel)
-    setAnswersByLevel(initial.answersByLevel)
-    setCreatedPizza(initial.createdPizza)
-  }, [])
+  const restartGame = resetProgress
 
   const canAccessLevel = useCallback(
     (levelId) => {
@@ -139,6 +157,7 @@ export function GameProvider({ children }) {
     () => ({
       userName,
       setUserName,
+      startNewGame,
       score,
       currentLevel,
       unlockedLevel,
@@ -154,6 +173,7 @@ export function GameProvider({ children }) {
     [
       userName,
       setUserName,
+      startNewGame,
       score,
       currentLevel,
       unlockedLevel,

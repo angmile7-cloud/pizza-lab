@@ -6,7 +6,7 @@ import { useGame } from '../game/useGame'
 // Componente de pantalla de autenticación
 export default function AuthScreen({ mode }) {
   const navigate = useNavigate()
-  const { userName, setUserName } = useGame()
+  const { startNewGame } = useGame()
   const isRegister = mode === 'register'
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -15,7 +15,7 @@ export default function AuthScreen({ mode }) {
   // Función para manejar el envío del formulario
   function handleSubmit(event) {
     event.preventDefault()
-    setUserName(isRegister ? name.trim() : userName || email.split('@')[0])
+    startNewGame(isRegister ? name.trim() : email.split('@')[0])
     navigate('/jugar')
   }
 

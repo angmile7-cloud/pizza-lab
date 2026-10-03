@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import welcomeImage from '../assets/Niveles/pizza pantalla  inicio.png'
 
 export default function WelcomeScreen() {
 
@@ -9,11 +10,13 @@ export default function WelcomeScreen() {
         <h1 className="menu-title">DODO&apos;S PIZZA LAB</h1>
         <p className="menu-welcome">¡Bienvenidos!</p>
       </div>
-      <img
-        className="menu-pizza"
-        src="/Inicio/welcome-pizza.png"
-        alt="Pizza de Dodo's Pizza Lab"
-      />
+      <div className="menu-pizza-slot">
+        <img
+          className="menu-pizza"
+          src={welcomeImage}
+          alt="Pizza de Dodo's Pizza Lab"
+        />
+      </div>
       <div className="menu-actions">
         <Link className="btn-yellow" to="/registro">
           Crear cuenta
