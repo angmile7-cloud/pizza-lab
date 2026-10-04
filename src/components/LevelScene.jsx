@@ -1,4 +1,4 @@
-import levelKitchen from '../assets/Niveles/Cocina italiana rústica para pizza.png'
+import levelKitchen from '../assets/Niveles/fondo_cocina.png'
 import { useGame } from '../game/useGame'
 import { getMaxTriviaScore, LEVELS } from '../game/gameUtils'
 import LevelHeader, { ScoreBadge } from './LevelHeader'
