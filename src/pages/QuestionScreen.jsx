@@ -52,23 +52,20 @@ export default function QuestionScreen() {
   }
 
   return (
-    <LevelScene>
+    <LevelScene levelId={level.id}>
       <section className="page level-page level-question">
-        <p className="level-nav">
-          <Link to="/jugar">Inicio</Link>
-        </p>
-        <h1>
-          Nivel {level.id}: {level.title}
-        </h1>
+        <h1 className="level-question__level">{level.title}:</h1>
         <p className="level-progress">
-          Pregunta {questionIndex + 1} de {total} · Avanzas con al menos{' '}
-          {MIN_CORRECT_TO_UNLOCK} aciertos
+          Pregunta {questionIndex + 1} de {total} (avanzas con al menos{' '}
+          {MIN_CORRECT_TO_UNLOCK} aciertos)
         </p>
         <h2 className="level-question__prompt">{question.prompt}</h2>
         <ul className="level-options">
           {question.options.map((option) => (
             <li key={option.id}>
-              <label>
+              <label
+                className={`level-option${selectedOptionId === option.id ? ' is-selected' : ''}${feedback && option.id === question.correctOptionId ? ' is-correct' : ''}${feedback && selectedOptionId === option.id && !feedback.correct ? ' is-incorrect' : ''}`}
+              >
                 <input
                   type="radio"
                   name={question.id}
@@ -77,13 +74,19 @@ export default function QuestionScreen() {
                   disabled={Boolean(feedback)}
                   onChange={() => setSelectedOptionId(option.id)}
                 />{' '}
-                {option.text}
+                <span className="level-option__dot" aria-hidden="true" />
+                <span className="level-option__text">{option.text}</span>
               </label>
             </li>
           ))}
         </ul>
         {!feedback ? (
-          <button className="btn-yellow level-action" type="button" onClick={handleConfirm} disabled={!selectedOptionId}>
+          <button
+            className="level-action level-action--confirm"
+            type="button"
+            onClick={handleConfirm}
+            disabled={!selectedOptionId}
+          >
             Confirmar
           </button>
         ) : (
@@ -101,6 +104,9 @@ export default function QuestionScreen() {
             </button>
           </div>
         )}
+        <Link className="level-action level-action--home" to="/jugar">
+          Inicio
+        </Link>
       </section>
     </LevelScene>
   )
