@@ -1,6 +1,6 @@
 import levelKitchen from '../assets/Niveles/fondo_cocina.png'
 import { useGame } from '../game/useGame'
-import { getMaxTriviaScore, LEVELS } from '../game/gameUtils'
+import { getMaxScore, LEVELS } from '../game/gameUtils'
 import LevelHeader, { ScoreBadge } from './LevelHeader'
 
 export default function LevelScene({ levelId, children }) {
@@ -12,7 +12,7 @@ export default function LevelScene({ levelId, children }) {
       style={{ '--level-scene-image': `url("${levelKitchen}")` }}
     >
       <LevelHeader levelId={levelId} levelCount={LEVELS.length} />
-      <ScoreBadge score={score} maximum={getMaxTriviaScore()} />
+      <ScoreBadge score={score} maximum={getMaxScore()} />
       <div className="level-scene__content">{children}</div>
     </div>
   )

@@ -1,14 +1,9 @@
 import { useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { useGame } from '../game/useGame'
-import { getLevel } from '../game/gameUtils'
+import { createEmptySelection, getLevel, levelPath } from '../game/gameUtils'
 import LevelScene from '../components/LevelScene'
-
-function emptySelection(slots) {
-  return Object.fromEntries(
-    slots.map((slot) => [slot.id, slot.multiple ? [] : '']),
-  )
-}
+import PizzaBuilderControls from '../components/PizzaBuilderControls'
 
 const EMPTY_SLOTS = []
 
@@ -17,7 +12,7 @@ export default function PizzaBuilderScreen() {
   const level = getLevel(levelId)
   const { canAccessLevel, createdPizza, savePizza, score } = useGame()
   const slots = level?.builder?.slots ?? EMPTY_SLOTS
-  const [selection, setSelection] = useState(() => emptySelection(slots))
+  const [selection, setSelection] = useState(() => createEmptySelection(slots))
   const [submitted, setSubmitted] = useState(Boolean(createdPizza))
 
   const pizza = submitted ? createdPizza ?? selection : selection
@@ -34,22 +29,6 @@ export default function PizzaBuilderScreen() {
 
   if (!canAccessLevel(level.id)) {
     return <Navigate to="/" replace />
-  }
-
-  function handleSingle(slotId, choiceId) {
-    setSelection((current) => ({ ...current, [slotId]: choiceId }))
-  }
-
-  function handleMultiple(slot, choiceId) {
-    setSelection((current) => {
-      const list = current[slot.id] ?? []
-      const exists = list.includes(choiceId)
-      let next = exists ? list.filter((id) => id !== choiceId) : [...list, choiceId]
-      if (!exists && slot.maxSelections && next.length > slot.maxSelections) {
-        next = next.slice(0, slot.maxSelections)
-      }
-      return { ...current, [slot.id]: next }
-    })
   }
 
   function handleSave() {
@@ -86,11 +65,13 @@ export default function PizzaBuilderScreen() {
             ))}
           </ul>
           <p>
-            Completaste Maestro Pizzero. Ya puedes explicar el proceso: ingredientes,
-            masa, salsa, queso, toppings, armado y cocción.
+            Terminaste tu pizza y ya puedes aplicar lo aprendido sobre ingredientes,
+            armado y cocción en los siguientes niveles.
           </p>
           <p>
-            <Link className="btn-yellow level-action" to="/jugar">Volver al inicio</Link>
+            <Link className="btn-yellow level-action" to={levelPath(getLevel(9))}>
+              Continuar al nivel 9
+            </Link>
           </p>
         </section>
       </LevelScene>
@@ -107,43 +88,11 @@ export default function PizzaBuilderScreen() {
           Nivel {level.id}: {level.title}
         </h1>
         <p>{level.description}</p>
-        {slots.map((slot) => (
-          <fieldset key={slot.id}>
-            <legend>{slot.label}</legend>
-            {slot.choices.map((choice) => {
-              const inputId = `${slot.id}-${choice.id}`
-              if (slot.multiple) {
-                return (
-                  <div className="level-builder__choice" key={choice.id}>
-                    <label htmlFor={inputId}>
-                      <input
-                        id={inputId}
-                        type="checkbox"
-                        checked={(selection[slot.id] ?? []).includes(choice.id)}
-                        onChange={() => handleMultiple(slot, choice.id)}
-                      />{' '}
-                      {choice.name}
-                    </label>
-                  </div>
-                )
-              }
-              return (
-                <div className="level-builder__choice" key={choice.id}>
-                  <label htmlFor={inputId}>
-                    <input
-                      id={inputId}
-                      type="radio"
-                      name={slot.id}
-                      checked={selection[slot.id] === choice.id}
-                      onChange={() => handleSingle(slot.id, choice.id)}
-                    />{' '}
-                    {choice.name}
-                  </label>
-                </div>
-              )
-            })}
-          </fieldset>
-        ))}
+        <PizzaBuilderControls
+          slots={slots}
+          selection={selection}
+          setSelection={setSelection}
+        />
         <p>
           <button className="btn-yellow level-action" type="button" onClick={handleSave} disabled={!ready}>
             Hornear pizza

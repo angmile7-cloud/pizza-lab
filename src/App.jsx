@@ -9,6 +9,7 @@ import GameHubScreen from './pages/GameHubScreen'
 import QuestionScreen from './pages/QuestionScreen'
 import LevelResultScreen from './pages/LevelResultScreen'
 import PizzaBuilderScreen from './pages/PizzaBuilderScreen'
+import OrderScreen from './pages/OrderScreen'
 import Chat from './pages/Chat'
 
 export default function App() {
@@ -26,6 +27,7 @@ export default function App() {
             <Route path="/nivel/:levelId" element={<QuestionScreen />} />
             <Route path="/nivel/:levelId/resultado" element={<LevelResultScreen />} />
             <Route path="/nivel/:levelId/pizza" element={<PizzaBuilderScreen />} />
+            <Route path="/nivel/:levelId/pedido" element={<OrderScreen />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </div>

@@ -100,9 +100,12 @@ function ProgressPath({ rowCount, height }) {
   )
 }
 
-function FinishIllustration() {
+function FinishIllustration({ completed }) {
   return (
-    <div className="progress-map__finish" aria-hidden="true">
+    <div
+      className={`progress-map__finish${completed ? ' progress-map__finish--complete' : ''}`}
+      aria-hidden="true"
+    >
       <svg className="progress-map__chef" viewBox="0 0 64 78">
         <path
           d="M12 42c-7-2-9-7-7-13 1-5 5-8 10-9C14 9 22 3 31 7c7-8 21-4 23 7 8 2 11 9 8 16-1 5-5 9-11 11v8H13z"
@@ -125,7 +128,15 @@ function FinishIllustration() {
 }
 
 export default function GameHubScreen() {
-  const { score, currentLevel, unlockedLevel, createdPizza, userName, restartGame } = useGame()
+  const {
+    score,
+    currentLevel,
+    unlockedLevel,
+    createdPizza,
+    gameCompleted,
+    userName,
+    restartGame,
+  } = useGame()
   const currentLevelId = Math.min(Math.max(currentLevel, 1), LEVELS.length)
   const displayLevel = getLevel(currentLevelId)
   const mapLevels = Array.from({ length: Math.max(10, LEVELS.length) }, (_, index) => {
@@ -233,7 +244,7 @@ export default function GameHubScreen() {
                 )
               })}
               {rowIndex === rows.length - 1 && row.length < 3 ? (
-                <FinishIllustration />
+                <FinishIllustration completed={gameCompleted} />
               ) : null}
             </div>
           ))}

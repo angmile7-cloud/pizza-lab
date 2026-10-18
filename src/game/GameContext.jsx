@@ -2,7 +2,9 @@ import { createContext, useCallback, useMemo, useRef, useState } from 'react'
 import {
   clampScore,
   createInitialGameState,
+  didPassOrderLevel,
   didPassLevel,
+  evaluateOrder,
   getLevel,
   POINTS_PER_CORRECT,
   POINTS_PER_WRONG,
@@ -26,8 +28,15 @@ function answerKey(levelId, questionId) {
 export function GameProvider({ children }) {
   const [userName, setUserNameState] = useState(readUserName)
   const [gameState, setGameState] = useState(createInitialGameState)
-  const { score, currentLevel, unlockedLevel, answersByLevel, createdPizza } =
-    gameState
+  const {
+    score,
+    currentLevel,
+    unlockedLevel,
+    answersByLevel,
+    orderResultsByLevel,
+    createdPizza,
+    gameCompleted,
+  } = gameState
   const scoredKeysRef = useRef(new Set())
 
   const resetProgress = useCallback(() => {
@@ -103,20 +112,37 @@ export function GameProvider({ children }) {
   const resolveLevel = useCallback(
     (levelId) => {
       const level = getLevel(levelId)
-      if (!level || level.type !== 'trivia') return false
-      const answers = answersByLevel[level.id] ?? []
-      const passed = didPassLevel(answers, level.questions.length)
+      if (!level) return false
+      const passed =
+        level.type === 'trivia'
+          ? didPassLevel(
+              answersByLevel[level.id] ?? [],
+              level.questions.length,
+            )
+          : level.type === 'order'
+            ? didPassOrderLevel(
+                level,
+                orderResultsByLevel[level.id] ?? [],
+              )
+            : false
       if (passed) {
-        const nextId = Number(levelId) + 1
         setGameState((current) => ({
           ...current,
-          unlockedLevel: Math.max(current.unlockedLevel, nextId),
-          currentLevel: Math.max(current.currentLevel, nextId),
+          unlockedLevel: Math.max(
+            current.unlockedLevel,
+            Math.min(level.id + 1, getLevel(level.id + 1)?.id ?? level.id),
+          ),
+          currentLevel:
+            level.type === 'order'
+              ? level.id
+              : Math.max(current.currentLevel, level.id + 1),
+          gameCompleted:
+            level.type === 'order' ? passed : current.gameCompleted,
         }))
       }
       return passed
     },
-    [answersByLevel],
+    [answersByLevel, orderResultsByLevel],
   )
 
   const retryLevel = useCallback((levelId) => {
@@ -138,8 +164,67 @@ export function GameProvider({ children }) {
       ...current,
       createdPizza: pizza,
       unlockedLevel: Math.max(current.unlockedLevel, 9),
-      currentLevel: 8,
+      currentLevel: 9,
     }))
+  }, [])
+
+  const recordOrderResult = useCallback(
+    (levelId, order, selection) => {
+      const previous = orderResultsByLevel[levelId]?.find(
+        (result) => result.orderId === order.id,
+      )
+      if (previous) return previous
+
+      const evaluation = evaluateOrder(order, selection)
+      const level = getLevel(levelId)
+      const pointsAwarded = evaluation.satisfied
+        ? level.scoring.pointsPerSatisfiedOrder
+        : 0
+      const entry = {
+        orderId: order.id,
+        customerName: order.customerName,
+        message: order.message,
+        satisfied: evaluation.satisfied,
+        requirements: evaluation.requirements,
+        pointsAwarded,
+      }
+
+      setGameState((current) => {
+        const previousResults = current.orderResultsByLevel[levelId] ?? []
+        if (previousResults.some((result) => result.orderId === order.id)) {
+          return current
+        }
+        return {
+          ...current,
+          score: clampScore(current.score + pointsAwarded),
+          orderResultsByLevel: {
+            ...current.orderResultsByLevel,
+            [levelId]: [...previousResults, entry],
+          },
+        }
+      })
+      return entry
+    },
+    [orderResultsByLevel],
+  )
+
+  const retryOrderLevel = useCallback((levelId) => {
+    setGameState((current) => {
+      const previous = current.orderResultsByLevel[levelId] ?? []
+      const awarded = previous.reduce(
+        (total, result) => total + result.pointsAwarded,
+        0,
+      )
+      const next = { ...current.orderResultsByLevel }
+      delete next[levelId]
+      return {
+        ...current,
+        score: clampScore(current.score - awarded),
+        orderResultsByLevel: next,
+        currentLevel: Number(levelId),
+        gameCompleted: false,
+      }
+    })
   }, [])
 
   const restartGame = resetProgress
@@ -162,10 +247,14 @@ export function GameProvider({ children }) {
       currentLevel,
       unlockedLevel,
       answersByLevel,
+      orderResultsByLevel,
       createdPizza,
+      gameCompleted,
       recordAnswer,
+      recordOrderResult,
       resolveLevel,
       retryLevel,
+      retryOrderLevel,
       savePizza,
       restartGame,
       canAccessLevel,
@@ -178,10 +267,14 @@ export function GameProvider({ children }) {
       currentLevel,
       unlockedLevel,
       answersByLevel,
+      orderResultsByLevel,
       createdPizza,
+      gameCompleted,
       recordAnswer,
+      recordOrderResult,
       resolveLevel,
       retryLevel,
+      retryOrderLevel,
       savePizza,
       restartGame,
       canAccessLevel,

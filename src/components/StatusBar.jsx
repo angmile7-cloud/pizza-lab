@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import { useGame } from '../game/useGame'
-import { getMaxTriviaScore } from '../game/gameUtils'
+import { getMaxScore, LEVELS } from '../game/gameUtils'
 
 const HIDDEN_ON = new Set(['/', '/registro', '/login', '/jugar'])
 
@@ -16,9 +16,9 @@ export default function StatusBar() {
     <p className="status-bar">
       <Link to="/jugar">Dodo&apos;s Pizza Lab</Link>
       {' · '}
-      Puntos: {score} / {getMaxTriviaScore()}
+      Puntos: {score} / {getMaxScore()}
       {' · '}
-      Nivel {Math.min(currentLevel, 8)}/8
+      Nivel {Math.min(currentLevel, LEVELS.length)}/{LEVELS.length}
     </p>
   )
 }

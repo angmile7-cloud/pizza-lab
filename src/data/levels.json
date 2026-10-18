@@ -672,6 +672,148 @@
           }
         ]
       }
+    },
+    {
+      "id": 9,
+      "type": "trivia",
+      "title": "Tipos de pizza del mundo",
+      "theme": "tipos",
+      "description": "Conoce los estilos de pizza más famosos y qué los distingue.",
+      "questions": [
+        {
+          "id": "9-1",
+          "prompt": "¿De qué ciudad italiana es originaria la pizza napolitana?",
+          "options": [
+            { "id": "a", "text": "Roma" },
+            { "id": "b", "text": "Florencia" },
+            { "id": "c", "text": "Nápoles" },
+            { "id": "d", "text": "Milán" }
+          ],
+          "correctOptionId": "c",
+          "explanation": "La pizza napolitana nació en Nápoles, en el sur de Italia, y su tradición está reconocida por su masa y cocción particulares."
+        },
+        {
+          "id": "9-2",
+          "prompt": "¿Qué caracteriza a la pizza estilo Chicago \"deep dish\"?",
+          "options": [
+            { "id": "a", "text": "Una base muy fina y crujiente, sin borde" },
+            { "id": "b", "text": "Masa gruesa en molde hondo, con ingredientes en capas, queso abajo y salsa arriba" },
+            { "id": "c", "text": "Una masa fría que no se hornea" },
+            { "id": "d", "text": "Se sirve siempre enrollada como un cono" }
+          ],
+          "correctOptionId": "b",
+          "explanation": "La deep dish se hornea en un molde hondo; su masa alta sostiene capas abundantes, normalmente con el queso bajo los ingredientes y la salsa encima."
+        },
+        {
+          "id": "9-3",
+          "prompt": "¿Cómo se reconoce una pizza estilo Nueva York?",
+          "options": [
+            { "id": "a", "text": "Por sus porciones pequeñas y gruesas que se comen con cuchara" },
+            { "id": "b", "text": "Por una base alta rellena de queso hasta el borde" },
+            { "id": "c", "text": "Por no llevar nunca salsa ni queso" },
+            { "id": "d", "text": "Por rebanadas grandes, de masa fina y flexible, que se doblan para comer" }
+          ],
+          "correctOptionId": "d",
+          "explanation": "La pizza neoyorquina suele cortarse en porciones grandes y anchas; su masa fina y flexible permite doblarlas al comer."
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "type": "order",
+      "title": "Pedido del cliente",
+      "theme": "pedido",
+      "description": "Lee cada pedido y arma una pizza que cumpla sus requisitos.",
+      "scoring": {
+        "pointsPerSatisfiedOrder": 30,
+        "minimumSatisfiedOrders": 2
+      },
+      "orders": [
+        {
+          "id": "napolitana-clasica",
+          "customerName": "Lucía",
+          "message": "Quiero una clásica napolitana: tomate, mozzarella y un toque de albahaca fresca.",
+          "requirements": [
+            {
+              "id": "masa-napolitana",
+              "type": "mustInclude",
+              "slot": "masa",
+              "choiceIds": ["napolitana"],
+              "feedback": "La masa napolitana se distingue por su harina tipo 00 y su borde alto."
+            },
+            {
+              "id": "salsa-tomate",
+              "type": "mustInclude",
+              "slot": "salsa",
+              "choiceIds": ["tomate"],
+              "feedback": "La salsa de tomate es la base clásica de una pizza napolitana."
+            },
+            {
+              "id": "queso-mozzarella",
+              "type": "mustInclude",
+              "slot": "queso",
+              "choiceIds": ["mozzarella"],
+              "feedback": "La mozzarella aporta el fundido elástico característico."
+            },
+            {
+              "id": "topping-albahaca",
+              "type": "mustInclude",
+              "slot": "toppings",
+              "choiceIds": ["albahaca"],
+              "feedback": "La albahaca fresca se agrega al final, después de hornear."
+            }
+          ]
+        },
+        {
+          "id": "bianca-favorita",
+          "customerName": "Mateo",
+          "message": "Me encanta la pizza bianca. Prepáramela con mozzarella, parmesano y rúcula.",
+          "requirements": [
+            {
+              "id": "salsa-bianca",
+              "type": "mustInclude",
+              "slot": "salsa",
+              "choiceIds": ["bianca"],
+              "feedback": "La pizza bianca no lleva salsa de tomate; usa una base clara como aceite y ajo."
+            },
+            {
+              "id": "quesos",
+              "type": "mustInclude",
+              "slot": "queso",
+              "choiceIds": ["mix"],
+              "feedback": "El mix combina mozzarella fundente con parmesano, que aporta sabor intenso."
+            },
+            {
+              "id": "topping-rucula",
+              "type": "mustInclude",
+              "slot": "toppings",
+              "choiceIds": ["rucula"],
+              "feedback": "La rúcula es delicada y se agrega al final, después de hornear."
+            }
+          ]
+        },
+        {
+          "id": "vegetariana-ligera",
+          "customerName": "Sofía",
+          "message": "¿Me haces una pizza vegetariana, ligera, con máximo tres toppings y sin pepperoni ni jamón?",
+          "requirements": [
+            {
+              "id": "sin-carnes",
+              "type": "mustNotInclude",
+              "slot": "toppings",
+              "choiceIds": ["pepperoni", "jamon"],
+              "feedback": "Para mantener el pedido sin carne, no agregues pepperoni ni jamón."
+            },
+            {
+              "id": "limite-toppings",
+              "type": "maxToppings",
+              "slot": "toppings",
+              "max": 3,
+              "feedback": "Una capa moderada de toppings ayuda a que la pizza se cocine de manera pareja."
+            }
+          ]
+        }
+      ]
     }
   ],
   "pointsPerWrong": 10,

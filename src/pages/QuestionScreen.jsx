@@ -22,6 +22,10 @@ export default function QuestionScreen() {
     return <Navigate to={`/nivel/${level.id}/pizza`} replace />
   }
 
+  if (level.type === 'order') {
+    return <Navigate to={`/nivel/${level.id}/pedido`} replace />
+  }
+
   if (!canAccessLevel(level.id)) {
     return <Navigate to="/" replace />
   }
