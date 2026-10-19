@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import LevelScene from '../components/LevelScene'
 import PizzaBuilderControls from '../components/PizzaBuilderControls'
+import orderPaper from '../assets/papel_pedido.png'
 import { useGame } from '../game/useGame'
 import {
   createEmptySelection,
@@ -220,158 +221,204 @@ export default function OrdersModeScreen() {
   const ordersFailed = roundResults.length - ordersServed
 
   return (
-    <LevelScene
-      title="DODO'S PIZZA LAB - PEDIDOS"
-    >
+    <LevelScene levelId={currentTier.minPassedLevels}>
       <section className="page level-page level-builder orders-mode">
-        <p className="level-nav">
-          <Link to="/jugar">Volver al mapa</Link>
-        </p>
-        <h1 className="orders-mode__tier">{currentTier.name}</h1>
+        <div className="orders-mode__fixed-top">
+          <h1 className="level-question__level orders-mode__tier">
+            Nivel: {currentTier.name}
+          </h1>
 
-        {phase === 'intro' ? (
-          <article className="orders-mode__intro">
-            <p>
-              <strong>Este turno evalúa: {joinTopicNames(topics)}</strong>
-            </p>
-            <p>
-              Prepara {ROUND_SIZE} pedidos antes de que se acabe el tiempo.
-              Cada pedido tiene su propio reloj.
-            </p>
-            <div className="orders-mode__actions">
-              <button
-                className="btn-yellow level-action level-action--confirm"
-                type="button"
-                onClick={startRound}
+          {phase === 'play' && currentOrder ? (
+            <>
+              <p className="level-progress">
+                Pedido {orderIndex + 1} de {roundOrders.length}
+                <span className="orders-mode__sr-only">
+                  {' '}
+                  Puntaje del turno: {roundScore}
+                </span>
+              </p>
+              <article
+                className={`orders-mode__ticket${currentOrder.text.length > 120 ? ' is-long' : ''}`}
+                style={{ '--order-paper-image': `url("${orderPaper}")` }}
               >
-                Empezar
-              </button>
-            </div>
-          </article>
-        ) : null}
+                <h2 className="orders-mode__customer">
+                  Pedido de {currentOrder.customer}
+                </h2>
+                <p className="orders-mode__quote">
+                  “{currentOrder.text}”
+                </p>
+                <p className="orders-mode__topics orders-mode__sr-only">
+                  {currentOrder.topics
+                    .map((topic) => ORDER_TOPIC_LABELS[topic] ?? topic)
+                    .join(' · ')}
+                </p>
+              </article>
+              <div className="orders-mode__timer-hint">
+                <div className="orders-mode__timer" aria-hidden="true">
+                  <div className="orders-mode__timer-label">
+                    <span>Tiempo</span>
+                    <span>{Math.ceil(remainingMs / 1000)} s</span>
+                  </div>
+                  <div className="orders-mode__timer-track">
+                    <div
+                      className={`orders-mode__timer-fill${remainingMs <= 10_000 ? ' is-low' : ''}`}
+                      style={{
+                        '--timer-progress': Math.max(
+                          0,
+                          Math.min(1, remainingMs / durationMs),
+                        ),
+                      }}
+                    />
+                  </div>
+                </div>
+                <p className="orders-mode__hint">
+                  Elige los ingredientes para preparar la pizza
+                </p>
+              </div>
+              <p
+                className="orders-mode__sr-only"
+                aria-live="polite"
+                aria-atomic="true"
+              >
+                {announcement}
+              </p>
+            </>
+          ) : null}
+        </div>
 
-        {phase === 'play' && currentOrder ? (
-          <>
-            <p className="level-progress">
-              Pedido {orderIndex + 1} de {roundOrders.length} · Puntaje del turno: {roundScore}
-            </p>
-            <article className="orders-mode__ticket">
-              <h2>Pedido de {currentOrder.customer}</h2>
-              <p>“{currentOrder.text}”</p>
-              <p className="orders-mode__topics">
-                {currentOrder.topics
-                  .map((topic) => ORDER_TOPIC_LABELS[topic] ?? topic)
-                  .join(' · ')}
+        <div className="orders-mode__scroll">
+          {phase === 'intro' ? (
+            <article className="orders-mode__intro">
+              <p>
+                <strong>Este turno evalúa: {joinTopicNames(topics)}</strong>
+              </p>
+              <p>
+                Prepara {ROUND_SIZE} pedidos antes de que se acabe el tiempo.
+                Cada pedido tiene su propio reloj.
               </p>
             </article>
-            <div className="orders-mode__timer" aria-hidden="true">
-              <div className="orders-mode__timer-label">
-                <span>Tiempo</span>
-                <span>{Math.ceil(remainingMs / 1000)} s</span>
-              </div>
-              <div className="orders-mode__timer-track">
-                <div
-                  className={`orders-mode__timer-fill${remainingMs <= 10_000 ? ' is-low' : ''}`}
-                  style={{
-                    '--timer-progress': Math.max(
-                      0,
-                      Math.min(1, remainingMs / durationMs),
-                    ),
-                  }}
-                />
-              </div>
+          ) : null}
+
+          {phase === 'play' && currentOrder && !orderResult ? (
+            <div className="orders-mode__options">
+              <PizzaBuilderControls
+                slots={slots}
+                selection={selection}
+                setSelection={setSelection}
+                orderMode
+              />
             </div>
-            <p
-              className="orders-mode__sr-only"
-              aria-live="polite"
-              aria-atomic="true"
+          ) : null}
+
+          {phase === 'play' && currentOrder && orderResult ? (
+            <div
+              className={`level-feedback ${orderResult.satisfied ? 'is-correct' : 'is-incorrect'}`}
             >
-              {announcement}
-            </p>
-
-            {!orderResult ? (
-              <>
-                <p>Elige los ingredientes para preparar su pizza.</p>
-                <PizzaBuilderControls
-                  slots={slots}
-                  selection={selection}
-                  setSelection={setSelection}
-                />
-                <button
-                  className="btn-yellow level-action level-action--confirm"
-                  type="button"
-                  onClick={deliverOrder}
-                  disabled={!ready}
-                >
-                  ENTREGAR
-                </button>
-              </>
-            ) : (
-              <div
-                className={`level-feedback ${orderResult.satisfied ? 'is-correct' : 'is-incorrect'}`}
-              >
-                <p className="level-feedback__result">
-                  {orderResult.expired
-                    ? 'Se acabó el tiempo: el pedido se perdió. 0 puntos.'
-                    : orderResult.satisfied
-                      ? `¡Pedido cumplido! +${orderResult.pointsAwarded} puntos`
-                      : 'El pedido quedó incompleto. No se suman puntos.'}
-                </p>
-                <ul className="level-order__requirements">
-                  {orderResult.evaluation.requirements.map((requirement) => (
-                    <li
-                      className={requirement.met ? 'is-correct' : 'is-incorrect'}
-                      key={requirement.requirementId}
-                    >
-                      <strong>{requirement.met ? 'Cumplido' : 'Pendiente'}:</strong>{' '}
-                      {requirement.feedback}
-                    </li>
-                  ))}
-                </ul>
-                <p className="orders-mode__tip">
-                  <strong>Consejo:</strong> {currentOrder.tip}
-                </p>
-                <button
-                  className="btn-yellow level-action"
-                  type="button"
-                  onClick={advanceOrder}
-                >
-                  {orderIndex + 1 === roundOrders.length
-                    ? 'Ver resumen'
-                    : 'Siguiente pedido'}
-                </button>
-              </div>
-            )}
-          </>
-        ) : null}
-
-        {phase === 'summary' ? (
-          <article className="orders-mode__summary">
-            <h2>Fin del turno</h2>
-            <ul>
-              <li>Pedidos atendidos: {ordersServed}</li>
-              <li>Pedidos fallidos: {ordersFailed}</li>
-              <li>Puntaje del turno: {roundScore}</li>
-              <li>Puntaje acumulado: {totalScore}</li>
-              <li>Tier jugado: {currentTier.name}</li>
-            </ul>
-            <div className="orders-mode__actions">
-              <button
-                className="btn-yellow level-action level-action--confirm"
-                type="button"
-                onClick={playAgain}
-              >
-                Jugar otra ronda
-              </button>
-              <Link
-                className="btn-yellow level-action orders-mode__home"
-                to="/jugar"
-              >
-                Volver al mapa
-              </Link>
+              <p className="level-feedback__result">
+                {orderResult.expired
+                  ? 'Se acabó el tiempo: el pedido se perdió. 0 puntos.'
+                  : orderResult.satisfied
+                    ? `¡Pedido cumplido! +${orderResult.pointsAwarded} puntos`
+                    : 'El pedido quedó incompleto. No se suman puntos.'}
+              </p>
+              <ul className="level-order__requirements">
+                {orderResult.evaluation.requirements.map((requirement) => (
+                  <li
+                    className={requirement.met ? 'is-correct' : 'is-incorrect'}
+                    key={requirement.requirementId}
+                  >
+                    <strong>{requirement.met ? 'Cumplido' : 'Pendiente'}:</strong>{' '}
+                    {requirement.feedback}
+                  </li>
+                ))}
+              </ul>
+              <p className="orders-mode__tip">
+                <strong>Consejo:</strong> {currentOrder.tip}
+              </p>
             </div>
-          </article>
-        ) : null}
+          ) : null}
+
+          {phase === 'summary' ? (
+            <article className="orders-mode__summary">
+              <h2 className="level-question__prompt">Fin del turno</h2>
+              <ul>
+                <li>Pedidos atendidos: {ordersServed}</li>
+                <li>Pedidos fallidos: {ordersFailed}</li>
+                <li>Puntaje del turno: {roundScore}</li>
+                <li>Puntaje acumulado: {totalScore}</li>
+                <li>Tier jugado: {currentTier.name}</li>
+              </ul>
+            </article>
+          ) : null}
+        </div>
+
+        <div className="orders-mode__actions">
+          {phase === 'intro' ? (
+            <button
+              className="level-action level-action--confirm"
+              type="button"
+              onClick={startRound}
+            >
+              Empezar
+            </button>
+          ) : null}
+
+          {phase === 'play' && currentOrder && !orderResult ? (
+            <button
+              className="level-action level-action--confirm"
+              type="button"
+              onClick={deliverOrder}
+              disabled={!ready}
+            >
+              ENTREGAR
+            </button>
+          ) : null}
+
+          {phase === 'play' && currentOrder && orderResult ? (
+            <button
+              className="level-action level-action--confirm orders-mode__action--wide"
+              type="button"
+              onClick={advanceOrder}
+            >
+              {orderIndex + 1 === roundOrders.length
+                ? 'Ver resumen'
+                : 'Siguiente pedido'}
+            </button>
+          ) : null}
+
+          {phase === 'summary' ? (
+            <button
+              className="level-action level-action--confirm orders-mode__action--wide"
+              type="button"
+              onClick={playAgain}
+            >
+              Jugar otra ronda
+            </button>
+          ) : null}
+
+          {phase === 'play' ? (
+            <Link
+              className="level-action level-action--home orders-mode__home"
+              to="/jugar"
+            >
+              INICIO
+            </Link>
+          ) : phase === 'summary' ? (
+            <Link
+              className="level-action level-action--home orders-mode__home orders-mode__action--wide"
+              to="/jugar"
+            >
+              Volver al mapa
+            </Link>
+          ) : (
+            <Link
+              className="level-action level-action--home orders-mode__home orders-mode__action--wide"
+              to="/jugar"
+            >
+              Volver al mapa
+            </Link>
+          )}
+        </div>
       </section>
     </LevelScene>
   )
