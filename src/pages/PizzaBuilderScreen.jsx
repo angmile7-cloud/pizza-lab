@@ -10,7 +10,7 @@ const EMPTY_SLOTS = []
 export default function PizzaBuilderScreen() {
   const { levelId } = useParams()
   const level = getLevel(levelId)
-  const { canAccessLevel, createdPizza, savePizza, score } = useGame()
+  const { canAccessLevel, createdPizza, savePizza, totalScore } = useGame()
   const slots = level?.builder?.slots ?? EMPTY_SLOTS
   const [selection, setSelection] = useState(() => createEmptySelection(slots))
   const [submitted, setSubmitted] = useState(Boolean(createdPizza))
@@ -51,7 +51,7 @@ export default function PizzaBuilderScreen() {
           </p>
           <h1>¡Pizza lista!</h1>
           <p>Nivel 8 · {level.title}</p>
-          <p>Puntuación de trivia: {score}</p>
+          <p>Puntaje acumulado: {totalScore}</p>
           <ul>
             {slots.map((slot) => (
               <li key={slot.id}>

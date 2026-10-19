@@ -21,7 +21,7 @@ export default function LevelResultScreen() {
     resolveLevel,
     retryLevel,
     retryOrderLevel,
-    score,
+    totalScore,
   } = useGame()
   const level = getLevel(levelId)
 
@@ -71,7 +71,7 @@ export default function LevelResultScreen() {
             {level.scoring.minimumSatisfiedOrders} para avanzar)
           </p>
           <p>Puntos aplicados en este nivel: {pointsAwarded}</p>
-          <p>Puntaje acumulado: {score}</p>
+          <p>Puntaje acumulado: {totalScore}</p>
           <ul className="level-result__answers">
             {results.map((result) => (
               <li key={result.orderId}>
@@ -149,7 +149,7 @@ export default function LevelResultScreen() {
           Puntos aplicados en este intento:{' '}
           {answers.reduce((total, answer) => total + answer.appliedDelta, 0)}
         </p>
-        <p>Puntaje acumulado: {score}</p>
+        <p>Puntaje acumulado: {totalScore}</p>
         <ul className="level-result__answers">
           {answers.map((answer, index) => (
             <li key={answer.questionId}>

@@ -40,7 +40,8 @@ export function createEmptySelection(slots) {
 
 export function createInitialGameState() {
   return {
-    score: 0,
+    levelScore: 0,
+    orderScore: 0,
     currentLevel: 1,
     unlockedLevel: 1,
     answersByLevel: {},
@@ -76,7 +77,39 @@ export function didPassOrderLevel(level, results) {
 }
 
 export function evaluateOrder(order, selection) {
-  const requirements = order.requirements.map((requirement) => {
+  const toppingRequirements = order.requirements.filter(
+    (requirement) =>
+      requirement.slot === 'toppings' && requirement.type === 'mustInclude',
+  )
+  const requestedToppings = toppingRequirements.flatMap(
+    (requirement) => requirement.choiceIds,
+  )
+  const pickedToppings = order.requirements
+    .filter(
+      (requirement) =>
+        requirement.type === 'toppingPick' &&
+        (requirement.slot ?? 'toppings') === 'toppings',
+    )
+    .flatMap((requirement) => requirement.ids)
+  const exactToppingsRequirement = {
+    id: 'exact-toppings',
+    type: 'exactToppings',
+    slot: 'toppings',
+    choiceIds: [
+      ...new Set([
+        ...requestedToppings,
+        ...pickedToppings,
+        ...(order.allowedExtras ?? []),
+      ]),
+    ],
+    feedback: 'La pizza lleva solo los toppings solicitados o autorizados.',
+  }
+  const requirementsToEvaluate = [
+    ...order.requirements,
+    exactToppingsRequirement,
+  ]
+
+  const requirements = requirementsToEvaluate.map((requirement) => {
     const selected = selection?.[requirement.slot]
     const selectedChoices = Array.isArray(selected)
       ? selected
@@ -93,8 +126,47 @@ export function evaluateOrder(order, selection) {
       met = requirement.choiceIds.every(
         (choiceId) => !selectedChoices.includes(choiceId),
       )
+    } else if (requirement.type === 'slotNotIn') {
+      met = selectedChoices.every(
+        (choiceId) => !requirement.values.includes(choiceId),
+      )
+    } else if (requirement.type === 'toppingPick') {
+      const toppingIds = requirement.ids
+      const selectedCount = selectedChoices.filter((choiceId) =>
+        toppingIds.includes(choiceId),
+      ).length
+      met =
+        selectedCount >= requirement.min && selectedCount <= requirement.max
     } else if (requirement.type === 'maxToppings') {
       met = selectedChoices.length <= requirement.max
+    } else if (requirement.type === 'exactToppings') {
+      const extras = selectedChoices.filter(
+        (choiceId) => !requirement.choiceIds.includes(choiceId),
+      )
+      met = extras.length === 0
+      if (!met) {
+        const toppingChoices =
+          getLevel(8)?.builder?.slots.find(
+            (slot) => slot.id === 'toppings',
+          )?.choices ?? []
+        const extraNames = extras.map(
+          (choiceId) =>
+            toppingChoices
+              .find((choice) => choice.id === choiceId)
+              ?.name.replace(/\s*\([^)]*\)\s*/g, '')
+              .trim() ?? choiceId,
+        )
+        const formattedNames =
+          extraNames.length < 2
+            ? extraNames[0]
+            : `${extraNames.slice(0, -1).join(', ')} y ${extraNames.at(-1)}`
+        return {
+          requirementId: requirement.id,
+          type: requirement.type,
+          met,
+          feedback: `No pediste esto: ${formattedNames}. Agregar ingredientes que el cliente no pidió estropea el pedido.`,
+        }
+      }
     }
 
     return {

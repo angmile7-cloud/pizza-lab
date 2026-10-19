@@ -29,7 +29,8 @@ export function GameProvider({ children }) {
   const [userName, setUserNameState] = useState(readUserName)
   const [gameState, setGameState] = useState(createInitialGameState)
   const {
-    score,
+    levelScore,
+    orderScore,
     currentLevel,
     unlockedLevel,
     answersByLevel,
@@ -38,10 +39,13 @@ export function GameProvider({ children }) {
     gameCompleted,
   } = gameState
   const scoredKeysRef = useRef(new Set())
+  const scoredOrderKeysRef = useRef(new Set())
+  const totalScore = levelScore + orderScore
 
   const resetProgress = useCallback(() => {
     setGameState(createInitialGameState())
     scoredKeysRef.current = new Set()
+    scoredOrderKeysRef.current = new Set()
   }, [])
 
   const setUserName = useCallback((name) => {
@@ -79,7 +83,7 @@ export function GameProvider({ children }) {
 
     scoredKeysRef.current.add(key)
 
-    const appliedDelta = clampScore(score + pointsDelta) - score
+    const appliedDelta = clampScore(levelScore + pointsDelta) - levelScore
     const entry = {
       questionId: question.id,
       prompt: question.prompt,
@@ -98,7 +102,7 @@ export function GameProvider({ children }) {
       }
       return {
         ...current,
-        score: clampScore(current.score + pointsDelta),
+        levelScore: clampScore(current.levelScore + pointsDelta),
         answersByLevel: {
           ...current.answersByLevel,
           [levelId]: [...previous, { ...entry }],
@@ -107,7 +111,7 @@ export function GameProvider({ children }) {
     })
 
     return entry
-  }, [answersByLevel, score])
+  }, [answersByLevel, levelScore])
 
   const resolveLevel = useCallback(
     (levelId) => {
@@ -196,7 +200,7 @@ export function GameProvider({ children }) {
         }
         return {
           ...current,
-          score: clampScore(current.score + pointsAwarded),
+          levelScore: clampScore(current.levelScore + pointsAwarded),
           orderResultsByLevel: {
             ...current.orderResultsByLevel,
             [levelId]: [...previousResults, entry],
@@ -207,6 +211,22 @@ export function GameProvider({ children }) {
     },
     [orderResultsByLevel],
   )
+
+  const addOrderPoints = useCallback((orderKey, points) => {
+    if (typeof orderKey !== 'string' || !orderKey) {
+      throw new Error('Se necesita una clave de pedido para sumar puntos')
+    }
+    if (!Number.isFinite(points) || points < 0) {
+      throw new Error('Los puntos de pedidos deben ser un número no negativo')
+    }
+    if (scoredOrderKeysRef.current.has(orderKey)) return
+
+    scoredOrderKeysRef.current.add(orderKey)
+    setGameState((current) => ({
+      ...current,
+      orderScore: current.orderScore + points,
+    }))
+  }, [])
 
   const retryOrderLevel = useCallback((levelId) => {
     setGameState((current) => {
@@ -219,7 +239,7 @@ export function GameProvider({ children }) {
       delete next[levelId]
       return {
         ...current,
-        score: clampScore(current.score - awarded),
+        levelScore: clampScore(current.levelScore - awarded),
         orderResultsByLevel: next,
         currentLevel: Number(levelId),
         gameCompleted: false,
@@ -243,7 +263,9 @@ export function GameProvider({ children }) {
       userName,
       setUserName,
       startNewGame,
-      score,
+      levelScore,
+      orderScore,
+      totalScore,
       currentLevel,
       unlockedLevel,
       answersByLevel,
@@ -252,6 +274,7 @@ export function GameProvider({ children }) {
       gameCompleted,
       recordAnswer,
       recordOrderResult,
+      addOrderPoints,
       resolveLevel,
       retryLevel,
       retryOrderLevel,
@@ -263,7 +286,9 @@ export function GameProvider({ children }) {
       userName,
       setUserName,
       startNewGame,
-      score,
+      levelScore,
+      orderScore,
+      totalScore,
       currentLevel,
       unlockedLevel,
       answersByLevel,
@@ -272,6 +297,7 @@ export function GameProvider({ children }) {
       gameCompleted,
       recordAnswer,
       recordOrderResult,
+      addOrderPoints,
       resolveLevel,
       retryLevel,
       retryOrderLevel,
@@ -281,5 +307,9 @@ export function GameProvider({ children }) {
     ],
   )
 
-  return <GameContext.Provider value={value}>{children}</GameContext.Provider>
+  return (
+    <GameContext.Provider value={value}>
+      {children}
+    </GameContext.Provider>
+  )
 }

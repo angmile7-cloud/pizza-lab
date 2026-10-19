@@ -1,0 +1,2949 @@
+{
+  "topics": [
+    {
+      "id": "ingredientes",
+      "label": "Ingredientes",
+      "level": 1
+    },
+    {
+      "id": "masa",
+      "label": "Masa",
+      "level": 2
+    },
+    {
+      "id": "salsas",
+      "label": "Salsas",
+      "level": 3
+    },
+    {
+      "id": "quesos",
+      "label": "Quesos",
+      "level": 4
+    },
+    {
+      "id": "toppings",
+      "label": "Toppings",
+      "level": 5
+    }
+  ],
+  "tiers": [
+    {
+      "id": 1,
+      "name": "Aprendiz",
+      "minPassedLevels": 1,
+      "timeSeconds": 75,
+      "basePoints": 20
+    },
+    {
+      "id": 2,
+      "name": "Cocinero",
+      "minPassedLevels": 2,
+      "timeSeconds": 60,
+      "basePoints": 30
+    },
+    {
+      "id": 3,
+      "name": "Pizzaiolo",
+      "minPassedLevels": 4,
+      "timeSeconds": 50,
+      "basePoints": 40
+    },
+    {
+      "id": 4,
+      "name": "Maestro",
+      "minPassedLevels": 7,
+      "timeSeconds": 45,
+      "basePoints": 50
+    }
+  ],
+  "orders": [
+    {
+      "id": "s01-01",
+      "stage": 1,
+      "customer": "Marta",
+      "text": "Quiero una Margherita de verdad: salsa de tomate, mozzarella y albahaca.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "albahaca"
+        }
+      ],
+      "topics": [
+        "ingredientes"
+      ],
+      "tip": "La Margherita clásica lleva masa, tomate, mozzarella y albahaca: los colores de la bandera de Italia."
+    },
+    {
+      "id": "s01-02",
+      "stage": 1,
+      "customer": "Luis",
+      "text": "Una pizza de pepperoni con mozzarella, por favor.",
+      "requirements": [
+        {
+          "type": "toppingIncluded",
+          "id": "pepperoni"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        }
+      ],
+      "topics": [
+        "ingredientes"
+      ],
+      "tip": "Con pocos ingredientes bien elegidos, cada uno se luce: pepperoni y mozzarella son una pareja clásica."
+    },
+    {
+      "id": "s01-03",
+      "stage": 1,
+      "customer": "Sofía",
+      "text": "Jamón y aceitunas, nada más.",
+      "requirements": [
+        {
+          "type": "toppingIncluded",
+          "id": "jamon"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "aceitunas"
+        }
+      ],
+      "topics": [
+        "ingredientes"
+      ],
+      "tip": "Pedir solo lo que el cliente quiere evita sobrecargar la pizza."
+    },
+    {
+      "id": "s01-04",
+      "stage": 1,
+      "customer": "Tomás",
+      "text": "Quiero una pizza de champiñones con salsa de tomate.",
+      "requirements": [
+        {
+          "type": "toppingIncluded",
+          "id": "champinones"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        }
+      ],
+      "topics": [
+        "ingredientes"
+      ],
+      "tip": "El tomate es la base más clásica y combina muy bien con los champiñones."
+    },
+    {
+      "id": "s01-05",
+      "stage": 1,
+      "customer": "Valeria",
+      "text": "Solo dos toppings: pepperoni y cebolla.",
+      "requirements": [
+        {
+          "type": "toppingIncluded",
+          "id": "pepperoni"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "cebolla"
+        }
+      ],
+      "topics": [
+        "ingredientes"
+      ],
+      "tip": "Cada topping extra cambia el sabor: sirve exactamente lo que se pide."
+    },
+    {
+      "id": "s01-06",
+      "stage": 1,
+      "customer": "Andrés",
+      "text": "Una pizza de queso: tomate y mozzarella, sin ningún topping.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        }
+      ],
+      "topics": [
+        "ingredientes"
+      ],
+      "tip": "Sin toppings también es pizza: tomate y mozzarella ya forman una base clásica."
+    },
+    {
+      "id": "s01-07",
+      "stage": 1,
+      "customer": "Camila",
+      "text": "Jamón con champiñones, solo esos dos.",
+      "requirements": [
+        {
+          "type": "toppingIncluded",
+          "id": "jamon"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "champinones"
+        }
+      ],
+      "topics": [
+        "ingredientes"
+      ],
+      "tip": "Dos toppings bien distribuidos se cocinan mejor que muchos amontonados."
+    },
+    {
+      "id": "s01-08",
+      "stage": 1,
+      "customer": "Julián",
+      "text": "Albahaca y aceitunas sobre salsa de tomate.",
+      "requirements": [
+        {
+          "type": "toppingIncluded",
+          "id": "albahaca"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "aceitunas"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        }
+      ],
+      "topics": [
+        "ingredientes"
+      ],
+      "tip": "La albahaca fresca aporta aroma; las aceitunas, un toque salado."
+    },
+    {
+      "id": "s02-01",
+      "stage": 2,
+      "customer": "Elena",
+      "text": "Masa napolitana (harina 00, borde alto) con tomate y albahaca.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "napolitana"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "albahaca"
+        }
+      ],
+      "topics": [
+        "masa"
+      ],
+      "tip": "La harina 00 es la típica de la pizza napolitana: fina y elástica."
+    },
+    {
+      "id": "s02-02",
+      "stage": 2,
+      "customer": "Pablo",
+      "text": "Masa fina y crocante con pepperoni.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "fina"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "pepperoni"
+        }
+      ],
+      "topics": [
+        "masa"
+      ],
+      "tip": "La masa fina da una base crocante, ideal para pocos ingredientes."
+    },
+    {
+      "id": "s02-03",
+      "stage": 2,
+      "customer": "Rosa",
+      "text": "Masa integral con champiñones y cebolla.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "integral"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "champinones"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "cebolla"
+        }
+      ],
+      "topics": [
+        "masa"
+      ],
+      "tip": "La masa integral lleva harina con salvado: es más rústica y de sabor intenso."
+    },
+    {
+      "id": "s02-04",
+      "stage": 2,
+      "customer": "Diego",
+      "text": "Quiero base fina y crocante con jamón y aceitunas.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "fina"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "jamon"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "aceitunas"
+        }
+      ],
+      "topics": [
+        "masa"
+      ],
+      "tip": "La masa fina soporta pocos toppings: más ingredientes la harían perder lo crocante."
+    },
+    {
+      "id": "s02-05",
+      "stage": 2,
+      "customer": "Irene",
+      "text": "Napolitana con mozzarella y pepperoni.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "napolitana"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "pepperoni"
+        }
+      ],
+      "topics": [
+        "masa"
+      ],
+      "tip": "La masa napolitana tiene el borde alto y esponjoso, perfecta para quesos fundidos."
+    },
+    {
+      "id": "s02-06",
+      "stage": 2,
+      "customer": "Mateo",
+      "text": "Una Margherita completa sobre masa napolitana: tomate, mozzarella y albahaca.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "napolitana"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "albahaca"
+        }
+      ],
+      "topics": [
+        "masa"
+      ],
+      "tip": "La Margherita auténtica combina masa napolitana, tomate, mozzarella y albahaca."
+    },
+    {
+      "id": "s02-07",
+      "stage": 2,
+      "customer": "Lucía",
+      "text": "Masa integral, tomate y mozzarella, sin toppings.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "integral"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        }
+      ],
+      "topics": [
+        "masa"
+      ],
+      "tip": "Una masa de sabor intenso como la integral luce incluso sin toppings."
+    },
+    {
+      "id": "s02-08",
+      "stage": 2,
+      "customer": "Hugo",
+      "text": "Base fina con rúcula y jamón.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "fina"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "rucula"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "jamon"
+        }
+      ],
+      "topics": [
+        "masa"
+      ],
+      "tip": "La rúcula fresca contrasta muy bien con una base fina y crocante."
+    },
+    {
+      "id": "s03-01",
+      "stage": 3,
+      "customer": "Paula",
+      "text": "Salsa bianca (aceite y ajo), con mozzarella y cebolla.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "bianca"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "cebolla"
+        }
+      ],
+      "topics": [
+        "salsas"
+      ],
+      "tip": "La pizza bianca no lleva tomate: se basa en aceite, ajo y quesos suaves."
+    },
+    {
+      "id": "s03-02",
+      "stage": 3,
+      "customer": "Ramiro",
+      "text": "Pesto sobre masa fina con aceitunas.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "pesto"
+        },
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "fina"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "aceitunas"
+        }
+      ],
+      "topics": [
+        "salsas"
+      ],
+      "tip": "El pesto es una salsa verde y aromática que reemplaza al tomate."
+    },
+    {
+      "id": "s03-03",
+      "stage": 3,
+      "customer": "Nora",
+      "text": "Una Marinara sobre masa napolitana: tomate, sin queso y sin toppings.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "napolitana"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "sin-queso"
+        }
+      ],
+      "topics": [
+        "salsas"
+      ],
+      "tip": "La Marinara es la pizza de tomate sin queso: aquí la protagonista es la salsa."
+    },
+    {
+      "id": "s03-04",
+      "stage": 3,
+      "customer": "Óscar",
+      "text": "Masa napolitana, salsa bianca, mozzarella y rúcula.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "napolitana"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "bianca"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "rucula"
+        }
+      ],
+      "topics": [
+        "salsas"
+      ],
+      "tip": "Sobre una base bianca, la rúcula fresca aporta un toque amargo que equilibra."
+    },
+    {
+      "id": "s03-05",
+      "stage": 3,
+      "customer": "Alma",
+      "text": "Pesto con mozzarella y champiñones.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "pesto"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "champinones"
+        }
+      ],
+      "topics": [
+        "salsas"
+      ],
+      "tip": "El pesto ya es húmedo y potente: con él basta una capa fina."
+    },
+    {
+      "id": "s03-06",
+      "stage": 3,
+      "customer": "Fabián",
+      "text": "Tomate sobre masa integral con pepperoni y cebolla.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "integral"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "pepperoni"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "cebolla"
+        }
+      ],
+      "topics": [
+        "salsas"
+      ],
+      "tip": "Demasiada salsa humedece la base: una capa fina cocina mejor."
+    },
+    {
+      "id": "s03-07",
+      "stage": 3,
+      "customer": "Clara",
+      "text": "Base fina con salsa bianca, champiñones y aceitunas.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "fina"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "bianca"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "champinones"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "aceitunas"
+        }
+      ],
+      "topics": [
+        "salsas"
+      ],
+      "tip": "Sin tomate, la bianca deja brillar a los toppings."
+    },
+    {
+      "id": "s03-08",
+      "stage": 3,
+      "customer": "Gael",
+      "text": "Masa napolitana con pesto, mozzarella y jamón.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "napolitana"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "pesto"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "jamon"
+        }
+      ],
+      "topics": [
+        "salsas"
+      ],
+      "tip": "El pesto es intenso: combina mejor con ingredientes suaves."
+    },
+    {
+      "id": "s04-01",
+      "stage": 4,
+      "customer": "Marcos",
+      "text": "Mozzarella con parmesano, tomate, masa napolitana y pepperoni.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mix"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "napolitana"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "pepperoni"
+        }
+      ],
+      "topics": [
+        "quesos"
+      ],
+      "tip": "El parmesano rallado aporta umami y sal; se usa en poca cantidad junto a la mozzarella."
+    },
+    {
+      "id": "s04-02",
+      "stage": 4,
+      "customer": "Eva",
+      "text": "Pizza sin queso: base fina, salsa bianca y rúcula.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "sin-queso"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "bianca"
+        },
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "fina"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "rucula"
+        }
+      ],
+      "topics": [
+        "quesos"
+      ],
+      "tip": "Una pizza sin queso se apoya en la salsa y en los toppings frescos."
+    },
+    {
+      "id": "s04-03",
+      "stage": 4,
+      "customer": "Raúl",
+      "text": "Salsa bianca, mozzarella con parmesano y champiñones.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mix"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "bianca"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "champinones"
+        }
+      ],
+      "topics": [
+        "quesos"
+      ],
+      "tip": "Mozzarella para fundir y parmesano para dar sabor: un dúo clásico."
+    },
+    {
+      "id": "s04-04",
+      "stage": 4,
+      "customer": "Ana",
+      "text": "Margherita con pepperoni: masa napolitana, tomate, mozzarella, albahaca y pepperoni.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "napolitana"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "albahaca"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "pepperoni"
+        }
+      ],
+      "topics": [
+        "quesos"
+      ],
+      "tip": "La mozzarella funde de forma elástica y es el queso estándar de la pizza."
+    },
+    {
+      "id": "s04-05",
+      "stage": 4,
+      "customer": "Iván",
+      "text": "Masa integral con pesto, mozzarella + parmesano y aceitunas.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "integral"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "pesto"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mix"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "aceitunas"
+        }
+      ],
+      "topics": [
+        "quesos"
+      ],
+      "tip": "Los quesos duros rallados aportan sabor intenso en poca cantidad."
+    },
+    {
+      "id": "s04-06",
+      "stage": 4,
+      "customer": "Silvia",
+      "text": "Sin queso, por favor: masa integral, tomate y cebolla.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "sin-queso"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "integral"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "cebolla"
+        }
+      ],
+      "topics": [
+        "quesos"
+      ],
+      "tip": "Sin queso, el tomate y los toppings pesan más: cuida las proporciones."
+    },
+    {
+      "id": "s04-07",
+      "stage": 4,
+      "customer": "Daniel",
+      "text": "Base fina, tomate, mozzarella + parmesano y jamón.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "fina"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mix"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "jamon"
+        }
+      ],
+      "topics": [
+        "quesos"
+      ],
+      "tip": "El parmesano refuerza lo salado del jamón: no hace falta añadir sal."
+    },
+    {
+      "id": "s04-08",
+      "stage": 4,
+      "customer": "Marina",
+      "text": "Mozzarella simple, salsa bianca, masa napolitana y cebolla.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "bianca"
+        },
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "napolitana"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "cebolla"
+        }
+      ],
+      "topics": [
+        "quesos"
+      ],
+      "tip": "La mozzarella simple da el fundido elástico sin tapar otros sabores."
+    },
+    {
+      "id": "s05-01",
+      "stage": 5,
+      "customer": "Héctor",
+      "text": "Masa napolitana, tomate, mozzarella, pepperoni y champiñones.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "napolitana"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "pepperoni"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "champinones"
+        }
+      ],
+      "topics": [
+        "toppings"
+      ],
+      "tip": "Menos es más: pocos toppings bien repartidos cocinan mejor que una montaña."
+    },
+    {
+      "id": "s05-02",
+      "stage": 5,
+      "customer": "Lola",
+      "text": "Base fina, salsa bianca y mozzarella, con rúcula y jamón.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "fina"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "bianca"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "rucula"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "jamon"
+        }
+      ],
+      "topics": [
+        "toppings"
+      ],
+      "tip": "La rúcula es delicada: se agrega al final, cuando sale del horno."
+    },
+    {
+      "id": "s05-03",
+      "stage": 5,
+      "customer": "Nico",
+      "text": "Tomate, mozzarella y albahaca, y además una carne a elegir: pepperoni o jamón.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "albahaca"
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "pepperoni",
+            "jamon"
+          ],
+          "min": 1,
+          "max": 1
+        }
+      ],
+      "topics": [
+        "toppings"
+      ],
+      "tip": "Elegir una sola carne mantiene la pizza equilibrada."
+    },
+    {
+      "id": "s05-04",
+      "stage": 5,
+      "customer": "Berta",
+      "text": "Masa integral con tomate, champiñones y cebolla.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "integral"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "champinones"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "cebolla"
+        }
+      ],
+      "topics": [
+        "toppings"
+      ],
+      "tip": "Los vegetales acuosos, como el champiñón, se usan con moderación: sueltan agua en el horno."
+    },
+    {
+      "id": "s05-05",
+      "stage": 5,
+      "customer": "Álvaro",
+      "text": "Masa napolitana, pesto, mozzarella, jamón y champiñones.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "napolitana"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "pesto"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "jamon"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "champinones"
+        }
+      ],
+      "topics": [
+        "toppings"
+      ],
+      "tip": "Si un ingrediente suelta agua, conviene saltearlo antes o usarlo con moderación."
+    },
+    {
+      "id": "s05-06",
+      "stage": 5,
+      "customer": "Carla",
+      "text": "Base fina con tomate y mozzarella, y exactamente dos toppings entre champiñones, aceitunas y cebolla.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "fina"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "champinones",
+            "aceitunas",
+            "cebolla"
+          ],
+          "min": 2,
+          "max": 2
+        }
+      ],
+      "topics": [
+        "toppings"
+      ],
+      "tip": "Limitar la cantidad de toppings evita que la masa se humedezca."
+    },
+    {
+      "id": "s05-07",
+      "stage": 5,
+      "customer": "Rubén",
+      "text": "Salsa bianca, mozzarella con parmesano, rúcula y aceitunas.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "bianca"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mix"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "rucula"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "aceitunas"
+        }
+      ],
+      "topics": [
+        "toppings"
+      ],
+      "tip": "Los ingredientes delicados van al final; las aceitunas aguantan el horno."
+    },
+    {
+      "id": "s05-08",
+      "stage": 5,
+      "customer": "Teresa",
+      "text": "Masa napolitana, tomate, pepperoni y albahaca.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "napolitana"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "pepperoni"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "albahaca"
+        }
+      ],
+      "topics": [
+        "toppings"
+      ],
+      "tip": "La albahaca fresca se agrega al final para que no se queme."
+    },
+    {
+      "id": "s06-01",
+      "stage": 6,
+      "customer": "Gonzalo",
+      "text": "Base fina con tomate y mozzarella. Una carne (pepperoni o jamón) y un vegetal (champiñones o cebolla).",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "fina"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "pepperoni",
+            "jamon"
+          ],
+          "min": 1,
+          "max": 1
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "champinones",
+            "cebolla"
+          ],
+          "min": 1,
+          "max": 1
+        }
+      ],
+      "topics": [
+        "armado",
+        "toppings"
+      ],
+      "tip": "El armado clásico va en capas: masa, salsa, queso y, al final, pocos toppings bien repartidos."
+    },
+    {
+      "id": "s06-02",
+      "stage": 6,
+      "customer": "Ingrid",
+      "text": "Nada de masa integral. Salsa bianca, mozzarella, rúcula y un topping a elegir entre jamón o aceitunas.",
+      "requirements": [
+        {
+          "type": "slotNotIn",
+          "slot": "masa",
+          "values": [
+            "integral"
+          ]
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "bianca"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "rucula"
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "jamon",
+            "aceitunas"
+          ],
+          "min": 1,
+          "max": 1
+        }
+      ],
+      "topics": [
+        "armado",
+        "toppings"
+      ],
+      "tip": "Con la masa lista, arma y hornea enseguida: la humedad de la salsa y el queso debilita la base."
+    },
+    {
+      "id": "s06-03",
+      "stage": 6,
+      "customer": "Mauro",
+      "text": "Sin tomate, por favor. Masa napolitana, mozzarella con parmesano y dos toppings entre champiñones, cebolla, aceitunas o albahaca.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "napolitana"
+        },
+        {
+          "type": "slotNotIn",
+          "slot": "salsa",
+          "values": [
+            "tomate"
+          ]
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mix"
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "champinones",
+            "cebolla",
+            "aceitunas",
+            "albahaca"
+          ],
+          "min": 2,
+          "max": 2
+        }
+      ],
+      "topics": [
+        "armado",
+        "toppings"
+      ],
+      "tip": "Una capa fina y pareja de ingredientes cocina mejor que una pizza cargada."
+    },
+    {
+      "id": "s06-04",
+      "stage": 6,
+      "customer": "Noelia",
+      "text": "Napolitana con tomate, albahaca y algún queso (que no falte el queso). Puede llevar pepperoni o jamón, pero no ambos.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "napolitana"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "slotNotIn",
+          "slot": "queso",
+          "values": [
+            "sin-queso"
+          ]
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "albahaca"
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "pepperoni",
+            "jamon"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "topics": [
+        "armado",
+        "toppings"
+      ],
+      "tip": "El queso va antes que los toppings: así se funde y los une a la salsa."
+    },
+    {
+      "id": "s06-05",
+      "stage": 6,
+      "customer": "Bruno",
+      "text": "Masa fina con pesto y mozzarella, champiñones y uno entre aceitunas o cebolla.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "fina"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "pesto"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "champinones"
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "aceitunas",
+            "cebolla"
+          ],
+          "min": 1,
+          "max": 1
+        }
+      ],
+      "topics": [
+        "armado",
+        "toppings"
+      ],
+      "tip": "Con salsa intensa y vegetales acuosos, menos ingredientes es mejor."
+    },
+    {
+      "id": "s06-06",
+      "stage": 6,
+      "customer": "Pilar",
+      "text": "Masa integral, tomate, mozzarella con parmesano y de dos a tres toppings entre champiñones, cebolla y aceitunas.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "integral"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mix"
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "champinones",
+            "cebolla",
+            "aceitunas"
+          ],
+          "min": 2,
+          "max": 3
+        }
+      ],
+      "topics": [
+        "armado",
+        "toppings"
+      ],
+      "tip": "Reparte los toppings parejo: una montaña en el centro deja la masa cruda."
+    },
+    {
+      "id": "s06-07",
+      "stage": 6,
+      "customer": "Ezequiel",
+      "text": "Napolitana con salsa bianca, rúcula y una carne (pepperoni o jamón). El queso, cualquiera menos mozzarella con parmesano.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "napolitana"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "bianca"
+        },
+        {
+          "type": "slotNotIn",
+          "slot": "queso",
+          "values": [
+            "mix"
+          ]
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "pepperoni",
+            "jamon"
+          ],
+          "min": 1,
+          "max": 1
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "rucula"
+        }
+      ],
+      "topics": [
+        "armado",
+        "toppings"
+      ],
+      "tip": "Al armar, pasa la pizza a la pala con sémola o harina para que no se pegue."
+    },
+    {
+      "id": "s06-08",
+      "stage": 6,
+      "customer": "Adriana",
+      "text": "Base fina, tomate, mozzarella, pepperoni y cebolla. Puede llevar albahaca o rúcula, pero solo una.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "fina"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "pepperoni"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "cebolla"
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "albahaca",
+            "rucula"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "topics": [
+        "armado",
+        "toppings"
+      ],
+      "tip": "Las hojas frescas van al final: hornearlas mucho tiempo las quema."
+    },
+    {
+      "id": "s07-01",
+      "stage": 7,
+      "customer": "Leandro",
+      "text": "Horno de leña a 450 °C: masa napolitana, tomate, mozzarella, albahaca y una carne a elegir (pepperoni o jamón).",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "napolitana"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "albahaca"
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "pepperoni",
+            "jamon"
+          ],
+          "min": 1,
+          "max": 1
+        }
+      ],
+      "topics": [
+        "coccion"
+      ],
+      "tip": "A 400–500 °C la pizza napolitana se cuece en poco más de un minuto y el borde se infla."
+    },
+    {
+      "id": "s07-02",
+      "stage": 7,
+      "customer": "Mónica",
+      "text": "Horno casero a 250 °C: masa fina y crocante, tomate, mozzarella, pepperoni y cebolla; si quieres, una de aceitunas o albahaca.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "fina"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "pepperoni"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "cebolla"
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "aceitunas",
+            "albahaca"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "topics": [
+        "coccion"
+      ],
+      "tip": "En un horno casero conviene una masa fina y una piedra o acero bien precalentados."
+    },
+    {
+      "id": "s07-03",
+      "stage": 7,
+      "customer": "Federico",
+      "text": "Horno de leña: masa napolitana, salsa bianca, mozzarella, rúcula y jamón.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "napolitana"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "bianca"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "rucula"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "jamon"
+        }
+      ],
+      "topics": [
+        "coccion"
+      ],
+      "tip": "Con tanto calor, la rúcula se pone al salir del horno, no antes."
+    },
+    {
+      "id": "s07-04",
+      "stage": 7,
+      "customer": "Gabriela",
+      "text": "Horno casero: masa fina, tomate, mozzarella con parmesano, albahaca y dos toppings entre pepperoni, aceitunas y cebolla.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "fina"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mix"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "albahaca"
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "pepperoni",
+            "aceitunas",
+            "cebolla"
+          ],
+          "min": 2,
+          "max": 2
+        }
+      ],
+      "topics": [
+        "coccion"
+      ],
+      "tip": "En el horno casero la cocción es más lenta: seca los toppings húmedos y no sobrecargues."
+    },
+    {
+      "id": "s07-05",
+      "stage": 7,
+      "customer": "Santiago",
+      "text": "Horno de leña: napolitana, pesto, algún queso (que no falte), jamón y, si quieres, una de aceitunas o cebolla.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "napolitana"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "pesto"
+        },
+        {
+          "type": "slotNotIn",
+          "slot": "queso",
+          "values": [
+            "sin-queso"
+          ]
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "jamon"
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "aceitunas",
+            "cebolla"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "topics": [
+        "coccion"
+      ],
+      "tip": "Un horno tan caliente cocina en ~90 segundos: ingredientes sencillos se cocinan parejo."
+    },
+    {
+      "id": "s07-06",
+      "stage": 7,
+      "customer": "Verónica",
+      "text": "Horno casero: base fina, cualquier salsa menos pesto, mozzarella, aceitunas y una hoja fresca (rúcula o albahaca).",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "fina"
+        },
+        {
+          "type": "slotNotIn",
+          "slot": "salsa",
+          "values": [
+            "pesto"
+          ]
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "aceitunas"
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "rucula",
+            "albahaca"
+          ],
+          "min": 1,
+          "max": 1
+        }
+      ],
+      "topics": [
+        "coccion"
+      ],
+      "tip": "Las hojas frescas se agregan al final; el horno las oscurece."
+    },
+    {
+      "id": "s07-07",
+      "stage": 7,
+      "customer": "Pedro",
+      "text": "Horno de leña: masa napolitana, tomate, mozzarella, pepperoni, cebolla y albahaca.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "napolitana"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "pepperoni"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "cebolla"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "albahaca"
+        }
+      ],
+      "topics": [
+        "coccion"
+      ],
+      "tip": "Buena señal: borde dorado, queso fundido y base con manchas tostadas."
+    },
+    {
+      "id": "s07-08",
+      "stage": 7,
+      "customer": "Daniela",
+      "text": "Horno casero: masa fina, salsa bianca, mozzarella con parmesano, rúcula y uno o dos toppings entre jamón, pepperoni y aceitunas.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "fina"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "bianca"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mix"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "rucula"
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "jamon",
+            "pepperoni",
+            "aceitunas"
+          ],
+          "min": 1,
+          "max": 2
+        }
+      ],
+      "topics": [
+        "coccion"
+      ],
+      "tip": "Un topping muy cargado retrasa la cocción del centro: elige pocos."
+    },
+    {
+      "id": "s08-01",
+      "stage": 8,
+      "customer": "Karina",
+      "text": "Base fina, tomate y mozzarella con parmesano. Una carne (pepperoni o jamón), uno o dos vegetales (champiñones, cebolla o aceitunas) y como mucho una hoja fresca (albahaca o rúcula).",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "fina"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mix"
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "pepperoni",
+            "jamon"
+          ],
+          "min": 1,
+          "max": 1
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "champinones",
+            "cebolla",
+            "aceitunas"
+          ],
+          "min": 1,
+          "max": 2
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "albahaca",
+            "rucula"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "topics": [
+        "armado-final"
+      ],
+      "tip": "Crear tu pizza es combinar lo aprendido: masa, salsa, queso y pocos toppings equilibrados."
+    },
+    {
+      "id": "s08-02",
+      "stage": 8,
+      "customer": "Joaquín",
+      "text": "Nada de masa integral ni de tomate. Mozzarella, rúcula, una carne (jamón o pepperoni) y, si quieres, una de aceitunas o cebolla.",
+      "requirements": [
+        {
+          "type": "slotNotIn",
+          "slot": "masa",
+          "values": [
+            "integral"
+          ]
+        },
+        {
+          "type": "slotNotIn",
+          "slot": "salsa",
+          "values": [
+            "tomate"
+          ]
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "rucula"
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "jamon",
+            "pepperoni"
+          ],
+          "min": 1,
+          "max": 1
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "aceitunas",
+            "cebolla"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "topics": [
+        "armado-final"
+      ],
+      "tip": "Quitar el tomate abre otras opciones de base: bianca o pesto."
+    },
+    {
+      "id": "s08-03",
+      "stage": 8,
+      "customer": "Beatriz",
+      "text": "Integral con pesto, mozzarella con parmesano, champiñones, cebolla y albahaca.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "integral"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "pesto"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mix"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "champinones"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "cebolla"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "albahaca"
+        }
+      ],
+      "topics": [
+        "armado-final"
+      ],
+      "tip": "Con una salsa tan húmeda como el pesto, los vegetales acuosos hay que usarlos con cuidado."
+    },
+    {
+      "id": "s08-04",
+      "stage": 8,
+      "customer": "Manuel",
+      "text": "Napolitana con tomate y algún queso (no sin queso), tres toppings entre pepperoni, champiñones, aceitunas y cebolla, y una hoja fresca: albahaca o rúcula.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "napolitana"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "slotNotIn",
+          "slot": "queso",
+          "values": [
+            "sin-queso"
+          ]
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "pepperoni",
+            "champinones",
+            "aceitunas",
+            "cebolla"
+          ],
+          "min": 3,
+          "max": 3
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "albahaca",
+            "rucula"
+          ],
+          "min": 1,
+          "max": 1
+        }
+      ],
+      "topics": [
+        "armado-final"
+      ],
+      "tip": "Cuatro ingredientes es el máximo razonable: más allá, la pizza se carga y no se cuece pareja."
+    },
+    {
+      "id": "s08-05",
+      "stage": 8,
+      "customer": "Rocío",
+      "text": "Fina, bianca y mozzarella con jamón y champiñones; puede llevar una hoja fresca (albahaca o rúcula) o ninguna.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "fina"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "bianca"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "jamon"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "champinones"
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "albahaca",
+            "rucula"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "topics": [
+        "armado-final"
+      ],
+      "tip": "La hoja fresca, si la hay, se coloca al final de la cocción."
+    },
+    {
+      "id": "s08-06",
+      "stage": 8,
+      "customer": "Esteban",
+      "text": "Masa napolitana, tomate, mozzarella con parmesano, pepperoni, aceitunas y albahaca.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "napolitana"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mix"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "pepperoni"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "aceitunas"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "albahaca"
+        }
+      ],
+      "topics": [
+        "armado-final"
+      ],
+      "tip": "Una combinación clásica: salado, graso y fresco en equilibrio."
+    },
+    {
+      "id": "s08-07",
+      "stage": 8,
+      "customer": "Alicia",
+      "text": "Nada de masa napolitana ni de mozzarella con parmesano. Pesto, rúcula y jamón.",
+      "requirements": [
+        {
+          "type": "slotNotIn",
+          "slot": "masa",
+          "values": [
+            "napolitana"
+          ]
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "pesto"
+        },
+        {
+          "type": "slotNotIn",
+          "slot": "queso",
+          "values": [
+            "mix"
+          ]
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "rucula"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "jamon"
+        }
+      ],
+      "topics": [
+        "armado-final"
+      ],
+      "tip": "Eliminar opciones también es parte del pedido: la masa y el queso quedan a tu criterio."
+    },
+    {
+      "id": "s08-08",
+      "stage": 8,
+      "customer": "Ricardo",
+      "text": "Masa integral, tomate, mozzarella, champiñones, cebolla y aceitunas; y si quieres, una hoja fresca (albahaca o rúcula).",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "integral"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "champinones"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "cebolla"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "aceitunas"
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "albahaca",
+            "rucula"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "topics": [
+        "armado-final"
+      ],
+      "tip": "Muchos vegetales juntos humedecen la masa: reparte parejo y no cargues."
+    },
+    {
+      "id": "s09-01",
+      "stage": 9,
+      "customer": "Chiara",
+      "text": "Una capricciosa napolitana: masa napolitana, tomate, mozzarella, jamón, champiñones y aceitunas.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "napolitana"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "jamon"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "champinones"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "aceitunas"
+        }
+      ],
+      "topics": [
+        "tipos-del-mundo"
+      ],
+      "tip": "Cada estilo se reconoce por su masa y sus ingredientes: la napolitana, esponjosa y con borde alto."
+    },
+    {
+      "id": "s09-02",
+      "stage": 9,
+      "customer": "Marco",
+      "text": "Estilo romano (base fina y crocante): tomate, mozzarella, pepperoni, cebolla y albahaca.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "fina"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "pepperoni"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "cebolla"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "albahaca"
+        }
+      ],
+      "topics": [
+        "tipos-del-mundo"
+      ],
+      "tip": "La pizza romana se reconoce por su base fina y crocante."
+    },
+    {
+      "id": "s09-03",
+      "stage": 9,
+      "customer": "Giulia",
+      "text": "Pizza blanca a la romana: base fina, salsa bianca, mozzarella con parmesano, rúcula, jamón y como mucho una de aceitunas o cebolla.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "fina"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "bianca"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mix"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "rucula"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "jamon"
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "aceitunas",
+            "cebolla"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "topics": [
+        "tipos-del-mundo"
+      ],
+      "tip": "Las pizzas blancas no llevan tomate: lucen la rúcula, el jamón y el queso."
+    },
+    {
+      "id": "s09-04",
+      "stage": 9,
+      "customer": "Paolo",
+      "text": "Estilo genovés (con pesto) sobre base fina: mozzarella, champiñones, cebolla y como mucho una de jamón o aceitunas.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "fina"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "pesto"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "champinones"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "cebolla"
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "jamon",
+            "aceitunas"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "topics": [
+        "tipos-del-mundo"
+      ],
+      "tip": "El pesto genovés, de albahaca, es la salsa que identifica a este estilo."
+    },
+    {
+      "id": "s09-05",
+      "stage": 9,
+      "customer": "Dante",
+      "text": "Una versión integral y vegetariana: masa integral, tomate, mozzarella, champiñones, cebolla, aceitunas y albahaca.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "integral"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "champinones"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "cebolla"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "aceitunas"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "albahaca"
+        }
+      ],
+      "topics": [
+        "tipos-del-mundo"
+      ],
+      "tip": "Una pizza vegetariana no lleva carne: sus sabores vienen de vegetales y hierbas."
+    },
+    {
+      "id": "s09-06",
+      "stage": 9,
+      "customer": "Bianca",
+      "text": "Estilo napolitano con crudo: masa napolitana, tomate, mozzarella con parmesano, jamón, rúcula y como mucho una de aceitunas o cebolla.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "napolitana"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mix"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "jamon"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "rucula"
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "aceitunas",
+            "cebolla"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "topics": [
+        "tipos-del-mundo"
+      ],
+      "tip": "En el estilo napolitano, los ingredientes frescos suelen ir al salir del horno."
+    },
+    {
+      "id": "s09-07",
+      "stage": 9,
+      "customer": "Jake",
+      "text": "Estilo americano: masa napolitana, tomate, mozzarella, pepperoni, champiñones y cebolla.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "napolitana"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "pepperoni"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "champinones"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "cebolla"
+        }
+      ],
+      "topics": [
+        "tipos-del-mundo"
+      ],
+      "tip": "La pizza americana se carga más de toppings, sobre todo de pepperoni."
+    },
+    {
+      "id": "s09-08",
+      "stage": 9,
+      "customer": "Lorenzo",
+      "text": "Vegetariana a la italiana: masa napolitana, tomate, mozzarella, champiñones, aceitunas y cebolla.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "napolitana"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "champinones"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "aceitunas"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "cebolla"
+        }
+      ],
+      "topics": [
+        "tipos-del-mundo"
+      ],
+      "tip": "La misma lista de vegetales cambia de carácter según la masa que la acompaña."
+    },
+    {
+      "id": "s10-01",
+      "stage": 10,
+      "customer": "Sra. Paredes",
+      "text": "Soy vegetariana y no me gusta la masa integral. Quiero tomate, mozzarella, champiñones, cebolla y aceitunas, y una hoja fresca (albahaca o rúcula).",
+      "requirements": [
+        {
+          "type": "slotNotIn",
+          "slot": "masa",
+          "values": [
+            "integral"
+          ]
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "champinones"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "cebolla"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "aceitunas"
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "albahaca",
+            "rucula"
+          ],
+          "min": 1,
+          "max": 1
+        }
+      ],
+      "topics": [
+        "pedido-cliente"
+      ],
+      "tip": "Vegetariano significa sin carne: pepperoni y jamón quedan fuera."
+    },
+    {
+      "id": "s10-02",
+      "stage": 10,
+      "customer": "Don Aurelio",
+      "text": "Soy vegano: nada de queso ni de pesto (lleva queso). Masa fina, aceitunas, cebolla y, si quieres, champiñones o albahaca (uno).",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "fina"
+        },
+        {
+          "type": "slotNotIn",
+          "slot": "salsa",
+          "values": [
+            "pesto"
+          ]
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "sin-queso"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "aceitunas"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "cebolla"
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "champinones",
+            "albahaca"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "topics": [
+        "pedido-cliente"
+      ],
+      "tip": "El pesto tradicional lleva parmesano: para una pizza vegana se descarta."
+    },
+    {
+      "id": "s10-03",
+      "stage": 10,
+      "customer": "Nadia",
+      "text": "Soy intolerante a la lactosa. Sin queso y sin pesto, con pepperoni y cebolla, y uno más entre aceitunas o champiñones. Nada de masa integral.",
+      "requirements": [
+        {
+          "type": "slotNotIn",
+          "slot": "masa",
+          "values": [
+            "integral"
+          ]
+        },
+        {
+          "type": "slotNotIn",
+          "slot": "salsa",
+          "values": [
+            "pesto"
+          ]
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "sin-queso"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "pepperoni"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "cebolla"
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "aceitunas",
+            "champinones"
+          ],
+          "min": 1,
+          "max": 1
+        }
+      ],
+      "topics": [
+        "pedido-cliente"
+      ],
+      "tip": "Sin lactosa no es solo quitar el queso: revisa también la salsa."
+    },
+    {
+      "id": "s10-04",
+      "stage": 10,
+      "customer": "Octavio",
+      "text": "Nada de tomate. Masa napolitana con mozzarella y parmesano, rúcula y jamón, un vegetal entre aceitunas, cebolla o champiñones, y albahaca si quieres.",
+      "requirements": [
+        {
+          "type": "slotNotIn",
+          "slot": "salsa",
+          "values": [
+            "tomate"
+          ]
+        },
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "napolitana"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mix"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "rucula"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "jamon"
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "aceitunas",
+            "cebolla",
+            "champinones"
+          ],
+          "min": 1,
+          "max": 1
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "albahaca"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "topics": [
+        "pedido-cliente"
+      ],
+      "tip": "Sin tomate, la base puede ser bianca o pesto: ambas encajan con rúcula y jamón."
+    },
+    {
+      "id": "s10-05",
+      "stage": 10,
+      "customer": "Cecilia",
+      "text": "Con prisa y horno casero: base fina, tomate, cualquier queso menos mozzarella con parmesano, pepperoni, uno o dos vegetales entre champiñones, cebolla y aceitunas, y como mucho una hoja fresca.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "fina"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "slotNotIn",
+          "slot": "queso",
+          "values": [
+            "mix"
+          ]
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "pepperoni"
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "champinones",
+            "cebolla",
+            "aceitunas"
+          ],
+          "min": 1,
+          "max": 2
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "albahaca",
+            "rucula"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "topics": [
+        "pedido-cliente"
+      ],
+      "tip": "En el horno casero la masa fina y pocos toppings se cocinan más rápido."
+    },
+    {
+      "id": "s10-06",
+      "stage": 10,
+      "customer": "Familia Rojas",
+      "text": "Para una fiesta: masa napolitana, tomate, mozzarella, pepperoni y jamón, uno o dos vegetales entre aceitunas, champiñones y cebolla, y albahaca opcional.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "napolitana"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "pepperoni"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "jamon"
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "aceitunas",
+            "champinones",
+            "cebolla"
+          ],
+          "min": 1,
+          "max": 2
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "albahaca"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "topics": [
+        "pedido-cliente"
+      ],
+      "tip": "Una pizza para compartir sigue la regla de siempre: pocos toppings, bien repartidos."
+    },
+    {
+      "id": "s10-07",
+      "stage": 10,
+      "customer": "Chef invitado",
+      "text": "Algo gourmet: masa napolitana, salsa bianca, mozzarella con parmesano, jamón, rúcula, aceitunas y, si quieres, champiñones o cebolla (uno).",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "napolitana"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "bianca"
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mix"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "jamon"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "rucula"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "aceitunas"
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "champinones",
+            "cebolla"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "topics": [
+        "pedido-cliente"
+      ],
+      "tip": "Un pedido gourmet une técnica y producto: bianca, queso rallado y hojas frescas al final."
+    },
+    {
+      "id": "s10-08",
+      "stage": 10,
+      "customer": "Rita",
+      "text": "Algo equilibrado: masa integral, cualquier salsa menos bianca, mozzarella, champiñones, una carne entre pepperoni o jamón, y una o dos de aceitunas, cebolla, albahaca o rúcula.",
+      "requirements": [
+        {
+          "type": "slotIs",
+          "slot": "masa",
+          "value": "integral"
+        },
+        {
+          "type": "slotNotIn",
+          "slot": "salsa",
+          "values": [
+            "bianca"
+          ]
+        },
+        {
+          "type": "slotIs",
+          "slot": "queso",
+          "value": "mozzarella"
+        },
+        {
+          "type": "toppingIncluded",
+          "id": "champinones"
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "pepperoni",
+            "jamon"
+          ],
+          "min": 1,
+          "max": 1
+        },
+        {
+          "type": "toppingPick",
+          "ids": [
+            "aceitunas",
+            "cebolla",
+            "albahaca",
+            "rucula"
+          ],
+          "min": 1,
+          "max": 2
+        }
+      ],
+      "topics": [
+        "pedido-cliente"
+      ],
+      "tip": "Equilibrar es no pasarse: una carne, algunos vegetales y una base que los sostenga."
+    }
+  ]
+}

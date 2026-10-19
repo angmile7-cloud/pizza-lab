@@ -795,7 +795,14 @@
         {
           "id": "vegetariana-ligera",
           "customerName": "Sofía",
-          "message": "¿Me haces una pizza vegetariana, ligera, con máximo tres toppings y sin pepperoni ni jamón?",
+          "message": "¿Me haces una pizza vegetariana ligera, con hasta tres toppings a tu gusto, pero sin pepperoni ni jamón?",
+          "allowedExtras": [
+            "albahaca",
+            "champinones",
+            "aceitunas",
+            "rucula",
+            "cebolla"
+          ],
           "requirements": [
             {
               "id": "sin-carnes",

@@ -1,6 +1,7 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { LEVELS, getLevel, levelPath } from '../game/gameUtils'
 import { useGame } from '../game/useGame'
+import { getPassedLevelIds } from '../game/ordersModeUtils'
 
 const levelImages = import.meta.glob('../assets/Niveles/*.png', {
   eager: true,
@@ -128,15 +129,24 @@ function FinishIllustration({ completed }) {
 }
 
 export default function GameHubScreen() {
+  const navigate = useNavigate()
   const {
-    score,
+    totalScore,
     currentLevel,
     unlockedLevel,
     createdPizza,
     gameCompleted,
     userName,
     restartGame,
+    answersByLevel,
+    orderResultsByLevel,
   } = useGame()
+  const passedLevelIds = getPassedLevelIds({
+    answersByLevel,
+    orderResultsByLevel,
+    createdPizza,
+  })
+  const ordersUnlocked = passedLevelIds.includes(1)
   const currentLevelId = Math.min(Math.max(currentLevel, 1), LEVELS.length)
   const displayLevel = getLevel(currentLevelId)
   const mapLevels = Array.from({ length: Math.max(10, LEVELS.length) }, (_, index) => {
@@ -159,13 +169,37 @@ export default function GameHubScreen() {
           <span>{userName || 'Chef'}</span>
           <span>Nivel {currentLevelId} - {displayLevel?.title}</span>
         </div>
-        <div className="progress-map__score" aria-label={`Puntaje: ${score}`}>
-          <strong>{score}</strong>
+        <div className="progress-map__score" aria-label={`Puntaje: ${totalScore}`}>
+          <strong>{totalScore}</strong>
           <span>Puntaje</span>
         </div>
       </header>
 
       <h1 className="progress-map__title">TU PROGRESO</h1>
+
+      <div className="progress-map__orders">
+        {ordersUnlocked ? (
+          <button
+            className="btn-green progress-map__orders-button"
+            type="button"
+            onClick={() => navigate('/pedidos')}
+          >
+            Modo pedidos
+          </button>
+        ) : (
+          <>
+            <button
+              className="btn-green progress-map__orders-button"
+              type="button"
+              disabled
+              aria-describedby="orders-mode-lock"
+            >
+              Modo pedidos
+            </button>
+            <p id="orders-mode-lock">Supera el nivel 1 para desbloquearlo</p>
+          </>
+        )}
+      </div>
 
       <div className="progress-map__canvas" style={{ height: mapHeight }}>
         <ProgressPath rowCount={rowCount} height={mapHeight} />
