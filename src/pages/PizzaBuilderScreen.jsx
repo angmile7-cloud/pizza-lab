@@ -44,7 +44,7 @@ export default function PizzaBuilderScreen() {
 
   if (submitted && pizza) {
     return (
-      <LevelScene>
+      <LevelScene levelId={level.id}>
         <section className="page level-page level-builder level-builder--complete">
           <p className="level-nav">
             <Link to="/jugar">Inicio</Link>
@@ -79,7 +79,7 @@ export default function PizzaBuilderScreen() {
   }
 
   return (
-    <LevelScene>
+    <LevelScene levelId={level.id}>
       <section className="page level-page level-builder">
         <p className="level-nav">
           <Link to="/jugar">Inicio</Link>

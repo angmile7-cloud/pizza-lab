@@ -134,7 +134,7 @@ export default function LevelResultScreen() {
   }
 
   return (
-    <LevelScene>
+    <LevelScene levelId={level.id}>
       <section className="page level-page level-result">
         <p className="level-nav">
           <Link to="/jugar">Inicio</Link>
