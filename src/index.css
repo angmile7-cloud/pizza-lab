@@ -15,6 +15,31 @@
   --level-answer-radio-size: 14px;
   --level-action-confirm-height: 46px;
   --level-action-home-height: 40px;
+
+  /* Orders mode animation tuning: change these to adjust feel everywhere. */
+  --om-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --om-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --om-dur-drop: 1200ms;
+  --om-delay-drop: 120ms;
+  --om-dur-pill: 180ms;
+  --om-dur-radio: 180ms;
+  --om-dur-exit: 400ms;
+  --om-dur-crumple: 520ms;
+  --om-dur-shake: 350ms;
+  --om-dur-float: 800ms;
+  --om-dur-score: 600ms;
+  --om-dur-fade: 200ms;
+  --om-dur-pulse: 1600ms;
+  --om-dur-timer-pulse: 1000ms;
+  --om-dist-drop: -170px;
+  --om-dist-fly: 150%;
+  --om-shadow-ticket: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.25));
+
+  /* Timer colors (fix #3). Thresholds in seconds live in OrdersModeScreen.jsx
+     (TIMER_COLOR_THRESHOLDS) so JS and CSS stay next to the logic they drive. */
+  --om-timer-color-green: #51a059;
+  --om-timer-color-amber: #f5a623;
+  --om-timer-color-red: #d64545;
 }
 
 *,
@@ -622,14 +647,25 @@ label {
   width: 100%;
   height: 100%;
   border-radius: inherit;
-  background: var(--level-green);
+  background: var(--om-timer-color-green);
   transform: scaleX(var(--timer-progress));
   transform-origin: left center;
-  transition: transform 200ms linear;
+  transition:
+    transform 200ms linear,
+    background-color 300ms ease;
 }
 
-.orders-mode__timer-fill.is-low {
-  background: #b94937;
+.orders-mode__timer-fill.is-amber {
+  background: var(--om-timer-color-amber);
+}
+
+.orders-mode__timer-fill.is-red {
+  background: var(--om-timer-color-red);
+}
+
+.orders-mode__timer-seconds.is-urgent {
+  display: inline-block;
+  animation: om-timer-pulse var(--om-dur-timer-pulse) ease-in-out infinite;
 }
 
 .orders-mode__summary ul {
@@ -664,7 +700,7 @@ label {
 
 @media (prefers-reduced-motion: reduce) {
   .orders-mode__timer-fill {
-    transition: none;
+    transition: background-color 300ms ease;
   }
 }
 
@@ -1213,10 +1249,16 @@ label {
   border-radius: 0;
   background-color: transparent;
   background-image: var(--order-paper-image);
-  background-position: center;
+  /* papel_pedido.png has transparent padding around the torn-paper artwork
+     (~15% left/right, ~6%/11% top/bottom of the canvas). The size/position
+     below zoom and re-center the image so the drawn paper itself spans the
+     full width of this element (matching the pills column) instead of
+     looking smaller than its box. aspect-ratio matches the paper's own
+     drawn proportions so the zoom is uniform (no stretching). */
+  background-position: 49.86% 36.67%;
   background-repeat: no-repeat;
-  background-size: 100% 100%;
-  aspect-ratio: 1980 / 1080;
+  background-size: 144.11% 120%;
+  aspect-ratio: 229 / 150;
   text-align: center;
 }
 
@@ -1268,11 +1310,28 @@ label {
 }
 
 .orders-mode__timer-fill {
-  background: #51a059;
+  background: var(--om-timer-color-green);
+  transition:
+    transform 200ms linear,
+    background-color 300ms ease;
 }
 
-.orders-mode__timer-fill.is-low {
-  background: #b94937;
+.orders-mode__timer-fill.is-amber {
+  background: var(--om-timer-color-amber);
+}
+
+.orders-mode__timer-fill.is-red {
+  background: var(--om-timer-color-red);
+}
+
+.orders-mode__timer-seconds.is-urgent {
+  display: inline-block;
+  animation: om-timer-pulse var(--om-dur-timer-pulse) ease-in-out infinite;
+}
+
+.orders-mode__timer-seconds.is-urgent-soft {
+  display: inline-block;
+  animation: om-timer-pulse-soft var(--om-dur-timer-pulse) ease-in-out infinite;
 }
 
 .orders-mode__hint {
@@ -1357,16 +1416,27 @@ label {
   border: 2px solid #ffd54f;
   background: #ffd54f;
   color: #000;
+  transition:
+    transform 120ms var(--om-ease),
+    border-color var(--om-dur-radio) ease;
+}
+
+.orders-mode__option:hover {
+  transform: scale(1.02);
+}
+
+.orders-mode__option:active {
+  transform: scale(0.98);
 }
 
 .orders-mode__option.is-selected {
   border-color: #fff;
   background: #ffd54f;
+  animation: om-pill-pop var(--om-dur-pill) var(--om-ease);
 }
 
 .orders-mode__option.is-selected .orders-mode__radio {
   border-color: #fff;
-  background: #000;
   box-shadow: inset 0 0 0 2px #fff;
 }
 
@@ -1384,7 +1454,22 @@ label {
 }
 
 .orders-mode__radio {
+  position: relative;
   flex: 0 0 var(--level-answer-radio-size);
+}
+
+.orders-mode__radio::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: #000;
+  opacity: 0;
+  transform: scale(0);
+}
+
+.orders-mode__option.is-selected .orders-mode__radio::after {
+  animation: om-radio-grow var(--om-dur-radio) var(--om-ease) forwards;
 }
 
 .orders-mode__option-label {
@@ -1438,6 +1523,7 @@ label {
 }
 
 .orders-mode__actions {
+  position: relative;
   display: flex;
   flex: 0 0 auto;
   flex-direction: row;
@@ -1486,6 +1572,441 @@ label {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   clip-path: inset(50%);
+}
+
+/* === Orders mode: animation keyframes (transform/opacity only) === */
+@keyframes om-drop-in {
+  0% {
+    opacity: 0;
+    transform: translateY(var(--om-dist-drop)) rotate(-5deg);
+  }
+
+  60% {
+    opacity: 1;
+    transform: translateY(6px) rotate(1.5deg);
+  }
+
+  80% {
+    transform: translateY(-3px) rotate(-0.5deg);
+  }
+
+  92% {
+    /* tiny tape wiggle as the paper settles */
+    transform: translateY(1px) rotate(0.3deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg);
+  }
+}
+
+@keyframes om-shadow-in {
+  0% {
+    filter: drop-shadow(0 0 0 rgba(0, 0, 0, 0));
+  }
+
+  100% {
+    filter: var(--om-shadow-ticket);
+  }
+}
+
+@keyframes om-flash {
+  0% {
+    opacity: 0;
+  }
+
+  35% {
+    opacity: 0.38;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes om-fly-right {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0deg);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(var(--om-dist-fly), -8%) rotate(14deg);
+  }
+}
+
+@keyframes om-crumple {
+  0% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg) translateX(0);
+  }
+
+  18% {
+    transform: scale(1) rotate(-2deg) translateX(-4px);
+  }
+
+  36% {
+    transform: scale(1) rotate(2deg) translateX(4px);
+  }
+
+  60% {
+    transform: scale(0.85) rotate(-3deg) translateX(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0.6) rotate(6deg);
+  }
+}
+
+@keyframes om-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  20% {
+    transform: translateX(-7px);
+  }
+
+  40% {
+    transform: translateX(7px);
+  }
+
+  60% {
+    transform: translateX(-5px);
+  }
+
+  80% {
+    transform: translateX(5px);
+  }
+}
+
+@keyframes om-pill-pop {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.04);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes om-radio-grow {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes om-pulse-soft {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.03);
+  }
+}
+
+@keyframes om-timer-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+@keyframes om-timer-pulse-soft {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+@keyframes om-float-points {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 0);
+  }
+
+  18% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -46px);
+  }
+}
+
+@keyframes om-badge-bounce {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  40% {
+    transform: scale(1.1);
+  }
+
+  70% {
+    transform: scale(0.97);
+  }
+}
+
+@keyframes om-intro-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes om-fade-in {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes om-row-in {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes om-confetti-fall {
+  0% {
+    opacity: 0;
+    transform: translate(0, -10px) rotate(0deg);
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(var(--confetti-drift, 0px), 140px)
+      rotate(var(--confetti-spin, 180deg));
+  }
+}
+
+/* Order ticket enter/exit. The shadow is a drop-shadow filter (not a box)
+   so it follows the torn-paper silhouette instead of drawing a rectangle. */
+.orders-mode__ticket {
+  filter: var(--om-shadow-ticket);
+  animation:
+    om-drop-in var(--om-dur-drop) var(--om-ease-bounce) var(--om-delay-drop)
+      both,
+    om-shadow-in var(--om-dur-drop) var(--om-ease) var(--om-delay-drop)
+      forwards;
+}
+
+.orders-mode__ticket::after {
+  position: absolute;
+  inset: 0;
+  content: '';
+  opacity: 0;
+  pointer-events: none;
+}
+
+.orders-mode__ticket.is-correct::after {
+  background: #4caf6b;
+  animation: om-flash 420ms var(--om-ease);
+}
+
+.orders-mode__ticket.is-correct {
+  animation: om-fly-right var(--om-dur-exit) var(--om-ease) forwards;
+}
+
+.orders-mode__ticket.is-timeout {
+  animation: om-crumple var(--om-dur-crumple) var(--om-ease) forwards;
+}
+
+.orders-mode__ticket.is-wrong {
+  animation: om-shake var(--om-dur-shake) var(--om-ease);
+}
+
+.orders-mode__ticket.is-wrong::after {
+  background: #c0392b;
+  animation: om-flash var(--om-dur-shake) var(--om-ease);
+}
+
+/* Floating "+points" rising from the actions bar */
+.orders-mode__score-float {
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  font-family: 'Fredoka', var(--sans);
+  font-size: 1rem;
+  font-weight: 700;
+  color: #eafff0;
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.45),
+    0 0 8px rgba(79, 158, 106, 0.65);
+  pointer-events: none;
+  animation: om-float-points var(--om-dur-float) var(--om-ease) forwards;
+}
+
+/* Score badge bounce on change (opt-in via bounceKey prop) */
+.level-score-badge__copy strong.om-badge-bounce {
+  display: inline-block;
+  animation: om-badge-bounce 420ms var(--om-ease-bounce);
+}
+
+/* Intro card + start button pulse */
+.orders-mode__intro {
+  animation: om-intro-pop var(--om-dur-fade) var(--om-ease);
+}
+
+.orders-mode__start-button {
+  animation: om-pulse-soft var(--om-dur-pulse) ease-in-out infinite;
+}
+
+/* Cross-fade options between orders */
+.orders-mode__options {
+  animation: om-fade-in var(--om-dur-fade) ease;
+}
+
+/* Round summary stagger + celebration confetti */
+.orders-mode__summary {
+  position: relative;
+}
+
+.orders-mode__summary ul li {
+  opacity: 0;
+  animation: om-row-in var(--om-dur-fade) var(--om-ease) forwards;
+}
+
+.orders-mode__summary ul li:nth-child(1) {
+  animation-delay: 0ms;
+}
+
+.orders-mode__summary ul li:nth-child(2) {
+  animation-delay: 120ms;
+}
+
+.orders-mode__summary ul li:nth-child(3) {
+  animation-delay: 240ms;
+}
+
+.orders-mode__summary ul li:nth-child(4) {
+  animation-delay: 360ms;
+}
+
+.orders-mode__summary ul li:nth-child(5) {
+  animation-delay: 480ms;
+}
+
+.orders-mode__confetti-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.orders-mode__confetti {
+  position: absolute;
+  top: -10px;
+  left: var(--confetti-left, 50%);
+  width: 6px;
+  height: 10px;
+  background: var(--confetti-color, #ffd54f);
+  opacity: 0;
+  animation: om-confetti-fall var(--confetti-duration, 1500ms) ease-in forwards;
+  animation-delay: var(--confetti-delay, 0ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orders-mode__ticket,
+  .orders-mode__ticket.is-correct,
+  .orders-mode__ticket.is-timeout,
+  .orders-mode__ticket.is-wrong,
+  .orders-mode__ticket::after,
+  .orders-mode__option.is-selected,
+  .orders-mode__option,
+  .orders-mode__option:hover,
+  .orders-mode__option:active,
+  .orders-mode__timer-seconds.is-urgent,
+  .orders-mode__timer-seconds.is-urgent-soft,
+  .orders-mode__score-float,
+  .level-score-badge__copy strong.om-badge-bounce,
+  .orders-mode__intro,
+  .orders-mode__start-button,
+  .orders-mode__options,
+  .orders-mode__summary ul li,
+  .orders-mode__confetti {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .orders-mode__ticket {
+    /* Keep the (static) drop-shadow for readability; only motion is removed. */
+    filter: var(--om-shadow-ticket) !important;
+  }
+
+  .orders-mode__ticket::after {
+    opacity: 0 !important;
+  }
+
+  .orders-mode__ticket.is-correct,
+  .orders-mode__ticket.is-timeout {
+    opacity: 0;
+    transition: opacity 150ms ease;
+  }
+
+  .orders-mode__radio::after {
+    transition: opacity 120ms ease;
+  }
+
+  .orders-mode__option.is-selected .orders-mode__radio::after {
+    animation: none !important;
+    opacity: 1;
+    transform: scale(1) !important;
+  }
+
+  .orders-mode__summary ul li {
+    opacity: 1 !important;
+  }
+
+  .orders-mode__confetti-layer {
+    display: none;
+  }
 }
 
 @media (max-height: 600px) {

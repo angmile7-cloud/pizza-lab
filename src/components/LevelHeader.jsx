@@ -1,6 +1,6 @@
 import ChefLogo from './ChefLogo'
 
-export function ScoreBadge({ totalScore, maximum }) {
+export function ScoreBadge({ totalScore, maximum, bounceKey }) {
   return (
     <div className="level-score-badge" aria-live="polite" aria-label={`Puntos: ${totalScore} de ${maximum}`}>
       <svg className="level-score-badge__coin" viewBox="0 0 48 48" aria-hidden="true">
@@ -9,7 +9,10 @@ export function ScoreBadge({ totalScore, maximum }) {
         <path d="M18.5 29V15h6.2a5 5 0 0 1 0 10h-6.2m0-5h7" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" />
       </svg>
       <span className="level-score-badge__copy">
-        <strong>{totalScore}/{maximum}</strong>
+        {/* key forces a remount so the bounce keyframe replays on each score change */}
+        <strong key={bounceKey} className={bounceKey ? 'om-badge-bounce' : undefined}>
+          {totalScore}/{maximum}
+        </strong>
         <span>Puntos</span>
       </span>
     </div>

@@ -22,6 +22,98 @@ const ROUND_SIZE = 5
 const TIME_BONUS_MAX = 10
 let nextRoundId = 0
 
+// Animation durations in ms. Keep these in sync with the --om-dur-* CSS
+// variables in src/index.css so JS timers and CSS transitions line up.
+const ANIM_MS = {
+  exit: 400, // correct delivery: paper flies off
+  crumple: 520, // time out: paper crumples away
+  shake: 350, // wrong delivery: card shake
+  float: 800, // floating "+points"
+  score: 600, // badge count-up
+}
+
+// Timer bar color thresholds, in absolute seconds remaining (not percentage
+// of total time). Visual only: does not affect how time is counted.
+const TIMER_COLOR_THRESHOLDS = {
+  amberAtSeconds: 35, // bar turns amber at or below this many seconds left
+  redAtSeconds: 10, // bar turns red at or below this many seconds left
+  // For orders whose total time is at or below amberAtSeconds, the bar would
+  // start already amber. Instead, amber kicks in at this fraction of the
+  // order's own total time (so it always starts green). If the total time is
+  // at or below shortOrderNoAmberSeconds, skip amber entirely (green -> red).
+  shortOrderAmberRatio: 0.6,
+  shortOrderNoAmberSeconds: 20,
+}
+
+// Returns 'normal' | 'amber' | 'red' for the timer bar/seconds text, using
+// absolute seconds remaining and the order's own total duration.
+function getTimerUrgency(remainingMs, durationMs) {
+  const remainingSeconds = remainingMs / 1000
+  const totalSeconds = durationMs / 1000
+  const { amberAtSeconds, redAtSeconds, shortOrderAmberRatio, shortOrderNoAmberSeconds } =
+    TIMER_COLOR_THRESHOLDS
+
+  if (remainingSeconds <= redAtSeconds) return 'red'
+
+  if (totalSeconds <= shortOrderNoAmberSeconds) return 'normal'
+
+  const amberThresholdSeconds =
+    totalSeconds <= amberAtSeconds
+      ? totalSeconds * shortOrderAmberRatio
+      : amberAtSeconds
+
+  return remainingSeconds <= amberThresholdSeconds ? 'amber' : 'normal'
+}
+
+function reducedAnimMs(key, prefersReducedMotion) {
+  return prefersReducedMotion ? 0 : ANIM_MS[key]
+}
+
+function usePrefersReducedMotion() {
+  const [reduced, setReduced] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia
+      ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      : false,
+  )
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return undefined
+    const mql = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const handleChange = (event) => setReduced(event.matches)
+    mql.addEventListener('change', handleChange)
+    return () => mql.removeEventListener('change', handleChange)
+  }, [])
+
+  return reduced
+}
+
+// Tracks setTimeout ids so every pending timer is cleared if the screen
+// unmounts mid-animation (avoids state updates after unmount / stuck state).
+function useManagedTimeouts() {
+  const idsRef = useRef(new Set())
+
+  useEffect(
+    () => () => {
+      idsRef.current.forEach((id) => window.clearTimeout(id))
+      idsRef.current.clear()
+    },
+    [],
+  )
+
+  return useCallback((fn, ms) => {
+    const id = window.setTimeout(() => {
+      idsRef.current.delete(id)
+      fn()
+    }, ms)
+    idsRef.current.add(id)
+    return id
+  }, [])
+}
+
+function easeOutCubic(progress) {
+  return 1 - (1 - progress) ** 3
+}
+
 function joinTopicNames(topics) {
   const names = topics.map((topic) => topic.label)
   if (names.length < 2) return names.join('')
@@ -59,6 +151,7 @@ export default function OrdersModeScreen() {
   const slots = getLevel(8)?.builder?.slots ?? EMPTY_SLOTS
   const [phase, setPhase] = useState('intro')
   const [roundOrders, setRoundOrders] = useState([])
+  const [roundId, setRoundId] = useState(0)
   const [orderIndex, setOrderIndex] = useState(0)
   const [selection, setSelection] = useState(() => createEmptySelection(slots))
   const [orderResult, setOrderResult] = useState(null)
@@ -66,12 +159,22 @@ export default function OrdersModeScreen() {
   const [roundScore, setRoundScore] = useState(0)
   const [remainingMs, setRemainingMs] = useState(0)
   const [announcement, setAnnouncement] = useState('')
+  const [cardPhase, setCardPhase] = useState('idle')
+  const [exiting, setExiting] = useState(false)
+  const [scoreFloat, setScoreFloat] = useState(null)
+  const [scoreFloatTick, setScoreFloatTick] = useState(0)
+  const [scoreDisplay, setScoreDisplay] = useState(totalScore)
+  const [scoreBounceTick, setScoreBounceTick] = useState(0)
+  const [summaryScoreDisplay, setSummaryScoreDisplay] = useState(0)
+  const [confetti, setConfetti] = useState([])
   const deadlineRef = useRef(0)
   const intervalRef = useRef(null)
   const selectionRef = useRef(selection)
   const resolvedRef = useRef(false)
   const announcedTenSecondsRef = useRef(false)
-  const roundIdRef = useRef(0)
+  const prevTotalScoreRef = useRef(totalScore)
+  const prefersReducedMotion = usePrefersReducedMotion()
+  const scheduleTimeout = useManagedTimeouts()
 
   const currentOrder = roundOrders[orderIndex]
   const durationMs = (currentOrder?.timeSeconds ?? 0) * 1000
@@ -93,7 +196,7 @@ export default function OrdersModeScreen() {
       const pointsAwarded = satisfied
         ? getTierById(currentOrder.tier).basePoints + timeBonus
         : 0
-      addOrderPoints(`${roundIdRef.current}:${currentOrder.id}`, pointsAwarded)
+      addOrderPoints(`${roundId}:${currentOrder.id}`, pointsAwarded)
       const result = {
         orderId: currentOrder.id,
         customerName: currentOrder.customer,
@@ -114,8 +217,45 @@ export default function OrdersModeScreen() {
             ? `Pedido cumplido. Sumaste ${pointsAwarded} puntos.`
             : 'El pedido no cumplió todos los requisitos.',
       )
+
+      // Decoration only: these flags drive CSS animation classes and never
+      // delay the scoring above, which already happened synchronously.
+      if (satisfied) {
+        setCardPhase('correct')
+        setExiting(true)
+        setScoreFloat(pointsAwarded)
+        setScoreFloatTick((tick) => tick + 1)
+        scheduleTimeout(
+          () => setExiting(false),
+          reducedAnimMs('exit', prefersReducedMotion),
+        )
+        scheduleTimeout(
+          () => setScoreFloat(null),
+          reducedAnimMs('float', prefersReducedMotion),
+        )
+      } else if (expired) {
+        setCardPhase('timeout')
+        setExiting(true)
+        scheduleTimeout(
+          () => setExiting(false),
+          reducedAnimMs('crumple', prefersReducedMotion),
+        )
+      } else {
+        setCardPhase('wrong')
+        scheduleTimeout(
+          () => setCardPhase('idle'),
+          reducedAnimMs('shake', prefersReducedMotion),
+        )
+      }
     },
-    [addOrderPoints, currentOrder, durationMs],
+    [
+      addOrderPoints,
+      currentOrder,
+      durationMs,
+      prefersReducedMotion,
+      roundId,
+      scheduleTimeout,
+    ],
   )
 
   useEffect(() => {
@@ -163,12 +303,96 @@ export default function OrdersModeScreen() {
     [],
   )
 
+  // Animates the score badge from its old value to the new total whenever
+  // addOrderPoints updates totalScore (decoration only; totalScore itself
+  // already holds the real, final value at all times).
+  useEffect(() => {
+    if (totalScore === prevTotalScoreRef.current) return undefined
+
+    const from = prevTotalScoreRef.current
+    const to = totalScore
+    prevTotalScoreRef.current = to
+    setScoreBounceTick((tick) => tick + 1)
+
+    if (prefersReducedMotion) {
+      setScoreDisplay(to)
+      return undefined
+    }
+
+    let frameId
+    const start = performance.now()
+    const step = (now) => {
+      const progress = Math.min(1, (now - start) / ANIM_MS.score)
+      setScoreDisplay(Math.round(from + (to - from) * easeOutCubic(progress)))
+      if (progress < 1) {
+        frameId = requestAnimationFrame(step)
+      }
+    }
+    frameId = requestAnimationFrame(step)
+
+    return () => {
+      if (frameId) cancelAnimationFrame(frameId)
+    }
+  }, [totalScore, prefersReducedMotion])
+
+  // Counts the round's points up from 0 once the summary screen appears.
+  useEffect(() => {
+    if (phase !== 'summary') return undefined
+
+    if (prefersReducedMotion) {
+      setSummaryScoreDisplay(roundScore)
+      return undefined
+    }
+
+    let frameId
+    const start = performance.now()
+    const step = (now) => {
+      const progress = Math.min(1, (now - start) / ANIM_MS.score)
+      setSummaryScoreDisplay(Math.round(roundScore * easeOutCubic(progress)))
+      if (progress < 1) {
+        frameId = requestAnimationFrame(step)
+      }
+    }
+    frameId = requestAnimationFrame(step)
+
+    return () => {
+      if (frameId) cancelAnimationFrame(frameId)
+    }
+  }, [phase, roundScore, prefersReducedMotion])
+
+  // Lightweight CSS-only confetti when more than half the round was served.
+  useEffect(() => {
+    if (phase !== 'summary' || prefersReducedMotion) return undefined
+    if (roundResults.length === 0) return undefined
+
+    const served = roundResults.filter((result) => result.satisfied).length
+    if (served <= roundResults.length / 2) return undefined
+
+    const colors = ['#ffd54f', '#4f9e6a', '#e85d4c', '#4a90d9']
+    const count = 12 + Math.floor(Math.random() * 9)
+    setConfetti(
+      Array.from({ length: count }, (_, index) => ({
+        id: `${roundId}-${index}`,
+        left: Math.random() * 100,
+        color: colors[index % colors.length],
+        delay: Math.random() * 300,
+        duration: 1200 + Math.random() * 400,
+        drift: (Math.random() - 0.5) * 60,
+        spin: 180 + Math.random() * 360,
+      })),
+    )
+
+    const timeoutId = window.setTimeout(() => setConfetti([]), 1700)
+    return () => window.clearTimeout(timeoutId)
+  }, [phase, roundResults, roundId, prefersReducedMotion])
+
   if (!passedLevelIds.includes(1)) {
     return <Navigate to="/jugar" replace />
   }
 
   function startRound() {
-    roundIdRef.current = ++nextRoundId
+    const nextRoundIdValue = ++nextRoundId
+    setRoundId(nextRoundIdValue)
     const nextOrders = createOrdersRound(passedLevelIds)
     setRoundOrders(nextOrders)
     setOrderIndex(0)
@@ -178,6 +402,9 @@ export default function OrdersModeScreen() {
     setRoundScore(0)
     setRemainingMs(nextOrders[0].timeSeconds * 1000)
     resolvedRef.current = false
+    setCardPhase('idle')
+    setExiting(false)
+    setScoreFloat(null)
     setAnnouncement(
       `Pedido 1 de ${ROUND_SIZE}. Tienes ${nextOrders[0].timeSeconds} segundos.`,
     )
@@ -195,6 +422,9 @@ export default function OrdersModeScreen() {
       return
     }
     resolvedRef.current = false
+    setCardPhase('idle')
+    setExiting(false)
+    setScoreFloat(null)
     setRemainingMs(roundOrders[orderIndex + 1].timeSeconds * 1000)
     setAnnouncement(
       `Pedido ${orderIndex + 2} de ${ROUND_SIZE}. Tienes ${roundOrders[orderIndex + 1].timeSeconds} segundos.`,
@@ -213,15 +443,25 @@ export default function OrdersModeScreen() {
     setRoundScore(0)
     setRemainingMs(0)
     resolvedRef.current = false
+    setCardPhase('idle')
+    setExiting(false)
+    setScoreFloat(null)
+    setSummaryScoreDisplay(0)
+    setConfetti([])
     setAnnouncement('')
     setPhase('intro')
   }
 
   const ordersServed = roundResults.filter((result) => result.satisfied).length
   const ordersFailed = roundResults.length - ordersServed
+  const timerUrgency = getTimerUrgency(remainingMs, durationMs)
 
   return (
-    <LevelScene levelId={currentTier.minPassedLevels}>
+    <LevelScene
+      levelId={currentTier.minPassedLevels}
+      scoreDisplay={scoreDisplay}
+      scoreBounceKey={scoreBounceTick || undefined}
+    >
       <section className="page level-page level-builder orders-mode">
         <div className="orders-mode__fixed-top">
           <h1 className="level-question__level orders-mode__tier">
@@ -238,7 +478,16 @@ export default function OrdersModeScreen() {
                 </span>
               </p>
               <article
-                className={`orders-mode__ticket${currentOrder.text.length > 120 ? ' is-long' : ''}`}
+                key={`${roundId}-${orderIndex}`}
+                className={[
+                  'orders-mode__ticket',
+                  currentOrder.text.length > 120 ? 'is-long' : '',
+                  cardPhase === 'correct' ? 'is-correct' : '',
+                  cardPhase === 'timeout' ? 'is-timeout' : '',
+                  cardPhase === 'wrong' ? 'is-wrong' : '',
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
                 style={{ '--order-paper-image': `url("${orderPaper}")` }}
               >
                 <h2 className="orders-mode__customer">
@@ -257,11 +506,21 @@ export default function OrdersModeScreen() {
                 <div className="orders-mode__timer" aria-hidden="true">
                   <div className="orders-mode__timer-label">
                     <span>Tiempo</span>
-                    <span>{Math.ceil(remainingMs / 1000)} s</span>
+                    <span
+                      className={[
+                        'orders-mode__timer-seconds',
+                        timerUrgency === 'red' ? 'is-urgent' : '',
+                        timerUrgency === 'amber' ? 'is-urgent-soft' : '',
+                      ]
+                        .filter(Boolean)
+                        .join(' ')}
+                    >
+                      {Math.ceil(remainingMs / 1000)} s
+                    </span>
                   </div>
                   <div className="orders-mode__timer-track">
                     <div
-                      className={`orders-mode__timer-fill${remainingMs <= 10_000 ? ' is-low' : ''}`}
+                      className={`orders-mode__timer-fill${timerUrgency !== 'normal' ? ` is-${timerUrgency}` : ''}`}
                       style={{
                         '--timer-progress': Math.max(
                           0,
@@ -300,7 +559,10 @@ export default function OrdersModeScreen() {
           ) : null}
 
           {phase === 'play' && currentOrder && !orderResult ? (
-            <div className="orders-mode__options">
+            <div
+              className="orders-mode__options"
+              key={`options-${roundId}-${orderIndex}`}
+            >
               <PizzaBuilderControls
                 slots={slots}
                 selection={selection}
@@ -344,10 +606,28 @@ export default function OrdersModeScreen() {
               <ul>
                 <li>Pedidos atendidos: {ordersServed}</li>
                 <li>Pedidos fallidos: {ordersFailed}</li>
-                <li>Puntaje del turno: {roundScore}</li>
+                <li>Puntaje del turno: {summaryScoreDisplay}</li>
                 <li>Puntaje acumulado: {totalScore}</li>
                 <li>Tier jugado: {currentTier.name}</li>
               </ul>
+              {confetti.length > 0 ? (
+                <div className="orders-mode__confetti-layer" aria-hidden="true">
+                  {confetti.map((piece) => (
+                    <span
+                      key={piece.id}
+                      className="orders-mode__confetti"
+                      style={{
+                        '--confetti-left': `${piece.left}%`,
+                        '--confetti-color': piece.color,
+                        '--confetti-delay': `${piece.delay}ms`,
+                        '--confetti-duration': `${piece.duration}ms`,
+                        '--confetti-drift': `${piece.drift}px`,
+                        '--confetti-spin': `${piece.spin}deg`,
+                      }}
+                    />
+                  ))}
+                </div>
+              ) : null}
             </article>
           ) : null}
         </div>
@@ -355,7 +635,7 @@ export default function OrdersModeScreen() {
         <div className="orders-mode__actions">
           {phase === 'intro' ? (
             <button
-              className="level-action level-action--confirm"
+              className="level-action level-action--confirm orders-mode__start-button"
               type="button"
               onClick={startRound}
             >
@@ -363,18 +643,18 @@ export default function OrdersModeScreen() {
             </button>
           ) : null}
 
-          {phase === 'play' && currentOrder && !orderResult ? (
+          {phase === 'play' && currentOrder && (!orderResult || exiting) ? (
             <button
               className="level-action level-action--confirm"
               type="button"
               onClick={deliverOrder}
-              disabled={!ready}
+              disabled={!ready || Boolean(orderResult)}
             >
               ENTREGAR
             </button>
           ) : null}
 
-          {phase === 'play' && currentOrder && orderResult ? (
+          {phase === 'play' && currentOrder && orderResult && !exiting ? (
             <button
               className="level-action level-action--confirm orders-mode__action--wide"
               type="button"
@@ -394,6 +674,16 @@ export default function OrdersModeScreen() {
             >
               Jugar otra ronda
             </button>
+          ) : null}
+
+          {scoreFloat != null ? (
+            <span
+              key={scoreFloatTick}
+              className="orders-mode__score-float"
+              aria-hidden="true"
+            >
+              +{scoreFloat}
+            </span>
           ) : null}
 
           {phase === 'play' ? (

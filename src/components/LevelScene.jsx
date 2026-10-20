@@ -8,6 +8,8 @@ export default function LevelScene({
   children,
   title,
   maximum: maximumOverride,
+  scoreDisplay,
+  scoreBounceKey,
 }) {
   const { totalScore } = useGame()
 
@@ -18,8 +20,9 @@ export default function LevelScene({
     >
       <LevelHeader levelId={levelId} levelCount={LEVELS.length} title={title} />
       <ScoreBadge
-        totalScore={totalScore}
+        totalScore={scoreDisplay ?? totalScore}
         maximum={maximumOverride ?? getMaxScore()}
+        bounceKey={scoreBounceKey}
       />
       <div className="level-scene__content">{children}</div>
     </div>
