@@ -53,6 +53,8 @@ export function createInitialGameState() {
   return {
     levelScore: 0,
     orderScore: 0,
+    spentPoints: 0,
+    redemptions: [],
     currentLevel: 1,
     unlockedLevel: 1,
     answersByLevel: {},

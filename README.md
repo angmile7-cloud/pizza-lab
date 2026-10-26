@@ -1,5 +1,40 @@
 # React + Vite
 
+## Rewards (front-end only)
+
+The map links to `/recompensas`, including before unlock. Catalog, unlock level,
+fantasy voucher copy, six selectable secret recipes, seven chef topics with
+28 guided questions, and all rewards/chat UI copy live in
+[`src/data/rewards.json`](./src/data/rewards.json). The existing passed-level
+helper controls unlock; reward costs never change earned scores, progress,
+tiers, shifts or the maximum score.
+
+`GameContext` exposes `spentPoints`, `redemptions`, `availablePoints`,
+`unlockedRecipeIds`, `answeredQuestionIds` and
+`redeemReward(rewardId, optionId?, requestId?)`. Recipe/question purchases require
+an existing, unowned option ID. A confirmation supplies a stable request ID for
+idempotency; pending calls for the same option also share their result before
+the state commit. The original three recipes previously had no IDs; their
+stable IDs are now `masa-dodo`, `salsa-tomate` and `pizza-margarita`.
+Spending and redemption history update together. Available points clamp to zero
+if earned scores drop. All rewards are in-memory and cleared by the existing
+restart/new-game path; nothing new is persisted or sent over the network.
+
+Opening `/chat`, changing topics, browsing recipes, dismissing a sheet and
+navigation are free. Only the final Canjear/Preguntar confirmation calls
+`redeemReward`. Recipes cost 80 points each; questions cost 50 each, without
+credits. Owned recipes and answered questions reopen free, even without points.
+Chat history derives from redemptions and survives route changes during the
+session. Restart clears history and both collections. Sheets focus Cancelar
+by default, trap focus, and dismiss with Escape or a tap on their backdrop.
+
+Vouchers are fantasy collectibles, not redeemable benefits outside the game.
+The `fulfillment` field is retained for future extensions; this version only
+ships `fantasy` rewards. The confirmation/result dialogs stay inside the phone,
+trap keyboard focus, support Escape, and announce redemption results.
+The count animation respects reduced motion. Clipboard permission failures use
+a selected-code fallback and display manual-copy instructions if that fails.
+
 ## Levels pizza artwork
 
 `src/components/PizzaPreview.jsx` is a decorative, SVG-only illustration with

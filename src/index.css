@@ -1539,6 +1539,25 @@ label {
   font-size: 0.72rem;
 }
 
+.progress-map__mode-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.15rem 0.5rem;
+  width: 100%;
+}
+
+.progress-map__mode-buttons p {
+  order: 1;
+  width: 100%;
+}
+
+.progress-map__mode-buttons .progress-map__orders-button {
+  min-width: 0;
+  max-width: calc(50% - 0.25rem);
+}
+
 .progress-map__orders-button {
   width: auto;
   max-width: 100%;
@@ -1806,6 +1825,431 @@ label {
 .btn-yellow:disabled {
   opacity: 0.6;
   cursor: default;
+}
+
+.rewards-screen {
+  --level-gold: #ffd54a;
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  background: #f8c1b1;
+}
+
+.rewards-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.rewards-screen .level-header {
+  position: relative;
+  flex: none;
+  height: 50px;
+}
+
+.rewards-score {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 1.4rem 1.1rem 1rem;
+}
+
+.rewards-score h1 {
+  margin: 0;
+  color: #fff;
+  font-family: 'Fredoka', var(--sans);
+  font-size: 1.15rem;
+  letter-spacing: 0.1em;
+  -webkit-text-stroke: 1px #7b493e;
+  paint-order: stroke fill;
+}
+
+.rewards-score p {
+  margin: 0.4rem 0 0;
+  font-size: 0.75rem;
+}
+
+.rewards-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.5rem 0.7rem;
+  border-radius: 40px;
+  background: #fff;
+  text-align: center;
+}
+
+.rewards-badge strong,
+.rewards-badge span:not(.rewards-coin) {
+  display: block;
+}
+
+.rewards-badge strong {
+  font-size: 1.3rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.rewards-badge span:not(.rewards-coin) {
+  font-size: 0.62rem;
+}
+
+.rewards-coin {
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.rewards-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 1rem 1rem;
+}
+
+.rewards-scroll h2 {
+  margin: 0.8rem 0 1rem;
+  font-family: 'Fredoka', var(--sans);
+  font-size: 1.2rem;
+  letter-spacing: 0.08em;
+}
+
+.rewards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 0.7rem;
+}
+
+.reward-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 0.55rem 0.6rem;
+  border: 1px solid #321d13;
+  border-radius: 18px;
+  background: #fff;
+  text-align: center;
+}
+
+.reward-card__icon {
+  flex: none;
+  width: 62px;
+  height: 62px;
+}
+
+.reward-card h3 {
+  margin: 0.8rem 0 0.4rem;
+  min-height: 2.8em;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  overflow-wrap: anywhere;
+}
+
+.reward-card > strong {
+  margin-top: auto;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+}
+
+.rewards-screen .btn-yellow {
+  padding: 0.55rem 0.6rem;
+  min-height: 42px;
+  background: #ffd54a;
+  color: #321d13;
+  font-family: 'Fredoka', var(--sans);
+  font-size: 0.85rem;
+}
+
+.rewards-screen .btn-yellow:disabled {
+  opacity: 1;
+  background: #e8dfcb;
+  color: #655548;
+}
+
+.reward-card__reason {
+  min-height: 2.8em;
+  margin: 0.45rem 0 0;
+  font-size: 0.68rem;
+  line-height: 1.4;
+}
+
+.rewards-footer {
+  flex: none;
+  padding: 0.4rem 1.2rem 0.8rem;
+  text-align: center;
+}
+
+.rewards-footer p {
+  margin: 0 0 0.4rem;
+  font-size: 0.7rem;
+}
+
+.rewards-footer .btn-yellow {
+  max-width: 230px;
+  margin: auto;
+}
+
+.rewards-overlay {
+  position: absolute;
+  z-index: 10;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0.7rem;
+  background: rgb(50 29 19 / 50%);
+}
+
+.rewards-dialog {
+  width: 100%;
+  max-height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 1.1rem;
+  border: 2px solid #7b493e;
+  border-radius: 22px;
+  background: #fff9ed;
+  box-shadow: 0 8px 24px rgb(50 29 19 / 25%);
+}
+
+.rewards-dialog h2 {
+  margin: 0 0 1rem;
+}
+
+.rewards-dialog p,
+.rewards-dialog li {
+  font-size: 0.85rem;
+}
+
+.rewards-dialog li + li {
+  margin-top: 0.6rem;
+}
+
+.rewards-dialog__actions {
+  display: flex;
+  gap: 0.7rem;
+}
+
+.rewards-cancel {
+  width: 100%;
+  min-height: 42px;
+  padding: 0.5rem 0.8rem;
+  border: 1px solid #7b493e;
+  border-radius: 24px;
+  background: #fff;
+  color: #321d13;
+  cursor: pointer;
+}
+
+.reward-ticket {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.rewards-history ol {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+  padding: 0;
+  list-style: none;
+}
+
+.rewards-history__entry {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem;
+  height: 100%;
+  border: 1px dashed #7b493e;
+  border-radius: 12px;
+  background: #fff4d3;
+  font-size: 0.75rem;
+}
+
+.rewards-history__entry svg {
+  width: 30px;
+  flex: none;
+}
+
+.rewards-history__entry small {
+  display: block;
+}
+
+.rewards-history__open {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: none;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.rewards-code-label {
+  display: block;
+  margin-bottom: 0.6rem;
+  font-size: 0.75rem;
+}
+
+.rewards-code-label input {
+  display: block;
+  width: 100%;
+  margin-top: 0.3rem;
+  padding: 0.5rem;
+  border: 1px solid #7b493e;
+  border-radius: 6px;
+  font: inherit;
+  font-size: 1rem;
+}
+
+.rewards-copy-status {
+  min-height: 1.4em;
+}
+
+.rewards-dialog .rewards-small {
+  font-size: 0.7rem;
+}
+
+.rewards-announcement {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.rewards-screen :focus-visible {
+  outline: 3px solid #2a6150;
+  outline-offset: 3px;
+}
+
+.recipe-options,
+.chef-questions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 0;
+  list-style: none;
+}
+
+.recipe-option {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #7b493e;
+  border-radius: 14px;
+  background: #fff;
+  color: #321d13;
+  text-align: left;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+
+.recipe-option > svg {
+  width: 32px;
+  height: 32px;
+  flex: none;
+}
+
+.recipe-option small {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+}
+
+.recipe-option:disabled {
+  background: #eee8dd;
+  color: #655548;
+  cursor: default;
+}
+
+.chef-chat__intro {
+  margin: 0 0 1rem;
+  font-size: 0.85rem;
+}
+
+.chef-chat__back {
+  width: auto;
+}
+
+.chef-topics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.chef-topic {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 0.5rem;
+  border: 1px solid #321d13;
+  border-radius: 18px;
+  background: #fff;
+  color: #321d13;
+  font-family: 'Fredoka', var(--sans);
+  cursor: pointer;
+}
+
+.chef-topic svg {
+  width: 48px;
+  height: 48px;
+}
+
+.chef-conversation {
+  margin-top: 1.2rem;
+}
+
+.chef-answer {
+  margin: 1rem 0;
+  border-radius: 14px;
+  scroll-margin-block: 0.5rem;
+}
+
+.chef-bubble {
+  margin: 0.6rem 1rem 0.6rem 0;
+  padding: 0.85rem;
+  border: 1px solid #b48d65;
+  border-radius: 16px 16px 16px 3px;
+  background: #fff4d3;
+  color: #321d13;
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
+}
+
+.chef-bubble--user {
+  margin: 0.6rem 0 0.6rem 1rem;
+  border-radius: 16px 16px 3px 16px;
+  background: #fff;
+}
+
+.chef-bubble p {
+  margin: 0.35rem 0 0;
+}
+
+.chef-chat__footer {
+  display: flex;
+  gap: 0.6rem;
+  padding-top: 0.7rem;
+}
+
+.chef-chat__footer .btn-yellow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  letter-spacing: 0.02em;
 }
 
 .auth-form {

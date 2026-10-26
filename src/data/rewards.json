@@ -1,0 +1,374 @@
+{
+  "unlockAfterLevel": 3,
+  "labels": {
+    "brand": "DODO'S PIZZA LAB",
+    "scoreTitle": "TU PUNTAJE",
+    "totalScore": "Puntaje total: {total}",
+    "availablePoints": "Puntos canjeables",
+    "points": "{cost} Puntos",
+    "optionCost": "{cost} puntos",
+    "rewardsTitle": "Canjea Recompensas",
+    "redeem": "CANJEAR",
+    "confirmRedeem": "Canjear",
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "home": "INICIO",
+    "footer": "Las recompensas son parte del juego.",
+    "history": "Mis canjes",
+    "myRecipes": "Mis recetas",
+    "recipePicker": "Elige tu receta",
+    "unlockedRecipe": "Desbloqueada · Ver",
+    "complete": "Colección completa",
+    "recipeTip": "Secreto de Dodo: ",
+    "confirmRecipe": "¿Canjear {title} por {cost} puntos?",
+    "confirmQuestion": "¿Preguntar por {cost} puntos?",
+    "redeemLabel": "Canjear {title} por {cost} puntos",
+    "viewRedemption": "Ver canje {index}: {title}",
+    "redeemed": "Canje realizado: {title}. {cost} puntos gastados.",
+    "preparing": "Preparando tu recompensa…",
+    "errorTitle": "No se pudo canjear",
+    "unknownReward": "Recompensa desconocida",
+    "invalidOption": "Elige una opción válida",
+    "alreadyBought": "Ya desbloqueada",
+    "alreadyRedeemed": "Ya canjeado",
+    "locked": "Supera el nivel {level} para desbloquear las recompensas",
+    "missingPoints": "Te faltan {missing} puntos",
+    "chatTitle": "Pregunta al chef",
+    "chatIntro": "Elige un tema y paga solo por la pregunta que quieras",
+    "topics": "Temas del laboratorio",
+    "backTopics": "← Temas",
+    "ask": "Preguntar",
+    "answered": "Respondida",
+    "conversation": "Tu conversación con Dodo",
+    "chef": "Dodo",
+    "player": "Tú",
+    "backGame": "Volver al juego",
+    "backRewards": "Recompensas",
+    "answerReady": "Dodo respondió a tu pregunta"
+  },
+  "voucherLabels": {
+    "copy": "Copiar código",
+    "copied": "Copiado",
+    "code": "Código del vale",
+    "copyError": "No se pudo copiar automáticamente. Selecciona el código y cópialo con el menú de tu dispositivo."
+  },
+  "rewards": [
+    {
+      "id": "pregunta-chef",
+      "title": "Pregunta al chef",
+      "cost": 50,
+      "type": "chat",
+      "maxRedeems": 28,
+      "description": "Elige un tema y paga solo por la pregunta que quieras",
+      "icon": "chat",
+      "fulfillment": "fantasy"
+    },
+    {
+      "id": "recetas-secretas",
+      "title": "Recetas Secretas",
+      "cost": 80,
+      "type": "content",
+      "maxRedeems": 6,
+      "description": "Elige una receta del recetario de Dodo y guárdala en tu colección.",
+      "icon": "book",
+      "fulfillment": "fantasy"
+    },
+    {
+      "id": "descuento-restaurante",
+      "title": "Descuento en Restaurante",
+      "cost": 100,
+      "type": "voucher",
+      "maxRedeems": 1,
+      "description": "Un guiño del chef para tu próxima visita imaginaria al comedor del laboratorio.",
+      "icon": "restaurant",
+      "fulfillment": "fantasy",
+      "voucher": {
+        "caption": "Vale del Chef Dodo · válido solo en Dodo's Pizza Lab",
+        "instruction": "Guarda este vale en tu colección. ¡El chef lo recibirá con una sonrisa (y harina en las manos)!",
+        "stamp": "Colección de Dodo",
+        "notice": "Un tesoro del juego para tu restaurante imaginario."
+      }
+    },
+    {
+      "id": "clase-personalizada",
+      "title": "Clase Personalizada",
+      "cost": 150,
+      "type": "voucher",
+      "maxRedeems": 1,
+      "description": "Colecciona un pase imaginario a la clase más harinosa de Dodo.",
+      "icon": "monitor",
+      "fulfillment": "fantasy",
+      "voucher": {
+        "caption": "Pase del Chef Dodo · válido solo en Dodo's Pizza Lab",
+        "instruction": "Guarda este pase en tu colección. ¡En la cocina imaginaria de Dodo siempre hay un delantal para ti!",
+        "stamp": "Colección de Dodo",
+        "notice": "Una clase de fantasía dentro del juego, con mucha imaginación y harina."
+      }
+    }
+  ],
+  "secretRecipes": [
+    {
+      "id": "masa-dodo",
+      "title": "Masa de Dodo",
+      "subtitle": "Una base elástica con un 64 % de hidratación.",
+      "ingredients": "250 g de harina de trigo, 160 ml de agua, 2 g de levadura seca, 5 g de sal y 1 cucharadita de aceite de oliva.",
+      "steps": [
+        "Mezcla la harina con la levadura y el agua. Añade la sal y el aceite; amasa 8 minutos hasta que esté elástica.",
+        "Tapa y deja levar 2 horas a temperatura ambiente, hasta que aumente de volumen.",
+        "Estira con las manos sobre una superficie enharinada. Añade tus ingredientes y hornea en una bandeja precalentada a 250 °C durante 10–14 minutos, hasta dorar."
+      ],
+      "tip": "Deja reposar la masa 10 minutos si se encoge al estirarla."
+    },
+    {
+      "id": "salsa-tomate",
+      "title": "Salsa secreta de tomate",
+      "subtitle": "Tomate y orégano, sin cocción previa.",
+      "ingredients": "200 g de tomate triturado, 1 cucharadita de aceite de oliva, 1 pizca de sal y ½ cucharadita de orégano.",
+      "steps": [
+        "Escurre el tomate en un colador durante 5 minutos si tiene mucha agua.",
+        "Mezcla con el aceite, la sal y el orégano. No hace falta cocinarla antes.",
+        "Extiende una capa fina sobre la masa: unas 3 cucharadas por pizza mediana. Se cocinará en el horno."
+      ],
+      "tip": "Guarda la salsa sobrante tapada en la nevera y úsala en 2 días."
+    },
+    {
+      "id": "pizza-margarita",
+      "title": "Pizza margarita del laboratorio",
+      "subtitle": "Tomate, mozzarella y albahaca fresca.",
+      "ingredients": "1 base de masa de 25 cm, 3 cucharadas de salsa de tomate, 100 g de mozzarella escurrida, hojas de albahaca y 1 cucharadita de aceite de oliva.",
+      "steps": [
+        "Precalienta el horno con la bandeja dentro a 250 °C durante 25 minutos.",
+        "Coloca la masa sobre papel de horno apto para esa temperatura. Cubre con salsa y mozzarella troceada, dejando libre el borde.",
+        "Pasa con cuidado a la bandeja caliente y hornea 10–14 minutos, hasta dorar la base. Añade albahaca y aceite al salir."
+      ],
+      "tip": "Escurre y seca la mozzarella antes de usarla para evitar una base húmeda."
+    },
+    {
+      "id": "pesto-rapido",
+      "title": "Pesto rápido",
+      "subtitle": "Albahaca, nueces y un toque de parmesano.",
+      "ingredients": "30 g de hojas de albahaca lavadas y secas, 20 g de nueces, 25 g de parmesano rallado, 50 ml de aceite de oliva y medio diente de ajo.",
+      "steps": [
+        "Tritura las nueces y el ajo con la mitad del aceite.",
+        "Añade la albahaca, el parmesano y el resto del aceite. Tritura en pulsos cortos, sin calentar la mezcla; prueba antes de añadir sal.",
+        "Pon pequeñas cucharaditas sobre la pizza recién horneada. Conserva lo que sobre en un recipiente cerrado en la nevera y úsalo en 2 días, o congélalo en porciones."
+      ],
+      "tip": "No calientes el pesto durante mucho tiempo: la albahaca pierde su aroma y color."
+    },
+    {
+      "id": "salsa-bianca",
+      "title": "Salsa bianca",
+      "subtitle": "Una salsa blanca suave para extender en capa fina.",
+      "ingredients": "15 g de mantequilla, 15 g de harina de trigo, 200 ml de leche, una pizca de sal, pimienta y nuez moscada al gusto.",
+      "steps": [
+        "Derrite la mantequilla en un cazo a fuego medio-bajo. Añade la harina y remueve durante 2 minutos sin dorarla.",
+        "Incorpora la leche poco a poco, batiendo para evitar grumos. Cocina a hervor suave 4–5 minutos, removiendo, hasta que espese.",
+        "Sazona y deja templar. Extiende 2–3 cucharadas por pizza mediana; refrigera el sobrante antes de 2 horas y úsalo en 2 días."
+      ],
+      "tip": "Debe quedar cremosa, no líquida: una capa gruesa puede humedecer la base."
+    },
+    {
+      "id": "pizza-blanca-champinones",
+      "title": "Pizza blanca de champiñones",
+      "subtitle": "Champiñones dorados sobre una base cremosa.",
+      "ingredients": "1 base de masa de 25 cm, 3 cucharadas de salsa bianca, 150 g de champiñones laminados, 80 g de mozzarella de baja humedad, 1 cucharadita de aceite de oliva y tomillo al gusto.",
+      "steps": [
+        "Precalienta el horno y una bandeja a 250 °C durante 25 minutos. Saltea los champiñones con el aceite 6–8 minutos, hasta que pierdan su agua y se doren.",
+        "Deja templar los champiñones. Estira la masa sobre papel de horno apto para esa temperatura y reparte la salsa, el queso y los champiñones sin amontonarlos.",
+        "Pasa con cuidado a la bandeja caliente. Hornea 10–14 minutos, hasta que la base esté dorada; termina con tomillo."
+      ],
+      "tip": "Dora los champiñones en una sartén amplia, por tandas si hace falta: así no se cuecen en su propia agua."
+    }
+  ],
+  "chefTopics": [
+    {
+      "id": "masa",
+      "title": "Masa",
+      "icon": "dough",
+      "questions": [
+        {
+          "id": "masa-hidratacion",
+          "text": "¿Qué es la hidratación de la masa?",
+          "answer": "Es el peso del agua dividido por el de la harina, multiplicado por cien: 320 g de agua y 500 g de harina dan un 64 %. Para empezar, prueba un 60–65 % con harina de fuerza media. ¡Más agua no siempre es mejor, chef! Una masa muy húmeda exige más práctica y una harina que la sostenga."
+        },
+        {
+          "id": "masa-reposo",
+          "text": "¿Para qué sirve dejar reposar la masa?",
+          "answer": "El reposo hidrata la harina y relaja el gluten, así que la masa se estira con menos resistencia. Durante la fermentación, la levadura también produce gas y aromas. Mira cómo aumenta de volumen, no solo el reloj: una cocina cálida acelera el proceso."
+        },
+        {
+          "id": "masa-harinas",
+          "text": "¿Qué harina conviene para la pizza?",
+          "answer": "Una harina de trigo con alrededor del 11–13 % de proteína suele dar una masa manejable. El nombre «00» indica el grado de refinado, no garantiza por sí solo la fuerza. Si usas harina integral, empieza sustituyendo una parte y ajusta el agua poco a poco."
+        },
+        {
+          "id": "masa-esponjosa",
+          "text": "¿Cómo lograr que la masa quede más esponjosa?",
+          "answer": "Amasa hasta que esté elástica y dale tiempo para fermentar tapada hasta que aumente de volumen. Al estirar, empuja suavemente del centro hacia fuera y evita aplastar el borde: allí queremos conservar las burbujas. Un horno bien precalentado ayuda a que ese borde crezca; no intentes compensar un reposo corto con un montón de levadura."
+        }
+      ]
+    },
+    {
+      "id": "salsas",
+      "title": "Salsas",
+      "icon": "sauce",
+      "questions": [
+        {
+          "id": "salsas-tomate",
+          "text": "¿Hay que cocinar la salsa de tomate antes?",
+          "answer": "No siempre: un buen tomate triturado, un poco de sal y aceite funcionan muy bien sin cocción previa. Se cocinará sobre la pizza. Si está muy líquido, escúrrelo primero o redúcelo suavemente en un cazo y déjalo templar."
+        },
+        {
+          "id": "salsas-bianca",
+          "text": "¿Cómo se hace una salsa bianca cremosa?",
+          "answer": "Cocina cantidades iguales de mantequilla y harina un par de minutos, sin dorarlas. Añade la leche poco a poco mientras bates y deja hervir suavemente hasta espesar. En la pizza usa una capa fina, chef: buscamos cremosidad, no una piscina."
+        },
+        {
+          "id": "salsas-pesto",
+          "text": "¿Cuándo añado el pesto?",
+          "answer": "Pon el pesto en pequeñas cucharaditas al salir del horno para conservar su aroma. El calor prolongado oscurece la albahaca y puede resecarlo. Guarda el pesto casero en la nevera, úsalo en 2 días o congélalo en pequeñas porciones."
+        },
+        {
+          "id": "salsas-agua",
+          "text": "¿Cómo evito que la salsa agüe la pizza?",
+          "answer": "Escurre el tomate si tiene mucho líquido y extiéndelo en una capa fina. Para una pizza de unos 25 cm, empieza con tres cucharadas y ajusta según su espesor. La bandeja precalentada ayuda a cocer la base, pero no puede evaporar una montaña de salsa."
+        }
+      ]
+    },
+    {
+      "id": "quesos",
+      "title": "Quesos",
+      "icon": "cheese",
+      "questions": [
+        {
+          "id": "quesos-mozzarella",
+          "text": "¿Mozzarella fresca o rallada?",
+          "answer": "La fresca es jugosa y delicada: córtala y escúrrela antes de ponerla. La mozzarella de baja humedad suele fundirse con menos agua y funciona muy bien en hornos de casa. Si compras queso rallado, revisa que sea mozzarella y ten en cuenta que sus antiapelmazantes pueden cambiar el fundido."
+        },
+        {
+          "id": "quesos-cuando",
+          "text": "¿Cuándo pongo el queso?",
+          "answer": "La mozzarella suele ir antes de hornear, repartida sin cubrirlo todo con una capa gruesa. Si tu pizza necesita mucho tiempo y el queso se dora demasiado, añádelo en los últimos minutos. Vigila el horno y usa guantes para manipular la bandeja."
+        },
+        {
+          "id": "quesos-parmesano",
+          "text": "¿Cómo uso el parmesano?",
+          "answer": "Un poco de parmesano rallado aporta sal y un sabor intenso. Puedes añadirlo al final o justo después del horno para conservar mejor su aroma. Prueba antes de salar el resto de ingredientes: este queso ya lleva bastante sal."
+        },
+        {
+          "id": "quesos-sin",
+          "text": "¿Se puede hacer una pizza sin queso?",
+          "answer": "¡Claro, chef! La marinara lleva tomate, ajo, orégano y aceite de oliva, sin queso. También puedes combinar verduras bien escurridas con hierbas y un hilo de aceite al final. No hace falta sustituir el queso si equilibras sabor y humedad."
+        }
+      ]
+    },
+    {
+      "id": "toppings",
+      "title": "Toppings",
+      "icon": "toppings",
+      "questions": [
+        {
+          "id": "toppings-cantidad",
+          "text": "¿Cuántos toppings conviene poner?",
+          "answer": "Empieza con dos o tres ingredientes que combinen y distribúyelos en una sola capa ligera. Si amontonas muchos, la base tarda más en cocerse y retiene humedad. ¡Que se vea un poco de salsa entre los ingredientes es una buena señal!"
+        },
+        {
+          "id": "toppings-cuando",
+          "text": "¿Qué toppings van antes o después del horno?",
+          "answer": "Los champiñones salteados, las verduras asadas y las carnes ya cocinadas pueden ir antes. La rúcula, el pesto y otros acabados frescos suelen ir después. Cocina completamente la carne cruda por separado: el horneado breve de una pizza no garantiza que se haga de forma segura."
+        },
+        {
+          "id": "toppings-hojas",
+          "text": "¿Cómo cuido las hojas delicadas?",
+          "answer": "Lava y seca bien la albahaca o la rúcula y añádelas al sacar la pizza. El calor residual las templa sin quemarlas. Así conservan su color y dan ese toque fresco que alegra cada porción."
+        },
+        {
+          "id": "toppings-humedad",
+          "text": "¿Cómo quito humedad a los toppings?",
+          "answer": "Escurre las conservas y seca la mozzarella y el tomate cortado. Saltea los champiñones hasta evaporar su agua y deja templar las verduras cocinadas antes de montarlas. Reparte todo sin montones para que el vapor pueda salir."
+        }
+      ]
+    },
+    {
+      "id": "horno",
+      "title": "Horno y cocción",
+      "icon": "oven",
+      "questions": [
+        {
+          "id": "horno-temperatura",
+          "text": "¿A qué temperatura horneo la pizza?",
+          "answer": "En un horno doméstico, 240–250 °C suele funcionar bien para una pizza fina, si el aparato lo permite. Precalienta también una bandeja resistente durante unos 25–30 minutos. Respeta siempre los límites del horno, la bandeja y el papel que utilices."
+        },
+        {
+          "id": "horno-tiempos",
+          "text": "¿Cuánto tiempo necesita una pizza?",
+          "answer": "Una pizza fina suele tardar unos 10–14 minutos a 250 °C en casa, pero el grosor y el horno cambian mucho el resultado. Busca una base cocida y dorada y un borde hecho, no solo queso fundido. Empieza a revisar antes del tiempo previsto y alarga poco a poco si hace falta."
+        },
+        {
+          "id": "horno-casa-lena",
+          "text": "¿Qué cambia entre el horno de casa y el de leña?",
+          "answer": "Un horno de pizza de leña puede trabajar a temperaturas mucho mayores y cocer una napolitana en alrededor de 60–90 segundos. En casa, el calor es menor y la cocción dura más, así que conviene controlar la humedad de los ingredientes. No intentes copiar esos tiempos ni modificar un horno doméstico para subir su temperatura."
+        },
+        {
+          "id": "horno-quemar",
+          "text": "¿Cómo evito quemar la pizza?",
+          "answer": "Vigila la pizza durante los últimos minutos y no la dejes sola bajo el gratinador. Si se dora arriba antes de cocerse abajo, prueba una posición más baja en el siguiente horneado. Usa guantes y una pala o utensilio adecuado; nunca toques la bandeja para comprobar su temperatura."
+        }
+      ]
+    },
+    {
+      "id": "trucos",
+      "title": "Trucos del chef",
+      "icon": "hat",
+      "questions": [
+        {
+          "id": "trucos-errores",
+          "text": "¿Qué errores son los más comunes?",
+          "answer": "Montar la pizza con demasiada salsa, usar ingredientes mojados y hornear sin precalentar son tres clásicos del laboratorio. Prepara todo antes de estirar la masa para que no espere cargada sobre la mesa. Corrige una cosa cada vez y podrás descubrir qué mejora tu pizza."
+        },
+        {
+          "id": "trucos-estirar",
+          "text": "¿Cómo estiro la masa sin romperla?",
+          "answer": "Deja que la masa pierda el frío y trabaja sobre una superficie ligeramente enharinada. Presiona desde el centro y gira la pieza, dejando el borde algo más grueso. Si se encoge, tápala y espera unos diez minutos en vez de tirar con fuerza."
+        },
+        {
+          "id": "trucos-cortar",
+          "text": "¿Cómo corto la pizza sin arrastrar el queso?",
+          "answer": "Déjala reposar uno o dos minutos sobre una superficie adecuada para que el queso se asiente un poco. Usa un cortapizzas afilado o un cuchillo grande sobre una tabla estable. Mantén los dedos lejos del filo y pide ayuda a una persona adulta si la necesitas."
+        },
+        {
+          "id": "trucos-recalentar",
+          "text": "¿Cómo recaliento una porción?",
+          "answer": "Para recuperar una base crujiente, usa una sartén a fuego medio-bajo con tapa o un horno precalentado. Calienta hasta que toda la porción esté bien caliente, no solo la superficie. Guarda las sobras en la nevera antes de dos horas y, como regla prudente, consúmelas en dos días."
+        }
+      ]
+    },
+    {
+      "id": "historia",
+      "title": "Historia y curiosidades",
+      "icon": "history",
+      "questions": [
+        {
+          "id": "historia-napolitana",
+          "text": "¿Dónde nació la pizza napolitana?",
+          "answer": "La pizza napolitana se desarrolló en Nápoles, donde las masas planas con ingredientes se convirtieron en una comida popular. El tomate se incorporó después de llegar de América a Europa. Su borde aireado y su centro fino son parte de su identidad, chef."
+        },
+        {
+          "id": "historia-margherita",
+          "text": "¿Cuál es la historia de la Margherita?",
+          "answer": "La historia más famosa cuenta que en 1889 se preparó una pizza de tomate, mozzarella y albahaca para la reina Margarita de Saboya. Esos colores recuerdan a la bandera italiana. Hay debate sobre los detalles del relato y ya existían pizzas con ingredientes parecidos antes."
+        },
+        {
+          "id": "historia-nombre",
+          "text": "¿Por qué se llama pizza?",
+          "answer": "La palabra «pizza» aparece en documentos medievales italianos, mucho antes de la receta moderna con tomate. Su origen exacto no está resuelto: se han propuesto relaciones con palabras para panes planos y bocados. ¡El nombre es antiguo, pero la pizza no ha dejado de cambiar!"
+        },
+        {
+          "id": "historia-marinara",
+          "text": "¿La pizza marinara lleva marisco?",
+          "answer": "La marinara napolitana tradicional lleva tomate, ajo, orégano y aceite, no marisco. Su nombre se relaciona con los marineros y una preparación sencilla. Es una buena prueba de que una pizza puede tener muchísimo sabor sin queso ni muchos ingredientes."
+        }
+      ]
+    }
+  ]
+}

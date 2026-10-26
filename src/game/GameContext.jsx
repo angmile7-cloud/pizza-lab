@@ -15,6 +15,8 @@ import {
   getConsecutivePassedLevelCount,
   getPassedLevelIds,
 } from './ordersModeUtils'
+import rewardsData from '../data/rewards.json'
+import { areRewardsUnlocked, createVoucherCode, getRewardOption, rewardError, rewardText } from './rewardsUtils'
 
 export const GameContext = createContext(null)
 const USER_NAME_KEY = 'pizza-lab:userName'
@@ -44,10 +46,22 @@ export function GameProvider({ children }) {
     createdPizza,
     gameCompleted,
     ordersMode,
+    spentPoints,
+    redemptions,
   } = gameState
+  // Reserve spending synchronously; React may batch updates or replay updaters.
+  const rewardLedgerRef = useRef({ spentPoints: 0, redemptions: [], requests: new Map() })
   const scoredKeysRef = useRef(new Set())
   const scoredOrderKeysRef = useRef(new Set())
   const totalScore = levelScore + orderScore
+  const availablePoints = Math.max(0, totalScore - spentPoints)
+  const rewardsUnlocked = areRewardsUnlocked(gameState)
+  const unlockedRecipeIds = useMemo(() => redemptions
+    .filter((item) => item.rewardId === 'recetas-secretas')
+    .map((item) => item.optionId), [redemptions])
+  const answeredQuestionIds = useMemo(() => redemptions
+    .filter((item) => item.rewardId === 'pregunta-chef')
+    .map((item) => item.optionId), [redemptions])
   const passedLevelIds = getPassedLevelIds({
     answersByLevel,
     orderResultsByLevel,
@@ -62,7 +76,50 @@ export function GameProvider({ children }) {
     setGameState(createInitialGameState())
     scoredKeysRef.current = new Set()
     scoredOrderKeysRef.current = new Set()
+    rewardLedgerRef.current = { spentPoints: 0, redemptions: [], requests: new Map() }
   }, [])
+
+  const redeemReward = useCallback((rewardId, optionId, requestId) => {
+    const ledger = rewardLedgerRef.current
+    const requestKey = requestId ? `${rewardId}:${optionId ?? ''}:${requestId}` : null
+    if (requestKey && ledger.requests.has(requestKey)) {
+      return ledger.requests.get(requestKey)
+    }
+    // Calls before the first state commit belong to the same pending tap.
+    const pending = ledger.redemptions.find(
+      (item) => item.rewardId === rewardId && item.optionId === optionId && !redemptions.includes(item),
+    )
+    if (pending) {
+      const result = { redemption: pending }
+      if (requestKey) ledger.requests.set(requestKey, result)
+      return result
+    }
+    const reward = rewardsData.rewards.find((item) => item.id === rewardId)
+    if (reward && reward.type !== 'voucher' && !getRewardOption(reward, optionId)) {
+      return { error: rewardText('invalidOption') }
+    }
+    const error = rewardError(
+      reward, rewardsUnlocked, Math.max(0, totalScore - ledger.spentPoints), ledger.redemptions, optionId,
+    )
+    if (error) return { error }
+    const redemption = {
+      rewardId,
+      optionId,
+      code: reward.type === 'voucher' ? createVoucherCode(ledger.redemptions) : null,
+      cost: reward.cost,
+      index: ledger.redemptions.length + 1,
+    }
+    const nextSpent = ledger.spentPoints + reward.cost
+    const nextRedemptions = [...ledger.redemptions, redemption]
+    const result = { redemption }
+    ledger.spentPoints = nextSpent
+    ledger.redemptions = nextRedemptions
+    if (requestKey) ledger.requests.set(requestKey, result)
+    setGameState((current) => ({
+      ...current, spentPoints: nextSpent, redemptions: nextRedemptions,
+    }))
+    return result
+  }, [redemptions, rewardsUnlocked, totalScore])
 
   const setUserName = useCallback((name) => {
     const nextName = typeof name === 'string' ? name.trim() : ''
@@ -371,6 +428,13 @@ export function GameProvider({ children }) {
       levelScore,
       orderScore,
       totalScore,
+      spentPoints,
+      redemptions,
+      availablePoints,
+      rewardsUnlocked,
+      redeemReward,
+      unlockedRecipeIds,
+      answeredQuestionIds,
       currentLevel,
       unlockedLevel,
       answersByLevel,
@@ -400,6 +464,13 @@ export function GameProvider({ children }) {
       levelScore,
       orderScore,
       totalScore,
+      spentPoints,
+      redemptions,
+      availablePoints,
+      rewardsUnlocked,
+      redeemReward,
+      unlockedRecipeIds,
+      answeredQuestionIds,
       currentLevel,
       unlockedLevel,
       answersByLevel,

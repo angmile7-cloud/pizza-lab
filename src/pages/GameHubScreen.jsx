@@ -111,6 +111,7 @@ export default function GameHubScreen() {
     orderResultsByLevel,
     ordersMode,
     unlockedStage,
+    rewardsUnlocked,
   } = useGame()
   const passedLevelIds = getPassedLevelIds({
     answersByLevel,
@@ -156,6 +157,7 @@ export default function GameHubScreen() {
       <h1 className="progress-map__title">TU PROGRESO</h1>
 
       <div className="progress-map__orders">
+        <div className="progress-map__mode-buttons">
         {!ordersUnlocked ? (
           <>
             <button
@@ -189,6 +191,11 @@ export default function GameHubScreen() {
               : `Turnos al día. Supera el nivel ${unlockedStage + 1} para desbloquear otro.`}
           </button>
         )}
+          <Link className="progress-map__orders-button" to="/recompensas">
+            {!rewardsUnlocked && <span aria-label="Bloqueado">🔒 </span>}
+            Recompensas
+          </Link>
+        </div>
       </div>
 
       <div className="progress-map__canvas" style={{ height: mapHeight }}>

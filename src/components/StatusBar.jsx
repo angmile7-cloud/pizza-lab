@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { useGame } from '../game/useGame'
 import { getMaxScore, LEVELS } from '../game/gameUtils'
 
-const HIDDEN_ON = new Set(['/', '/registro', '/login', '/jugar', '/pedidos'])
+const HIDDEN_ON = new Set(['/', '/registro', '/login', '/jugar', '/pedidos', '/recompensas', '/chat'])
 
 export default function StatusBar() {
   const { pathname } = useLocation()
