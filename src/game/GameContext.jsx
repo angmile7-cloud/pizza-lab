@@ -6,9 +6,15 @@ import {
   didPassLevel,
   evaluateOrder,
   getLevel,
+  LEVELS,
   POINTS_PER_CORRECT,
   POINTS_PER_WRONG,
 } from './gameUtils'
+import {
+  createOrdersShift,
+  getConsecutivePassedLevelCount,
+  getPassedLevelIds,
+} from './ordersModeUtils'
 
 export const GameContext = createContext(null)
 const USER_NAME_KEY = 'pizza-lab:userName'
@@ -37,10 +43,20 @@ export function GameProvider({ children }) {
     orderResultsByLevel,
     createdPizza,
     gameCompleted,
+    ordersMode,
   } = gameState
   const scoredKeysRef = useRef(new Set())
   const scoredOrderKeysRef = useRef(new Set())
   const totalScore = levelScore + orderScore
+  const passedLevelIds = getPassedLevelIds({
+    answersByLevel,
+    orderResultsByLevel,
+    createdPizza,
+  })
+  const unlockedStage = Math.min(
+    LEVELS.length,
+    getConsecutivePassedLevelCount(passedLevelIds),
+  )
 
   const resetProgress = useCallback(() => {
     setGameState(createInitialGameState())
@@ -228,6 +244,95 @@ export function GameProvider({ children }) {
     }))
   }, [])
 
+  const startShift = useCallback((stage) => {
+    const numericStage = Number(stage)
+    if (
+      !Number.isInteger(numericStage) ||
+      numericStage < 1 ||
+      numericStage > unlockedStage
+    ) {
+      return null
+    }
+    const existing = ordersMode.shifts[numericStage]
+    if (existing) return existing.status === 'completed' ? null : existing
+
+    const shift = {
+      stage: numericStage,
+      orderIds: createOrdersShift(numericStage),
+      results: [],
+      status: 'inProgress',
+      score: 0,
+    }
+    setGameState((current) => {
+      if (current.ordersMode.shifts[numericStage]) return current
+      return {
+        ...current,
+        ordersMode: {
+          ...current.ordersMode,
+          shifts: {
+            ...current.ordersMode.shifts,
+            [numericStage]: shift,
+          },
+        },
+      }
+    })
+    return shift
+  }, [ordersMode.shifts, unlockedStage])
+
+  const recordShiftOrderResult = useCallback((stage, result) => {
+    setGameState((current) => {
+      const shift = current.ordersMode.shifts[stage]
+      if (
+        !shift ||
+        !shift.orderIds.includes(result.orderId) ||
+        shift.results.some((item) => item.orderId === result.orderId)
+      ) {
+        return current
+      }
+      const results = [...shift.results, result]
+      const completed = shift.orderIds.every((orderId) =>
+        results.some((item) => item.orderId === orderId),
+      )
+      return {
+        ...current,
+        ordersMode: {
+          ...current.ordersMode,
+          shifts: {
+            ...current.ordersMode.shifts,
+            [stage]: {
+              ...shift,
+              results,
+              status: completed ? 'completed' : 'inProgress',
+              score: shift.score + (result.pointsAwarded ?? 0),
+            },
+          },
+          activeOrder:
+            current.ordersMode.activeOrder?.stage === Number(stage) &&
+            current.ordersMode.activeOrder?.orderId === result.orderId
+              ? null
+              : current.ordersMode.activeOrder,
+        },
+      }
+    })
+  }, [])
+
+  const markActiveOrder = useCallback((stage, orderId) => {
+    setGameState((current) => ({
+      ...current,
+      ordersMode: {
+        ...current.ordersMode,
+        activeOrder: { stage: Number(stage), orderId },
+      },
+    }))
+  }, [])
+
+  const clearActiveOrder = useCallback(() => {
+    setGameState((current) => ({
+      ...current,
+      ordersMode: { ...current.ordersMode, activeOrder: null },
+    }))
+  }, [])
+
   const retryOrderLevel = useCallback((levelId) => {
     setGameState((current) => {
       const previous = current.orderResultsByLevel[levelId] ?? []
@@ -272,9 +377,15 @@ export function GameProvider({ children }) {
       orderResultsByLevel,
       createdPizza,
       gameCompleted,
+      ordersMode,
+      unlockedStage,
       recordAnswer,
       recordOrderResult,
       addOrderPoints,
+      startShift,
+      recordShiftOrderResult,
+      markActiveOrder,
+      clearActiveOrder,
       resolveLevel,
       retryLevel,
       retryOrderLevel,
@@ -295,9 +406,15 @@ export function GameProvider({ children }) {
       orderResultsByLevel,
       createdPizza,
       gameCompleted,
+      ordersMode,
+      unlockedStage,
       recordAnswer,
       recordOrderResult,
       addOrderPoints,
+      startShift,
+      recordShiftOrderResult,
+      markActiveOrder,
+      clearActiveOrder,
       resolveLevel,
       retryLevel,
       retryOrderLevel,

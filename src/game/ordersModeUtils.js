@@ -7,6 +7,8 @@ import {
 
 export const ORDER_TOPICS = ordersData.topics
 export const ORDER_TIERS = ordersData.tiers
+export const ORDER_SHIFT_SIZES = ordersData.shiftSizes
+export const ORDER_TIME_BONUS_MAX = ordersData.timeBonusMax
 
 function mapPoolRequirement(order, requirement, index) {
   const id = `${order.id}-requirement-${index + 1}`
@@ -58,7 +60,7 @@ export const ORDERS = ordersData.orders.map((order) => ({
   ),
 }))
 
-function getConsecutivePassedLevelCount(passedLevelIds) {
+export function getConsecutivePassedLevelCount(passedLevelIds) {
   const passed = new Set(passedLevelIds)
   let count = 0
   while (passed.has(count + 1)) count += 1
@@ -99,6 +101,23 @@ export function getOrdersModeTier(passedLevelIds) {
   return tier ?? ORDER_TIERS[0]
 }
 
+export function getTierForStage(stage) {
+  const validStage = Number(stage)
+  return [...ORDER_TIERS]
+    .reverse()
+    .find((tier) => validStage >= tier.minPassedLevels) ?? ORDER_TIERS[0]
+}
+
+export function getShiftSize(stage) {
+  const config = ORDER_SHIFT_SIZES.find(
+    (item) => stage >= item.minStage && stage <= item.maxStage,
+  )
+  if (!config) {
+    throw new Error(`No hay un tamaño de turno configurado para la etapa ${stage}`)
+  }
+  return config.size
+}
+
 export function getPassedOrderTopics(passedLevelIds) {
   const consecutivePassedLevelCount =
     getConsecutivePassedLevelCount(passedLevelIds)
@@ -107,22 +126,18 @@ export function getPassedOrderTopics(passedLevelIds) {
   )
 }
 
+export function getOrderTopicsForStage(stage) {
+  return ORDER_TOPICS.filter((topic) => topic.level <= stage)
+}
+
 export function getTierById(tierId) {
   return ORDER_TIERS.find((tier) => tier.id === tierId)
 }
 
-export function createOrdersRound(passedLevelIds) {
-  const stage = getConsecutivePassedLevelCount(passedLevelIds)
-  const currentTier = getOrdersModeTier(passedLevelIds)
-  const passedTopics = getPassedOrderTopics(passedLevelIds)
-  const latestTopic = passedTopics.at(-1)
-
-  if (stage === 0 || !latestTopic) {
-    throw new Error('Se necesita aprobar el nivel 1 para jugar pedidos')
-  }
-
+export function createOrdersShift(stage) {
+  const shiftSize = getShiftSize(stage)
   const candidates = ORDERS.filter((order) => order.stage === stage)
-  if (candidates.length < 5) {
+  if (candidates.length < shiftSize) {
     throw new Error(`Faltan pedidos para la etapa ${stage}`)
   }
 
@@ -133,9 +148,12 @@ export function createOrdersRound(passedLevelIds) {
     shuffled[index] = shuffled[swapIndex]
     shuffled[swapIndex] = order
   }
-  return shuffled.slice(0, 5).map((order) => ({
-    ...order,
-    tier: currentTier.id,
-    timeSeconds: currentTier.timeSeconds,
-  }))
+  return shuffled
+    .slice(0, shiftSize)
+    .sort(
+      (left, right) =>
+        left.requirements.length - right.requirements.length ||
+        ORDERS.indexOf(left) - ORDERS.indexOf(right),
+    )
+    .map((order) => order.id)
 }

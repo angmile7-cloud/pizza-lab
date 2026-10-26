@@ -12,6 +12,7 @@ import PizzaBuilderScreen from './pages/PizzaBuilderScreen'
 import OrderScreen from './pages/OrderScreen'
 import Chat from './pages/Chat'
 import OrdersModeScreen from './pages/OrdersModeScreen'
+import OrdersShiftsScreen from './pages/OrdersShiftsScreen'
 
 export default function App() {
   return (
@@ -25,7 +26,8 @@ export default function App() {
             <Route path="/login" element={<AuthScreen mode="login" />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/jugar" element={<GameHubScreen />} />
-            <Route path="/pedidos" element={<OrdersModeScreen />} />
+            <Route path="/pedidos" element={<OrdersShiftsScreen />} />
+            <Route path="/pedidos/:stage" element={<OrdersModeScreen />} />
             <Route path="/nivel/:levelId" element={<QuestionScreen />} />
             <Route path="/nivel/:levelId/resultado" element={<LevelResultScreen />} />
             <Route path="/nivel/:levelId/pizza" element={<PizzaBuilderScreen />} />

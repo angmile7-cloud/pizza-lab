@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Link, Navigate } from 'react-router-dom'
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import LevelScene from '../components/LevelScene'
 import PizzaBuilderControls from '../components/PizzaBuilderControls'
 import orderPaper from '../assets/papel_pedido.png'
@@ -7,119 +7,30 @@ import { useGame } from '../game/useGame'
 import {
   createEmptySelection,
   evaluateOrder,
+  LEVELS,
   getLevel,
 } from '../game/gameUtils'
 import {
-  createOrdersRound,
-  getOrdersModeTier,
-  getPassedLevelIds,
-  getPassedOrderTopics,
-  getTierById,
+  getOrderTopicsForStage,
+  getTierForStage,
+  ORDER_TIME_BONUS_MAX,
+  ORDERS,
 } from '../game/ordersModeUtils'
 
 const EMPTY_SLOTS = []
-const ROUND_SIZE = 5
-const TIME_BONUS_MAX = 10
-let nextRoundId = 0
-
-// Animation durations in ms. Keep these in sync with the --om-dur-* CSS
-// variables in src/index.css so JS timers and CSS transitions line up.
 const ANIM_MS = {
-  exit: 400, // correct delivery: paper flies off
-  crumple: 520, // time out: paper crumples away
-  shake: 350, // wrong delivery: card shake
-  float: 800, // floating "+points"
-  score: 600, // badge count-up
+  exit: 400,
+  crumple: 520,
+  shake: 350,
+  float: 800,
+  score: 600,
 }
-
-// Timer bar color thresholds, in absolute seconds remaining (not percentage
-// of total time). Visual only: does not affect how time is counted.
 const TIMER_COLOR_THRESHOLDS = {
-  amberAtSeconds: 35, // bar turns amber at or below this many seconds left
-  redAtSeconds: 10, // bar turns red at or below this many seconds left
-  // For orders whose total time is at or below amberAtSeconds, the bar would
-  // start already amber. Instead, amber kicks in at this fraction of the
-  // order's own total time (so it always starts green). If the total time is
-  // at or below shortOrderNoAmberSeconds, skip amber entirely (green -> red).
+  amberAtSeconds: 35,
+  redAtSeconds: 10,
   shortOrderAmberRatio: 0.6,
   shortOrderNoAmberSeconds: 20,
 }
-
-// Returns 'normal' | 'amber' | 'red' for the timer bar/seconds text, using
-// absolute seconds remaining and the order's own total duration.
-function getTimerUrgency(remainingMs, durationMs) {
-  const remainingSeconds = remainingMs / 1000
-  const totalSeconds = durationMs / 1000
-  const { amberAtSeconds, redAtSeconds, shortOrderAmberRatio, shortOrderNoAmberSeconds } =
-    TIMER_COLOR_THRESHOLDS
-
-  if (remainingSeconds <= redAtSeconds) return 'red'
-
-  if (totalSeconds <= shortOrderNoAmberSeconds) return 'normal'
-
-  const amberThresholdSeconds =
-    totalSeconds <= amberAtSeconds
-      ? totalSeconds * shortOrderAmberRatio
-      : amberAtSeconds
-
-  return remainingSeconds <= amberThresholdSeconds ? 'amber' : 'normal'
-}
-
-function reducedAnimMs(key, prefersReducedMotion) {
-  return prefersReducedMotion ? 0 : ANIM_MS[key]
-}
-
-function usePrefersReducedMotion() {
-  const [reduced, setReduced] = useState(() =>
-    typeof window !== 'undefined' && window.matchMedia
-      ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      : false,
-  )
-
-  useEffect(() => {
-    if (typeof window === 'undefined' || !window.matchMedia) return undefined
-    const mql = window.matchMedia('(prefers-reduced-motion: reduce)')
-    const handleChange = (event) => setReduced(event.matches)
-    mql.addEventListener('change', handleChange)
-    return () => mql.removeEventListener('change', handleChange)
-  }, [])
-
-  return reduced
-}
-
-// Tracks setTimeout ids so every pending timer is cleared if the screen
-// unmounts mid-animation (avoids state updates after unmount / stuck state).
-function useManagedTimeouts() {
-  const idsRef = useRef(new Set())
-
-  useEffect(
-    () => () => {
-      idsRef.current.forEach((id) => window.clearTimeout(id))
-      idsRef.current.clear()
-    },
-    [],
-  )
-
-  return useCallback((fn, ms) => {
-    const id = window.setTimeout(() => {
-      idsRef.current.delete(id)
-      fn()
-    }, ms)
-    idsRef.current.add(id)
-    return id
-  }, [])
-}
-
-function easeOutCubic(progress) {
-  return 1 - (1 - progress) ** 3
-}
-
-function joinTopicNames(topics) {
-  const names = topics.map((topic) => topic.label)
-  if (names.length < 2) return names.join('')
-  return `${names.slice(0, -1).join(', ')} y ${names.at(-1)}`
-}
-
 const ORDER_TOPIC_LABELS = {
   armado: 'Armado',
   'armado-final': 'Armado final',
@@ -133,30 +44,99 @@ const ORDER_TOPIC_LABELS = {
   toppings: 'Toppings',
 }
 
+function getTimerUrgency(remainingMs, durationMs) {
+  const remainingSeconds = remainingMs / 1000
+  const totalSeconds = durationMs / 1000
+  const { amberAtSeconds, redAtSeconds, shortOrderAmberRatio, shortOrderNoAmberSeconds } =
+    TIMER_COLOR_THRESHOLDS
+  if (remainingSeconds <= redAtSeconds) return 'red'
+  if (totalSeconds <= shortOrderNoAmberSeconds) return 'normal'
+  const amberThresholdSeconds =
+    totalSeconds <= amberAtSeconds
+      ? totalSeconds * shortOrderAmberRatio
+      : amberAtSeconds
+  return remainingSeconds <= amberThresholdSeconds ? 'amber' : 'normal'
+}
+
+function usePrefersReducedMotion() {
+  const [reduced, setReduced] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia
+      ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      : false,
+  )
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return undefined
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const update = (event) => setReduced(event.matches)
+    media.addEventListener('change', update)
+    return () => media.removeEventListener('change', update)
+  }, [])
+  return reduced
+}
+
+function useManagedTimeouts() {
+  const idsRef = useRef(new Set())
+  useEffect(
+    () => () => {
+      idsRef.current.forEach((id) => window.clearTimeout(id))
+      idsRef.current.clear()
+    },
+    [],
+  )
+  return useCallback((fn, ms) => {
+    const id = window.setTimeout(() => {
+      idsRef.current.delete(id)
+      fn()
+    }, ms)
+    idsRef.current.add(id)
+    return id
+  }, [])
+}
+
+function reducedAnimMs(key, prefersReducedMotion) {
+  return prefersReducedMotion ? 0 : ANIM_MS[key]
+}
+
+function easeOutCubic(progress) {
+  return 1 - (1 - progress) ** 3
+}
+
+function joinTopicNames(topics) {
+  const names = topics.map((topic) => topic.label)
+  if (names.length < 2) return names.join('')
+  return `${names.slice(0, -1).join(', ')} y ${names.at(-1)}`
+}
+
+function findNextOrderIndex(shift) {
+  if (!shift) return 0
+  const delivered = new Set(shift.results.map((result) => result.orderId))
+  const index = shift.orderIds.findIndex((orderId) => !delivered.has(orderId))
+  return index < 0 ? shift.orderIds.length - 1 : index
+}
+
 export default function OrdersModeScreen() {
+  const { stage: stageParam } = useParams()
+  const stage = Number(stageParam)
+  const navigate = useNavigate()
   const {
-    answersByLevel,
-    orderResultsByLevel,
-    createdPizza,
+    ordersMode,
+    unlockedStage,
     totalScore,
     addOrderPoints,
+    startShift,
+    recordShiftOrderResult,
+    markActiveOrder,
   } = useGame()
-  const passedLevelIds = getPassedLevelIds({
-    answersByLevel,
-    orderResultsByLevel,
-    createdPizza,
-  })
-  const currentTier = getOrdersModeTier(passedLevelIds)
-  const topics = getPassedOrderTopics(passedLevelIds)
+  const validStage = Number.isInteger(stage) && stage >= 1 && stage <= LEVELS.length
+  const shift = ordersMode.shifts[stage]
+  const tier = getTierForStage(stage)
+  const topics = getOrderTopicsForStage(stage)
   const slots = getLevel(8)?.builder?.slots ?? EMPTY_SLOTS
   const [phase, setPhase] = useState('intro')
-  const [roundOrders, setRoundOrders] = useState([])
-  const [roundId, setRoundId] = useState(0)
-  const [orderIndex, setOrderIndex] = useState(0)
+  const [hasStarted, setHasStarted] = useState(false)
+  const [orderIndex, setOrderIndex] = useState(() => findNextOrderIndex(shift))
   const [selection, setSelection] = useState(() => createEmptySelection(slots))
   const [orderResult, setOrderResult] = useState(null)
-  const [roundResults, setRoundResults] = useState([])
-  const [roundScore, setRoundScore] = useState(0)
   const [remainingMs, setRemainingMs] = useState(0)
   const [announcement, setAnnouncement] = useState('')
   const [cardPhase, setCardPhase] = useState('idle')
@@ -173,30 +153,67 @@ export default function OrdersModeScreen() {
   const resolvedRef = useRef(false)
   const announcedTenSecondsRef = useRef(false)
   const prevTotalScoreRef = useRef(totalScore)
+  const shiftCreationStartedRef = useRef(false)
+  const [activeOnLoad] = useState(() => ({
+    active: ordersMode.activeOrder,
+    shifts: ordersMode.shifts,
+  }))
   const prefersReducedMotion = usePrefersReducedMotion()
   const scheduleTimeout = useManagedTimeouts()
+  const shiftOrderIds = shift?.orderIds ?? []
+  const currentOrder = ORDERS.find(
+    (order) => order.id === shiftOrderIds[orderIndex],
+  )
+  const durationMs = (currentOrder?.timeSeconds ?? tier.timeSeconds) * 1000
+  const ready = slots.every((slot) => slot.multiple || Boolean(selection[slot.id]))
 
-  const currentOrder = roundOrders[orderIndex]
-  const durationMs = (currentOrder?.timeSeconds ?? 0) * 1000
-  const ready = slots.every((slot) => {
-    if (slot.multiple) return true
-    return Boolean(selection[slot.id])
-  })
+  useEffect(() => {
+    if (
+      validStage &&
+      unlockedStage > 0 &&
+      stage <= unlockedStage &&
+      !shift &&
+      !shiftCreationStartedRef.current
+    ) {
+      shiftCreationStartedRef.current = true
+      startShift(stage)
+    }
+  }, [stage, startShift, shift, unlockedStage, validStage])
+
+  useEffect(() => {
+    const active = activeOnLoad.active
+    if (!active) return
+    const activeShift = activeOnLoad.shifts[active.stage]
+    if (
+      activeShift &&
+      !activeShift.results.some((result) => result.orderId === active.orderId)
+    ) {
+      addOrderPoints(`${active.stage}:${active.orderId}`, 0)
+      recordShiftOrderResult(active.stage, {
+        orderId: active.orderId,
+        satisfied: false,
+        pointsAwarded: 0,
+        lost: true,
+      })
+    }
+  }, [activeOnLoad, addOrderPoints, recordShiftOrderResult])
+
+  useEffect(() => {
+    selectionRef.current = selection
+  }, [selection])
+
   const finishOrder = useCallback(
     (expired, timeLeftMs) => {
-      if (!currentOrder || resolvedRef.current) return
+      if (!currentOrder || resolvedRef.current || !shift) return
       resolvedRef.current = true
-
       const evaluation = evaluateOrder(currentOrder, selectionRef.current)
       const remaining = Math.max(0, Math.min(durationMs, timeLeftMs))
       const satisfied = !expired && remaining > 0 && evaluation.satisfied
       const timeBonus = satisfied
-        ? Math.floor((remaining / durationMs) * TIME_BONUS_MAX)
+        ? Math.round((remaining / durationMs) * ORDER_TIME_BONUS_MAX)
         : 0
-      const pointsAwarded = satisfied
-        ? getTierById(currentOrder.tier).basePoints + timeBonus
-        : 0
-      addOrderPoints(`${roundId}:${currentOrder.id}`, pointsAwarded)
+      const pointsAwarded = satisfied ? tier.basePoints + timeBonus : 0
+      addOrderPoints(`${stage}:${currentOrder.id}`, pointsAwarded)
       const result = {
         orderId: currentOrder.id,
         customerName: currentOrder.customer,
@@ -205,10 +222,8 @@ export default function OrdersModeScreen() {
         expired,
         pointsAwarded,
       }
-
+      recordShiftOrderResult(stage, result)
       setOrderResult(result)
-      setRoundResults((previous) => [...previous, result])
-      setRoundScore((previous) => previous + pointsAwarded)
       setRemainingMs(remaining)
       setAnnouncement(
         expired
@@ -217,35 +232,20 @@ export default function OrdersModeScreen() {
             ? `Pedido cumplido. Sumaste ${pointsAwarded} puntos.`
             : 'El pedido no cumplió todos los requisitos.',
       )
-
-      // Decoration only: these flags drive CSS animation classes and never
-      // delay the scoring above, which already happened synchronously.
       if (satisfied) {
         setCardPhase('correct')
         setExiting(true)
         setScoreFloat(pointsAwarded)
         setScoreFloatTick((tick) => tick + 1)
-        scheduleTimeout(
-          () => setExiting(false),
-          reducedAnimMs('exit', prefersReducedMotion),
-        )
-        scheduleTimeout(
-          () => setScoreFloat(null),
-          reducedAnimMs('float', prefersReducedMotion),
-        )
+        scheduleTimeout(() => setExiting(false), reducedAnimMs('exit', prefersReducedMotion))
+        scheduleTimeout(() => setScoreFloat(null), reducedAnimMs('float', prefersReducedMotion))
       } else if (expired) {
         setCardPhase('timeout')
         setExiting(true)
-        scheduleTimeout(
-          () => setExiting(false),
-          reducedAnimMs('crumple', prefersReducedMotion),
-        )
+        scheduleTimeout(() => setExiting(false), reducedAnimMs('crumple', prefersReducedMotion))
       } else {
         setCardPhase('wrong')
-        scheduleTimeout(
-          () => setCardPhase('idle'),
-          reducedAnimMs('shake', prefersReducedMotion),
-        )
+        scheduleTimeout(() => setCardPhase('idle'), reducedAnimMs('shake', prefersReducedMotion))
       }
     },
     [
@@ -253,126 +253,96 @@ export default function OrdersModeScreen() {
       currentOrder,
       durationMs,
       prefersReducedMotion,
-      roundId,
+      recordShiftOrderResult,
       scheduleTimeout,
+      shift,
+      stage,
+      tier.basePoints,
     ],
   )
 
   useEffect(() => {
-    selectionRef.current = selection
-  }, [selection])
-
-  useEffect(() => {
     if (phase !== 'play' || !currentOrder || orderResult) return undefined
-
     const deadline = Date.now() + durationMs
     deadlineRef.current = deadline
     announcedTenSecondsRef.current = false
-
     intervalRef.current = window.setInterval(() => {
       const remaining = Math.max(0, deadline - Date.now())
       setRemainingMs(remaining)
-
       if (remaining <= 10_000 && remaining > 0 && !announcedTenSecondsRef.current) {
         announcedTenSecondsRef.current = true
         setAnnouncement('Quedan 10 segundos para entregar el pedido.')
       }
-
       if (remaining === 0) {
         window.clearInterval(intervalRef.current)
         finishOrder(true, 0)
       }
     }, 200)
-
     return () => {
       window.clearInterval(intervalRef.current)
       intervalRef.current = null
     }
-  }, [
-    currentOrder,
-    durationMs,
-    finishOrder,
-    orderResult,
-    phase,
-  ])
+  }, [currentOrder, durationMs, finishOrder, orderResult, phase])
 
   useEffect(
-    () => () => {
-      window.clearInterval(intervalRef.current)
-    },
+    () => () => window.clearInterval(intervalRef.current),
     [],
   )
 
-  // Animates the score badge from its old value to the new total whenever
-  // addOrderPoints updates totalScore (decoration only; totalScore itself
-  // already holds the real, final value at all times).
   useEffect(() => {
     if (totalScore === prevTotalScoreRef.current) return undefined
-
     const from = prevTotalScoreRef.current
     const to = totalScore
     prevTotalScoreRef.current = to
     setScoreBounceTick((tick) => tick + 1)
-
     if (prefersReducedMotion) {
       setScoreDisplay(to)
       return undefined
     }
-
     let frameId
     const start = performance.now()
     const step = (now) => {
       const progress = Math.min(1, (now - start) / ANIM_MS.score)
       setScoreDisplay(Math.round(from + (to - from) * easeOutCubic(progress)))
-      if (progress < 1) {
-        frameId = requestAnimationFrame(step)
-      }
+      if (progress < 1) frameId = requestAnimationFrame(step)
     }
     frameId = requestAnimationFrame(step)
-
     return () => {
       if (frameId) cancelAnimationFrame(frameId)
     }
-  }, [totalScore, prefersReducedMotion])
+  }, [prefersReducedMotion, totalScore])
 
-  // Counts the round's points up from 0 once the summary screen appears.
   useEffect(() => {
     if (phase !== 'summary') return undefined
-
     if (prefersReducedMotion) {
-      setSummaryScoreDisplay(roundScore)
+      setSummaryScoreDisplay(shift?.score ?? 0)
       return undefined
     }
-
     let frameId
     const start = performance.now()
+    const score = shift?.score ?? 0
     const step = (now) => {
       const progress = Math.min(1, (now - start) / ANIM_MS.score)
-      setSummaryScoreDisplay(Math.round(roundScore * easeOutCubic(progress)))
-      if (progress < 1) {
-        frameId = requestAnimationFrame(step)
-      }
+      setSummaryScoreDisplay(Math.round(score * easeOutCubic(progress)))
+      if (progress < 1) frameId = requestAnimationFrame(step)
     }
     frameId = requestAnimationFrame(step)
-
     return () => {
       if (frameId) cancelAnimationFrame(frameId)
     }
-  }, [phase, roundScore, prefersReducedMotion])
+  }, [phase, prefersReducedMotion, shift?.score])
 
-  // Lightweight CSS-only confetti when more than half the round was served.
   useEffect(() => {
-    if (phase !== 'summary' || prefersReducedMotion) return undefined
-    if (roundResults.length === 0) return undefined
-
-    const served = roundResults.filter((result) => result.satisfied).length
-    if (served <= roundResults.length / 2) return undefined
-
+    if (phase !== 'summary' || prefersReducedMotion || !shift?.results.length) {
+      return undefined
+    }
+    const served = shift.results.filter((result) => result.satisfied).length
+    if (served <= shift.results.length / 2) return undefined
     const colors = ['#ffd54f', '#4f9e6a', '#e85d4c', '#4a90d9']
     const count = 12 + Math.floor(Math.random() * 9)
     setConfetti(
       Array.from({ length: count }, (_, index) => ({
-        id: `${roundId}-${index}`,
+        id: `${stage}-${index}`,
         left: Math.random() * 100,
         color: colors[index % colors.length],
         delay: Math.random() * 300,
@@ -381,32 +351,39 @@ export default function OrdersModeScreen() {
         spin: 180 + Math.random() * 360,
       })),
     )
-
     const timeoutId = window.setTimeout(() => setConfetti([]), 1700)
     return () => window.clearTimeout(timeoutId)
-  }, [phase, roundResults, roundId, prefersReducedMotion])
+  }, [phase, prefersReducedMotion, shift?.results, stage])
 
-  if (!passedLevelIds.includes(1)) {
+  if (!validStage || unlockedStage === 0) {
     return <Navigate to="/jugar" replace />
   }
+  if (stage > unlockedStage) return <Navigate to="/pedidos" replace />
+  if (!hasStarted && shift?.status === 'completed') {
+    return <Navigate to="/pedidos" replace />
+  }
 
-  function startRound() {
-    const nextRoundIdValue = ++nextRoundId
-    setRoundId(nextRoundIdValue)
-    const nextOrders = createOrdersRound(passedLevelIds)
-    setRoundOrders(nextOrders)
-    setOrderIndex(0)
+  function startShiftPlay() {
+    const nextShift = shift
+    if (!nextShift) return
+    setHasStarted(true)
+    const nextIndex = findNextOrderIndex(nextShift)
+    const nextOrder = ORDERS.find((order) => order.id === nextShift.orderIds[nextIndex])
+    if (!nextOrder) {
+      setPhase('summary')
+      return
+    }
+    setOrderIndex(nextIndex)
     setSelection(createEmptySelection(slots))
     setOrderResult(null)
-    setRoundResults([])
-    setRoundScore(0)
-    setRemainingMs(nextOrders[0].timeSeconds * 1000)
+    setRemainingMs(tier.timeSeconds * 1000)
     resolvedRef.current = false
     setCardPhase('idle')
     setExiting(false)
     setScoreFloat(null)
+    markActiveOrder(stage, nextOrder.id)
     setAnnouncement(
-      `Pedido 1 de ${ROUND_SIZE}. Tienes ${nextOrders[0].timeSeconds} segundos.`,
+      `Pedido ${nextIndex + 1} de ${nextShift.orderIds.length}. Tienes ${tier.timeSeconds} segundos.`,
     )
     setPhase('play')
   }
@@ -417,89 +394,85 @@ export default function OrdersModeScreen() {
   }
 
   function advanceOrder() {
-    if (orderIndex + 1 === roundOrders.length) {
+    if (orderIndex + 1 >= shiftOrderIds.length) {
       setPhase('summary')
       return
     }
+    const nextIndex = orderIndex + 1
+    const nextOrder = ORDERS.find((order) => order.id === shiftOrderIds[nextIndex])
+    if (!nextOrder) return
     resolvedRef.current = false
     setCardPhase('idle')
     setExiting(false)
     setScoreFloat(null)
-    setRemainingMs(roundOrders[orderIndex + 1].timeSeconds * 1000)
+    setRemainingMs(tier.timeSeconds * 1000)
     setAnnouncement(
-      `Pedido ${orderIndex + 2} de ${ROUND_SIZE}. Tienes ${roundOrders[orderIndex + 1].timeSeconds} segundos.`,
+      `Pedido ${nextIndex + 1} de ${shiftOrderIds.length}. Tienes ${tier.timeSeconds} segundos.`,
     )
-    setOrderIndex((current) => current + 1)
+    setOrderIndex(nextIndex)
     setSelection(createEmptySelection(slots))
     setOrderResult(null)
+    markActiveOrder(stage, nextOrder.id)
   }
 
-  function playAgain() {
-    setRoundOrders([])
-    setOrderIndex(0)
-    setSelection(createEmptySelection(slots))
-    setOrderResult(null)
-    setRoundResults([])
-    setRoundScore(0)
-    setRemainingMs(0)
-    resolvedRef.current = false
-    setCardPhase('idle')
-    setExiting(false)
-    setScoreFloat(null)
-    setSummaryScoreDisplay(0)
-    setConfetti([])
-    setAnnouncement('')
-    setPhase('intro')
+  function leaveShift() {
+    if (phase === 'play' && currentOrder && !orderResult && !resolvedRef.current) {
+      resolvedRef.current = true
+      addOrderPoints(`${stage}:${currentOrder.id}`, 0)
+      recordShiftOrderResult(stage, {
+        orderId: currentOrder.id,
+        customerName: currentOrder.customer,
+        satisfied: false,
+        pointsAwarded: 0,
+        lost: true,
+      })
+    }
+    navigate('/jugar')
   }
 
-  const ordersServed = roundResults.filter((result) => result.satisfied).length
-  const ordersFailed = roundResults.length - ordersServed
+  const results = shift?.results ?? []
+  const ordersServed = results.filter((result) => result.satisfied).length
+  const ordersFailed = results.length - ordersServed
   const timerUrgency = getTimerUrgency(remainingMs, durationMs)
+  const shiftSize = shift?.orderIds.length ?? 0
 
   return (
     <LevelScene
-      levelId={currentTier.minPassedLevels}
+      levelId={stage}
       scoreDisplay={scoreDisplay}
       scoreBounceKey={scoreBounceTick || undefined}
     >
-      <section className="page level-page level-builder orders-mode">
+      <section className="page level-page level-builder orders-mode scene-zones">
         <div className="orders-mode__fixed-top">
           <h1 className="level-question__level orders-mode__tier">
-            Nivel: {currentTier.name}
+            Nivel: {tier.name}
           </h1>
-
           {phase === 'play' && currentOrder ? (
             <>
               <p className="level-progress">
-                Pedido {orderIndex + 1} de {roundOrders.length}
+                Pedido {orderIndex + 1} de {shiftSize}
                 <span className="orders-mode__sr-only">
                   {' '}
-                  Puntaje del turno: {roundScore}
+                  Puntaje del turno: {shift?.score ?? 0}
                 </span>
               </p>
               <article
-                key={`${roundId}-${orderIndex}`}
+                key={`${stage}-${orderIndex}`}
                 className={[
                   'orders-mode__ticket',
                   currentOrder.text.length > 120 ? 'is-long' : '',
                   cardPhase === 'correct' ? 'is-correct' : '',
                   cardPhase === 'timeout' ? 'is-timeout' : '',
                   cardPhase === 'wrong' ? 'is-wrong' : '',
-                ]
-                  .filter(Boolean)
-                  .join(' ')}
+                ].filter(Boolean).join(' ')}
                 style={{ '--order-paper-image': `url("${orderPaper}")` }}
               >
                 <h2 className="orders-mode__customer">
                   Pedido de {currentOrder.customer}
                 </h2>
-                <p className="orders-mode__quote">
-                  “{currentOrder.text}”
-                </p>
+                <p className="orders-mode__quote">“{currentOrder.text}”</p>
                 <p className="orders-mode__topics orders-mode__sr-only">
-                  {currentOrder.topics
-                    .map((topic) => ORDER_TOPIC_LABELS[topic] ?? topic)
-                    .join(' · ')}
+                  {currentOrder.topics.map((topic) => ORDER_TOPIC_LABELS[topic] ?? topic).join(' · ')}
                 </p>
               </article>
               <div className="orders-mode__timer-hint">
@@ -511,9 +484,7 @@ export default function OrdersModeScreen() {
                         'orders-mode__timer-seconds',
                         timerUrgency === 'red' ? 'is-urgent' : '',
                         timerUrgency === 'amber' ? 'is-urgent-soft' : '',
-                      ]
-                        .filter(Boolean)
-                        .join(' ')}
+                      ].filter(Boolean).join(' ')}
                     >
                       {Math.ceil(remainingMs / 1000)} s
                     </span>
@@ -521,12 +492,7 @@ export default function OrdersModeScreen() {
                   <div className="orders-mode__timer-track">
                     <div
                       className={`orders-mode__timer-fill${timerUrgency !== 'normal' ? ` is-${timerUrgency}` : ''}`}
-                      style={{
-                        '--timer-progress': Math.max(
-                          0,
-                          Math.min(1, remainingMs / durationMs),
-                        ),
-                      }}
+                      style={{ '--timer-progress': Math.max(0, Math.min(1, remainingMs / durationMs)) }}
                     />
                   </div>
                 </div>
@@ -534,35 +500,33 @@ export default function OrdersModeScreen() {
                   Elige los ingredientes para preparar la pizza
                 </p>
               </div>
-              <p
-                className="orders-mode__sr-only"
-                aria-live="polite"
-                aria-atomic="true"
-              >
+              <p className="orders-mode__sr-only" aria-live="polite" aria-atomic="true">
                 {announcement}
               </p>
             </>
-          ) : null}
+          ) : (
+            <p className="level-progress">Turno de {shiftSize} pedidos</p>
+          )}
         </div>
 
-        <div className="orders-mode__scroll">
+        <div className="orders-mode__scroll scene-zones__scroll">
           {phase === 'intro' ? (
             <article className="orders-mode__intro">
+              <h2>{tier.name} · Etapa {stage}</h2>
+              <p><strong>Este turno evalúa: {joinTopicNames(topics)}</strong></p>
               <p>
-                <strong>Este turno evalúa: {joinTopicNames(topics)}</strong>
+                {shift?.results.length
+                  ? `Continúas tu turno: ${shift.results.length} de ${shiftSize} pedidos ya resueltos.`
+                  : `Prepara ${shiftSize} pedidos. Cada pedido tiene su propio reloj.`}
               </p>
-              <p>
-                Prepara {ROUND_SIZE} pedidos antes de que se acabe el tiempo.
-                Cada pedido tiene su propio reloj.
+              <p className="orders-mode__warning">
+                Cada turno se juega una sola vez. No podrás repetirlo.
               </p>
             </article>
           ) : null}
 
           {phase === 'play' && currentOrder && !orderResult ? (
-            <div
-              className="orders-mode__options"
-              key={`options-${roundId}-${orderIndex}`}
-            >
+            <div className="orders-mode__options" key={`options-${stage}-${orderIndex}`}>
               <PizzaBuilderControls
                 slots={slots}
                 selection={selection}
@@ -573,9 +537,7 @@ export default function OrdersModeScreen() {
           ) : null}
 
           {phase === 'play' && currentOrder && orderResult ? (
-            <div
-              className={`level-feedback ${orderResult.satisfied ? 'is-correct' : 'is-incorrect'}`}
-            >
+            <div className={`level-feedback ${orderResult.satisfied ? 'is-correct' : 'is-incorrect'}`}>
               <p className="level-feedback__result">
                 {orderResult.expired
                   ? 'Se acabó el tiempo: el pedido se perdió. 0 puntos.'
@@ -594,9 +556,7 @@ export default function OrdersModeScreen() {
                   </li>
                 ))}
               </ul>
-              <p className="orders-mode__tip">
-                <strong>Consejo:</strong> {currentOrder.tip}
-              </p>
+              <p className="orders-mode__tip"><strong>Consejo:</strong> {currentOrder.tip}</p>
             </div>
           ) : null}
 
@@ -608,7 +568,6 @@ export default function OrdersModeScreen() {
                 <li>Pedidos fallidos: {ordersFailed}</li>
                 <li>Puntaje del turno: {summaryScoreDisplay}</li>
                 <li>Puntaje acumulado: {totalScore}</li>
-                <li>Tier jugado: {currentTier.name}</li>
               </ul>
               {confetti.length > 0 ? (
                 <div className="orders-mode__confetti-layer" aria-hidden="true">
@@ -632,17 +591,17 @@ export default function OrdersModeScreen() {
           ) : null}
         </div>
 
-        <div className="orders-mode__actions">
+        <div className="orders-mode__actions scene-zones__actions">
           {phase === 'intro' ? (
             <button
-              className="level-action level-action--confirm orders-mode__start-button"
+              className="level-action level-action--confirm orders-mode__start-button orders-mode__action--wide"
               type="button"
-              onClick={startRound}
+              onClick={startShiftPlay}
+              disabled={!shift}
             >
               Empezar
             </button>
           ) : null}
-
           {phase === 'play' && currentOrder && (!orderResult || exiting) ? (
             <button
               className="level-action level-action--confirm"
@@ -653,61 +612,35 @@ export default function OrdersModeScreen() {
               ENTREGAR
             </button>
           ) : null}
-
           {phase === 'play' && currentOrder && orderResult && !exiting ? (
             <button
               className="level-action level-action--confirm orders-mode__action--wide"
               type="button"
               onClick={advanceOrder}
             >
-              {orderIndex + 1 === roundOrders.length
-                ? 'Ver resumen'
-                : 'Siguiente pedido'}
+              {orderIndex + 1 === shiftSize ? 'Ver resumen' : 'Siguiente pedido'}
             </button>
           ) : null}
-
           {phase === 'summary' ? (
-            <button
-              className="level-action level-action--confirm orders-mode__action--wide"
-              type="button"
-              onClick={playAgain}
+            <Link
+              className="level-action level-action--confirm orders-mode__action--wide orders-mode__summary-action"
+              to="/pedidos"
             >
-              Jugar otra ronda
-            </button>
+              Volver a los turnos
+            </Link>
           ) : null}
-
           {scoreFloat != null ? (
-            <span
-              key={scoreFloatTick}
-              className="orders-mode__score-float"
-              aria-hidden="true"
-            >
+            <span key={scoreFloatTick} className="orders-mode__score-float" aria-hidden="true">
               +{scoreFloat}
             </span>
           ) : null}
-
-          {phase === 'play' ? (
-            <Link
-              className="level-action level-action--home orders-mode__home"
-              to="/jugar"
-            >
-              INICIO
-            </Link>
-          ) : phase === 'summary' ? (
-            <Link
-              className="level-action level-action--home orders-mode__home orders-mode__action--wide"
-              to="/jugar"
-            >
-              Volver al mapa
-            </Link>
-          ) : (
-            <Link
-              className="level-action level-action--home orders-mode__home orders-mode__action--wide"
-              to="/jugar"
-            >
-              Volver al mapa
-            </Link>
-          )}
+          <button
+            className="level-action level-action--home orders-mode__home orders-mode__action--wide"
+            type="button"
+            onClick={leaveShift}
+          >
+            INICIO
+          </button>
         </div>
       </section>
     </LevelScene>

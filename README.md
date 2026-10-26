@@ -1,5 +1,23 @@
 # React + Vite
 
+## Levels pizza artwork
+
+`src/components/PizzaPreview.jsx` is a decorative, SVG-only illustration with
+instance-scoped definitions. It accepts `selection` (`masa`, `salsa`, `queso`,
+`toppings`) using the choice IDs in `src/data/levels.json`, plus `className`,
+`glow`, `cutLines` and `doneness` (`golden` by default, or `burnt`). Burnt
+pizzas reuse the same ingredient slots with charred edges, browned cheese,
+darkened toppings, an ash overlay and a static smoke wisp. The results oven
+uses its existing pass/fail value to choose doneness and the bubble text
+(`¡Ding!` on success, `¡Uy!` on failure); its existing smoke puff keeps the
+same animation and is static with reduced motion.
+Omitting `selection` draws a margherita; empty builder
+slots use the default base, sauce and cheese but do not add toppings.
+Ingredient placement is deterministic and independent of topping selection order.
+The illustration has no animations of its own; the results oven retains its
+existing motion and reduced-motion behavior. Builder controls and the saved-pizza
+summary intentionally remain text-only to preserve their layout.
+
 This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
 Currently, two official plugins are available:

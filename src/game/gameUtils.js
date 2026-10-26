@@ -1,4 +1,5 @@
 import levelsData from '../data/levels.json'
+import ordersData from '../data/orders.json'
 
 export const POINTS_PER_CORRECT = levelsData.pointsPerCorrect
 export const POINTS_PER_WRONG = levelsData.pointsPerWrong
@@ -25,7 +26,17 @@ export function getMaxScore() {
       level.orders.length * level.scoring.pointsPerSatisfiedOrder,
     0,
   )
-  return triviaMaximum + orderMaximum
+  const ordersModeMaximum = LEVELS.reduce((total, level) => {
+    const shiftSize = ordersData.shiftSizes.find(
+      (item) => level.id >= item.minStage && level.id <= item.maxStage,
+    )?.size
+    const tier = [...ordersData.tiers]
+      .reverse()
+      .find((item) => level.id >= item.minPassedLevels)
+    if (!shiftSize || !tier) return total
+    return total + shiftSize * (tier.basePoints + ordersData.timeBonusMax)
+  }, 0)
+  return triviaMaximum + orderMaximum + ordersModeMaximum
 }
 
 export function clampScore(value) {
@@ -48,6 +59,10 @@ export function createInitialGameState() {
     orderResultsByLevel: {},
     createdPizza: null,
     gameCompleted: false,
+    ordersMode: {
+      shifts: {},
+      activeOrder: null,
+    },
   }
 }
 

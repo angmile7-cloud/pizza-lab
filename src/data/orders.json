@@ -32,29 +32,35 @@
       "name": "Aprendiz",
       "minPassedLevels": 1,
       "timeSeconds": 75,
-      "basePoints": 20
+      "basePoints": 2
     },
     {
       "id": 2,
       "name": "Cocinero",
       "minPassedLevels": 2,
       "timeSeconds": 60,
-      "basePoints": 30
+      "basePoints": 3
     },
     {
       "id": 3,
       "name": "Pizzaiolo",
       "minPassedLevels": 4,
       "timeSeconds": 50,
-      "basePoints": 40
+      "basePoints": 4
     },
     {
       "id": 4,
       "name": "Maestro",
       "minPassedLevels": 7,
       "timeSeconds": 45,
-      "basePoints": 50
+      "basePoints": 5
     }
+  ],
+  "timeBonusMax": 2,
+  "shiftSizes": [
+    { "minStage": 1, "maxStage": 2, "size": 5 },
+    { "minStage": 3, "maxStage": 5, "size": 6 },
+    { "minStage": 6, "maxStage": 10, "size": 7 }
   ],
   "orders": [
     {

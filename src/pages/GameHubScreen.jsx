@@ -140,6 +140,8 @@ export default function GameHubScreen() {
     restartGame,
     answersByLevel,
     orderResultsByLevel,
+    ordersMode,
+    unlockedStage,
   } = useGame()
   const passedLevelIds = getPassedLevelIds({
     answersByLevel,
@@ -147,6 +149,13 @@ export default function GameHubScreen() {
     createdPizza,
   })
   const ordersUnlocked = passedLevelIds.includes(1)
+  const inProgressShift = Object.values(ordersMode.shifts).some(
+    (shift) => shift.status === 'inProgress',
+  )
+  const pendingShiftCount = Array.from(
+    { length: unlockedStage },
+    (_, index) => index + 1,
+  ).filter((stage) => ordersMode.shifts[stage]?.status !== 'completed').length
   const currentLevelId = Math.min(Math.max(currentLevel, 1), LEVELS.length)
   const displayLevel = getLevel(currentLevelId)
   const mapLevels = Array.from({ length: Math.max(10, LEVELS.length) }, (_, index) => {
@@ -178,15 +187,7 @@ export default function GameHubScreen() {
       <h1 className="progress-map__title">TU PROGRESO</h1>
 
       <div className="progress-map__orders">
-        {ordersUnlocked ? (
-          <button
-            className="btn-green progress-map__orders-button"
-            type="button"
-            onClick={() => navigate('/pedidos')}
-          >
-            Modo pedidos
-          </button>
-        ) : (
+        {!ordersUnlocked ? (
           <>
             <button
               className="btn-green progress-map__orders-button"
@@ -198,6 +199,26 @@ export default function GameHubScreen() {
             </button>
             <p id="orders-mode-lock">Supera el nivel 1 para desbloquearlo</p>
           </>
+        ) : pendingShiftCount > 0 ? (
+          <button
+            className="btn-green progress-map__orders-button"
+            type="button"
+            onClick={() => navigate('/pedidos')}
+          >
+            {inProgressShift
+              ? 'Continuar turno'
+              : `${pendingShiftCount} turnos pendientes`}
+          </button>
+        ) : (
+          <button
+            className="btn-green progress-map__orders-button"
+            type="button"
+            disabled
+          >
+            {unlockedStage >= LEVELS.length
+              ? 'Turnos al día. Completaste todos los turnos.'
+              : `Turnos al día. Supera el nivel ${unlockedStage + 1} para desbloquear otro.`}
+          </button>
         )}
       </div>
 
