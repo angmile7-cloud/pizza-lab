@@ -2,6 +2,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import { LEVELS, getLevel, levelPath } from '../game/gameUtils'
 import { useGame } from '../game/useGame'
 import { getPassedLevelIds } from '../game/ordersModeUtils'
+import ChefLogo from '../components/ChefLogo'
+import ProgressFoodTrail from '../components/ProgressFoodTrail'
 
 const levelImages = import.meta.glob('../assets/Niveles/*.png', {
   eager: true,
@@ -78,46 +80,13 @@ function makeProgressPath(rowCount, offset) {
   return rowPaths.join(' ')
 }
 
-function ProgressPath({ rowCount, height }) {
-  return (
-    <svg
-      className="progress-map__path"
-      viewBox={`0 0 360 ${height}`}
-      preserveAspectRatio="none"
-      aria-hidden="true"
-      focusable="false"
-    >
-      {[-3, 3].map((offset, index) => (
-        <path
-          key={offset}
-          d={makeProgressPath(rowCount, offset)}
-          fill="none"
-          stroke="#17110e"
-          strokeWidth={index === 0 ? 1.7 : 1.35}
-          strokeLinecap="round"
-        />
-      ))}
-    </svg>
-  )
-}
-
 function FinishIllustration({ completed }) {
   return (
     <div
       className={`progress-map__finish${completed ? ' progress-map__finish--complete' : ''}`}
       aria-hidden="true"
     >
-      <svg className="progress-map__chef" viewBox="0 0 64 78">
-        <path
-          d="M12 42c-7-2-9-7-7-13 1-5 5-8 10-9C14 9 22 3 31 7c7-8 21-4 23 7 8 2 11 9 8 16-1 5-5 9-11 11v8H13z"
-          fill="#fff"
-        />
-        <path d="M13 42h39v8H13z" fill="#fff" />
-        <path
-          d="M12 64c5 0 7 4 11 4 4 0 5-4 9-4s6 4 10 4c4 0 6-4 11-4v5c-5 0-7 5-11 5s-6-4-10-4-5 4-9 4-6-5-11-5z"
-          fill="#29231e"
-        />
-      </svg>
+      <ChefLogo className="progress-map__chef" />
       <svg className="progress-map__star" viewBox="0 0 64 64">
         <path
           d="m32 3 7.2 20.8L61 24l-17 12.7 6.2 21.1L32 45 13.8 57.8 20 36.7 3 24l21.8-.2z"
@@ -223,7 +192,7 @@ export default function GameHubScreen() {
       </div>
 
       <div className="progress-map__canvas" style={{ height: mapHeight }}>
-        <ProgressPath rowCount={rowCount} height={mapHeight} />
+        <ProgressFoodTrail path={makeProgressPath(rowCount, 0)} height={mapHeight} />
         <div className="progress-map__rows">
           {rows.map((row, rowIndex) => (
             <div className="progress-map__row" key={rowIndex}>

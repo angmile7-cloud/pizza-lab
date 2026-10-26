@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import LevelScene from '../components/LevelScene'
 import PizzaBuilderControls from '../components/PizzaBuilderControls'
+import PizzaPreview from '../components/PizzaPreview'
 import orderPaper from '../assets/papel_pedido.png'
 import { useGame } from '../game/useGame'
 import {
@@ -24,6 +25,112 @@ const ANIM_MS = {
   shake: 350,
   float: 800,
   score: 600,
+}
+const PIZZA_MS = {
+  enter: 220,
+  exit: 150,
+  center: 300,
+  baked: 800,
+  verdict: 1300,
+  hint: 1000,
+  total: 2200,
+  reduced: 1500,
+  skipped: 350,
+}
+const DELICATE_LEAVES = ['albahaca', 'rucula']
+
+function getPizzaMarks(order, result, selection) {
+  const ghosts = new Set()
+  const extras = new Set()
+  const badLayers = new Set()
+  if (!result || result.satisfied || result.expired) return { ghosts: [], extras: [], badLayers: [] }
+  const selected = selection.toppings ?? []
+  for (const evaluated of result.evaluation.requirements) {
+    if (evaluated.met) continue
+    if (evaluated.requirementId === 'exact-toppings') {
+      const allowed = order.requirements.flatMap((requirement) =>
+        requirement.slot === 'toppings'
+          ? requirement.type === 'mustInclude' ? requirement.choiceIds : requirement.type === 'toppingPick' ? requirement.ids : []
+          : [],
+      )
+      selected.filter((id) => ![...allowed, ...(order.allowedExtras ?? [])].includes(id)).forEach((id) => extras.add(id))
+      continue
+    }
+    const requirement = order.requirements.find((item) => item.id === evaluated.requirementId)
+    if (!requirement) continue
+    if (['masa', 'salsa', 'queso'].includes(requirement.slot)) {
+      badLayers.add(requirement.slot)
+    } else if (requirement.slot === 'toppings') {
+      if (requirement.type === 'mustInclude') {
+        requirement.choiceIds.filter((id) => !selected.includes(id)).forEach((id) => ghosts.add(id))
+      } else if (requirement.type === 'toppingPick') {
+        const count = selected.filter((id) => requirement.ids.includes(id)).length
+        if (count < requirement.min) requirement.ids.filter((id) => !selected.includes(id)).forEach((id) => ghosts.add(id))
+        if (count > requirement.max) selected.filter((id) => requirement.ids.includes(id)).forEach((id) => extras.add(id))
+      } else if (requirement.type === 'mustNotInclude') {
+        selected.filter((id) => requirement.choiceIds.includes(id)).forEach((id) => extras.add(id))
+      }
+    }
+  }
+  return { ghosts: [...ghosts], extras: [...extras], badLayers: [...badLayers] }
+}
+
+function AnimatedOrderPizza({ selection, reduced, scheduleTimeout, stageActive, ...props }) {
+  const containerRef = useRef(null)
+  const previousRef = useRef(new Map())
+  const animationsRef = useRef(new Set())
+  const rectRef = useRef(null)
+  const stageRef = useRef(false)
+
+  useLayoutEffect(() => {
+    const container = containerRef.current
+    const svg = container.querySelector('svg')
+    const nodes = new Map([...svg.querySelectorAll('[data-pizza-element]')].map((node) => [node.dataset.pizzaElement, node]))
+    const previous = previousRef.current
+    if (reduced) {
+      animationsRef.current.forEach((animation) => animation.cancel())
+      animationsRef.current.clear()
+    }
+    const animate = (node, frames, duration) => {
+      const animation = node.animate(frames, { duration, easing: 'ease-out' })
+      animationsRef.current.add(animation)
+      animation.onfinish = () => animationsRef.current.delete(animation)
+    }
+    if (!reduced) {
+      for (const [key, node] of nodes) {
+        if (!previous.has(key)) animate(node, [
+          { opacity: 0, transform: 'translateY(-8px) scale(.6)' },
+          { opacity: 1, transform: 'translateY(0) scale(1)' },
+        ], PIZZA_MS.enter)
+      }
+      for (const [key, snapshot] of previous) {
+        if (nodes.has(key)) continue
+        const clone = snapshot.cloneNode(true)
+        clone.removeAttribute('data-pizza-element')
+        svg.append(clone)
+        animate(clone, [{ opacity: 1, transform: 'scale(1)' }, { opacity: 0, transform: 'scale(.6)' }], PIZZA_MS.exit)
+        scheduleTimeout(() => clone.remove(), PIZZA_MS.exit)
+      }
+    }
+    previousRef.current = new Map([...nodes].map(([key, node]) => [key, node.cloneNode(true)]))
+    const rect = container.getBoundingClientRect()
+    if (stageActive && !stageRef.current && rectRef.current && !reduced) {
+      const from = rectRef.current
+      animate(container, [
+        { transform: `translate(${from.x + from.width / 2 - rect.x - rect.width / 2}px, ${from.y + from.height / 2 - rect.y - rect.height / 2}px) scale(${from.width / rect.width})` },
+        { transform: 'translate(0, 0) scale(1)' },
+      ], PIZZA_MS.center)
+    }
+    rectRef.current = rect
+    stageRef.current = stageActive
+  }, [selection, props.hold, reduced, scheduleTimeout, stageActive])
+
+  useEffect(() => () => {
+    animationsRef.current.forEach((animation) => animation.cancel())
+    animationsRef.current.clear()
+  }, [])
+
+  return <div ref={containerRef} className="orders-mode__pizza-art"><PizzaPreview selection={selection} {...props} /></div>
 }
 const TIMER_COLOR_THRESHOLDS = {
   amberAtSeconds: 35,
@@ -147,6 +254,11 @@ export default function OrdersModeScreen() {
   const [scoreBounceTick, setScoreBounceTick] = useState(0)
   const [summaryScoreDisplay, setSummaryScoreDisplay] = useState(0)
   const [confetti, setConfetti] = useState([])
+  const [pizzaPhase, setPizzaPhase] = useState('idle')
+  const [skipHint, setSkipHint] = useState(false)
+  const [pizzaSkipped, setPizzaSkipped] = useState(false)
+  const pizzaTimeoutsRef = useRef([])
+  const floatShownRef = useRef(false)
   const deadlineRef = useRef(0)
   const intervalRef = useRef(null)
   const selectionRef = useRef(selection)
@@ -166,6 +278,52 @@ export default function OrdersModeScreen() {
   )
   const durationMs = (currentOrder?.timeSeconds ?? tier.timeSeconds) * 1000
   const ready = slots.every((slot) => slot.multiple || Boolean(selection[slot.id]))
+  const pizzaActive = pizzaPhase !== 'idle'
+
+  const clearPizzaTimeouts = useCallback(() => {
+    pizzaTimeoutsRef.current.forEach((id) => window.clearTimeout(id))
+    pizzaTimeoutsRef.current = []
+  }, [])
+  const showVerdictPoints = useCallback((result) => {
+    if (!result.satisfied || floatShownRef.current) return
+    floatShownRef.current = true
+    setScoreFloat(result.pointsAwarded)
+    setScoreFloatTick((tick) => tick + 1)
+    pizzaTimeoutsRef.current.push(scheduleTimeout(() => setScoreFloat(null), reducedAnimMs('float', prefersReducedMotion)))
+  }, [prefersReducedMotion, scheduleTimeout])
+  const endPizzaStage = useCallback(() => {
+    setPizzaPhase('idle')
+    setPizzaSkipped(false)
+    setSkipHint(false)
+    setExiting(false)
+    setScoreFloat(null)
+  }, [])
+  const skipPizzaStage = useCallback(() => {
+    if (!pizzaActive || !orderResult) return
+    clearPizzaTimeouts()
+    if (orderResult.satisfied) {
+      showVerdictPoints(orderResult)
+      endPizzaStage()
+      return
+    }
+    setPizzaSkipped(true)
+    setPizzaPhase('verdict')
+    setSkipHint(false)
+    showVerdictPoints(orderResult)
+    pizzaTimeoutsRef.current.push(scheduleTimeout(endPizzaStage, PIZZA_MS.skipped))
+  }, [clearPizzaTimeouts, endPizzaStage, orderResult, pizzaActive, scheduleTimeout, showVerdictPoints])
+
+  useEffect(() => {
+    if (!pizzaActive) return undefined
+    const onKey = (event) => {
+      if (!['Enter', ' ', 'Escape'].includes(event.key) || event.repeat) return
+      if (event.target.closest?.('.orders-mode__home')) return
+      event.preventDefault()
+      skipPizzaStage()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [pizzaActive, skipPizzaStage])
 
   useEffect(() => {
     if (
@@ -232,20 +390,34 @@ export default function OrdersModeScreen() {
             ? `Pedido cumplido. Sumaste ${pointsAwarded} puntos.`
             : 'El pedido no cumplió todos los requisitos.',
       )
-      if (satisfied) {
-        setCardPhase('correct')
-        setExiting(true)
-        setScoreFloat(pointsAwarded)
-        setScoreFloatTick((tick) => tick + 1)
-        scheduleTimeout(() => setExiting(false), reducedAnimMs('exit', prefersReducedMotion))
-        scheduleTimeout(() => setScoreFloat(null), reducedAnimMs('float', prefersReducedMotion))
-      } else if (expired) {
+      if (expired) {
         setCardPhase('timeout')
         setExiting(true)
         scheduleTimeout(() => setExiting(false), reducedAnimMs('crumple', prefersReducedMotion))
       } else {
-        setCardPhase('wrong')
-        scheduleTimeout(() => setCardPhase('idle'), reducedAnimMs('shake', prefersReducedMotion))
+        setCardPhase(satisfied ? 'correct' : 'wrong')
+        if (!satisfied) scheduleTimeout(() => setCardPhase('idle'), reducedAnimMs('shake', prefersReducedMotion))
+        setExiting(true)
+        setSkipHint(false)
+        setPizzaSkipped(false)
+        floatShownRef.current = false
+        clearPizzaTimeouts()
+        setPizzaPhase(prefersReducedMotion ? 'verdict' : 'oven')
+        if (prefersReducedMotion) {
+          showVerdictPoints(result)
+        } else {
+          pizzaTimeoutsRef.current.push(
+            scheduleTimeout(() => setPizzaPhase('leaves'), PIZZA_MS.baked),
+            scheduleTimeout(() => {
+              setPizzaPhase('verdict')
+              showVerdictPoints(result)
+            }, PIZZA_MS.verdict),
+          )
+        }
+        pizzaTimeoutsRef.current.push(
+          scheduleTimeout(() => setSkipHint(true), PIZZA_MS.hint),
+          scheduleTimeout(endPizzaStage, prefersReducedMotion ? PIZZA_MS.reduced : PIZZA_MS.total),
+        )
       }
     },
     [
@@ -258,6 +430,9 @@ export default function OrdersModeScreen() {
       shift,
       stage,
       tier.basePoints,
+      clearPizzaTimeouts,
+      endPizzaStage,
+      showVerdictPoints,
     ],
   )
 
@@ -381,6 +556,8 @@ export default function OrdersModeScreen() {
     setCardPhase('idle')
     setExiting(false)
     setScoreFloat(null)
+    clearPizzaTimeouts()
+    setPizzaPhase('idle')
     markActiveOrder(stage, nextOrder.id)
     setAnnouncement(
       `Pedido ${nextIndex + 1} de ${nextShift.orderIds.length}. Tienes ${tier.timeSeconds} segundos.`,
@@ -405,6 +582,8 @@ export default function OrdersModeScreen() {
     setCardPhase('idle')
     setExiting(false)
     setScoreFloat(null)
+    clearPizzaTimeouts()
+    setPizzaPhase('idle')
     setRemainingMs(tier.timeSeconds * 1000)
     setAnnouncement(
       `Pedido ${nextIndex + 1} de ${shiftOrderIds.length}. Tienes ${tier.timeSeconds} segundos.`,
@@ -435,6 +614,12 @@ export default function OrdersModeScreen() {
   const ordersFailed = results.length - ordersServed
   const timerUrgency = getTimerUrgency(remainingMs, durationMs)
   const shiftSize = shift?.orderIds.length ?? 0
+  const verdictVisible = pizzaActive && pizzaPhase === 'verdict'
+  const ticketPizzaVisible = Boolean(orderResult?.satisfied) && !pizzaActive
+  const pizzaMarks = orderResult && (!pizzaActive || verdictVisible)
+    ? getPizzaMarks(currentOrder, orderResult, selection)
+    : {}
+  const heldLeaves = pizzaPhase === 'oven' ? DELICATE_LEAVES : EMPTY_SLOTS
 
   return (
     <LevelScene
@@ -456,13 +641,14 @@ export default function OrdersModeScreen() {
                   Puntaje del turno: {shift?.score ?? 0}
                 </span>
               </p>
+              <div className={`orders-mode__ticket-slot${ticketPizzaVisible ? ' has-pizza' : ''}`} key={`${stage}-${orderIndex}`}>
               <article
-                key={`${stage}-${orderIndex}`}
                 className={[
                   'orders-mode__ticket',
                   currentOrder.text.length > 120 ? 'is-long' : '',
                   cardPhase === 'correct' ? 'is-correct' : '',
-                  cardPhase === 'timeout' ? 'is-timeout' : '',
+                  cardPhase === 'timeout' && exiting ? 'is-timeout' : '',
+                  orderResult && !orderResult.satisfied && (cardPhase === 'idle' || (cardPhase === 'timeout' && !exiting)) ? 'is-resolved' : '',
                   cardPhase === 'wrong' ? 'is-wrong' : '',
                 ].filter(Boolean).join(' ')}
                 style={{ '--order-paper-image': `url("${orderPaper}")` }}
@@ -475,6 +661,12 @@ export default function OrdersModeScreen() {
                   {currentOrder.topics.map((topic) => ORDER_TOPIC_LABELS[topic] ?? topic).join(' · ')}
                 </p>
               </article>
+              {ticketPizzaVisible ? (
+                <div className="orders-mode__ticket-pizza" aria-hidden="true">
+                  <PizzaPreview selection={selection} glow cutLines face="happy" />
+                </div>
+              ) : null}
+              </div>
               <div className="orders-mode__timer-hint">
                 <div className="orders-mode__timer" aria-hidden="true">
                   <div className="orders-mode__timer-label">
@@ -500,6 +692,35 @@ export default function OrdersModeScreen() {
                   Elige los ingredientes para preparar la pizza
                 </p>
               </div>
+                <div className="orders-mode__preview-slot" aria-hidden="true" style={ticketPizzaVisible ? { visibility: 'hidden' } : undefined}>
+                  <div
+                    className={`orders-mode__pizza-stage${pizzaActive ? ' is-active' : ''}${verdictVisible ? ` is-verdict ${orderResult.satisfied ? 'is-happy' : 'is-worried'}` : ''}${pizzaPhase === 'leaves' ? ' is-leaves' : ''}${pizzaSkipped ? ' is-skipped' : ''}`}
+                    onClick={pizzaActive ? skipPizzaStage : undefined}
+                  >
+                    <AnimatedOrderPizza
+                      key={currentOrder.id}
+                      selection={selection}
+                      reduced={prefersReducedMotion || pizzaSkipped}
+                      scheduleTimeout={scheduleTimeout}
+                      stageActive={pizzaActive}
+                      face={verdictVisible ? orderResult.satisfied ? 'happy' : 'worried' : !orderResult && timerUrgency === 'red' ? 'nervous' : 'none'}
+                      hold={heldLeaves}
+                      glow={pizzaActive && (!verdictVisible || orderResult.satisfied)}
+                      cutLines={verdictVisible && orderResult.satisfied}
+                      sliceWiggle={verdictVisible && orderResult.satisfied && !prefersReducedMotion && !pizzaSkipped}
+                      {...pizzaMarks}
+                    />
+                    {pizzaPhase === 'oven' ? <div className="orders-mode__baking"><i /><i /><i /><span>¡Ding!</span></div> : null}
+                    {pizzaPhase === 'leaves' && selection.toppings.some((id) => DELICATE_LEAVES.includes(id)) ? <span className="orders-mode__leaf-sparkle">✦</span> : null}
+                    {verdictVisible ? (
+                      <div className="orders-mode__verdict-bubble">
+                        {orderResult.satisfied ? `¡Gracias, ${currentOrder.customer}!` : 'Eso no es lo que pedí…'}
+                        {pizzaMarks.extras?.length > 0 ? <small>× de más</small> : null}
+                      </div>
+                    ) : null}
+                    {pizzaActive && skipHint ? <small className="orders-mode__skip-hint">Toca para saltar</small> : null}
+                  </div>
+                </div>
               <p className="orders-mode__sr-only" aria-live="polite" aria-atomic="true">
                 {announcement}
               </p>
@@ -536,7 +757,7 @@ export default function OrdersModeScreen() {
             </div>
           ) : null}
 
-          {phase === 'play' && currentOrder && orderResult ? (
+          {phase === 'play' && currentOrder && orderResult && !pizzaActive ? (
             <div className={`level-feedback ${orderResult.satisfied ? 'is-correct' : 'is-incorrect'}`}>
               <p className="level-feedback__result">
                 {orderResult.expired

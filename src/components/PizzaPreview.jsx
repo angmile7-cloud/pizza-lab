@@ -40,6 +40,12 @@ export default function PizzaPreview({
   glow = false,
   cutLines = false,
   doneness = 'golden',
+  face = 'none',
+  ghosts = [],
+  extras = [],
+  badLayers = [],
+  hold = [],
+  sliceWiggle = false,
 }) {
   const burnt = doneness === 'burnt'
   const instanceId = useId()
@@ -50,6 +56,9 @@ export default function PizzaPreview({
   const sauce = selection.salsa || 'tomate'
   const cheese = selection.queso || 'mozzarella'
   const selectedToppings = selection.toppings ?? []
+  const hasDough = Boolean(selection.masa)
+  const hasSauce = Boolean(selection.salsa)
+  const hasCheese = Boolean(selection.queso) && cheese !== 'sin-queso'
 
   return (
     <svg
@@ -125,6 +134,10 @@ export default function PizzaPreview({
           <stop offset=".65" stopColor="#ffd36e" stopOpacity=".3" /><stop offset="1" stopColor="#ffd36e" stopOpacity="0" />
         </radialGradient>
         <clipPath id={id('surface')}><path d={SAUCE} /></clipPath>
+        {sliceWiggle ? Array.from({ length: 6 }, (_, index) => {
+          const angle = index * Math.PI / 3
+          return <clipPath key={index} id={id(`slice-${index}`)}><path d={`M120 120L${120 + 150 * Math.cos(angle)} ${120 + 150 * Math.sin(angle)}A150 150 0 0 1 ${120 + 150 * Math.cos(angle + Math.PI / 3)} ${120 + 150 * Math.sin(angle + Math.PI / 3)}Z`} /></clipPath>
+        }) : null}
         <symbol id={id('cheese')} viewBox="-22 -22 44 44">
           <path d="M-18-7C-20-17-8-19-2-15C5-21 18-15 16-6C24 1 14 7 15 14C8 23 1 13-8 17C-19 18-15 9-20 5C-23 1-21-4-18-7Z" fill={paint(burnt ? 'charred-cheese' : 'mozzarella')} stroke={burnt ? '#211a15' : '#c89a56'} strokeWidth=".6" />
           <path d="M-14-8Q-10-15-3-12M0-12L5-13" fill="none" stroke={burnt ? '#bc8c55' : '#fffdf0'} strokeWidth="2" strokeLinecap="round" opacity={burnt ? '.4' : '.85'} />
@@ -187,7 +200,10 @@ export default function PizzaPreview({
         <path d="M58 28Q76 119 57 210M67 24Q82 115 67 216M177 24Q159 111 179 215M191 34Q174 128 193 205M36 48Q49 121 34 190" />
         <circle cx="120" cy="120" r="107" />
       </g>
-      <path d={CRUST} fill="#65371e" opacity=".3" transform="translate(0 3)" />
+      <g style={sliceWiggle ? { display: 'none' } : undefined}>
+      <g id={id('food')}>
+      {hasDough ? <path d={CRUST} fill="#65371e" opacity=".3" transform="translate(0 3)" /> : null}
+      {hasDough ? <g key={`masa-${selection.masa}`} className="pizza-preview__layer" data-pizza-element={`masa-${selection.masa}`}>
       <g transform={thin ? 'translate(120 120) scale(1.025) translate(-120 -120)' : undefined}>
         <path d={CRUST} fill={paint('crust')} stroke="#9d5a2c" strokeWidth="1" />
         {burnt ? <path d={CRUST} fill={paint('charred-edge')} /> : null}
@@ -209,10 +225,16 @@ export default function PizzaPreview({
           const radius = 88 + index % 5 * 3.1
           return <ellipse key={index} cx={120 + Math.cos(angle) * radius} cy={120 + Math.sin(angle) * radius} rx="1.4" ry=".7" transform={`rotate(${index * 19} ${120 + Math.cos(angle) * radius} ${120 + Math.sin(angle) * radius})`} fill={index % 2 ? '#ecd09a' : '#624021'} />
         }) : null}
+        {badLayers.includes('masa') ? <path d={CRUST} fill="none" stroke="#d63137" strokeWidth="3" /> : null}
       </g>
+      </g> : null}
       <g transform={thin ? 'translate(120 120) scale(1.09) translate(-120 -120)' : undefined}>
-        <path d={SAUCE} fill={paint(sauce)} stroke={sauce === 'pesto' ? '#46652b' : sauce === 'bianca' ? '#c1a66e' : '#a13523'} strokeWidth="1" />
+        {hasSauce ? <g key={`salsa-${sauce}`} className="pizza-preview__layer" data-pizza-element={`salsa-${sauce}`}>
+          <path d={SAUCE} fill={paint(sauce)} stroke={sauce === 'pesto' ? '#46652b' : sauce === 'bianca' ? '#c1a66e' : '#a13523'} strokeWidth="1" />
+          {badLayers.includes('salsa') ? <path d={SAUCE} fill="none" stroke="#d63137" strokeWidth="3" /> : null}
+        </g> : null}
         <g clipPath={paint('surface')}>
+          {hasSauce ? <g className="pizza-preview__sauce-detail">
           <path d="M61 101C62 56 154 44 180 94S150 185 99 179S66 111 110 94S170 115 144 144" fill="none" stroke={sauce === 'tomate' ? '#f39060' : sauce === 'pesto' ? '#b3c963' : '#fff9d9'} strokeWidth="3" opacity=".28" strokeLinecap="round" />
           {Array.from({ length: 27 }, (_, index) => {
             const angle = index * 2.39996
@@ -220,8 +242,9 @@ export default function PizzaPreview({
             return <ellipse key={index} cx={120 + Math.cos(angle) * radius} cy={120 + Math.sin(angle) * radius} rx={sauce === 'pesto' ? 2.6 : 1.3} ry={sauce === 'bianca' ? 1.5 : .8} fill={sauce === 'tomate' ? '#8a3423' : '#36562a'} opacity=".5" />
           })}
           <path d="M56 94Q64 68 88 59M99 54L105 52M174 72L178 77" fill="none" stroke={sauce === 'tomate' ? '#ffb289' : '#fff8bb'} strokeWidth="2" opacity=".6" strokeLinecap="round" />
-          {cheese !== 'sin-queso' ? (
-            <>
+          </g> : null}
+          {hasCheese ? (
+            <g key={`queso-${cheese}`} className="pizza-preview__layer" data-pizza-element={`queso-${cheese}`}>
               <path d="M79 80Q96 107 124 115T160 147M80 125Q92 142 105 163M125 67Q127 89 126 115" fill="none" stroke="#f9e5ac" strokeWidth="1.5" opacity=".8" />
               {CHEESE_SLOTS.map(([x, y, rotation, scale], index) => (
                 <use key={index} href={`#${id('cheese')}`} x="-22" y="-22" width="44" height="44" transform={`translate(${x} ${y}) rotate(${rotation}) scale(${burnt ? scale * .88 : scale})`} />
@@ -233,28 +256,65 @@ export default function PizzaPreview({
                   <path d="M-7-2L5-4" stroke="#fffbe3" strokeWidth="1" />
                 </g>
               )) : null}
-            </>
+              {badLayers.includes('queso') ? <path d={SAUCE} transform="translate(120 120) scale(.86) translate(-120 -120)" fill="none" stroke="#d63137" strokeWidth="3" /> : null}
+            </g>
           ) : null}
           <g filter={burnt ? paint('scorch') : undefined}>
-            {TOPPINGS.flatMap((topping, index) => selectedToppings.includes(topping)
-            ? toppingSlots(topping, index).map(({ x, y, rotation, scale }, piece) => (
+            {TOPPINGS.map((topping, index) => selectedToppings.includes(topping) && !hold.includes(topping)
+            ? <g key={topping} className="pizza-preview__topping" data-pizza-element={topping}>
+              {toppingSlots(topping, index).map(({ x, y, rotation, scale }, piece) => (
               <use key={`${topping}-${piece}`} href={`#${id(`${topping}-piece`)}`} x="-16" y="-16" width="32" height="32" transform={`translate(${x} ${y}) rotate(${rotation}) scale(${scale})`} />
-            ))
-              : [])}
+              ))}
+            </g>
+              : null)}
           </g>
         </g>
-        {burnt ? (
-          <>
-            <path d={CRUST} fill="#737471" opacity=".12" />
-            <path d="M116 57C104 47 130 40 119 30S118 16 125 11M135 48C146 37 128 31 139 22" fill="none" stroke="#aaa9a4" strokeWidth="2.5" strokeLinecap="round" opacity=".5" />
-          </>
-        ) : null}
+        {badLayers.includes('queso') && !hasCheese ? <path d={SAUCE} fill="none" stroke="#d63137" strokeWidth="3" /> : null}
         {cutLines ? (
-          <g clipPath={paint('surface')} fill="none" stroke="#6e4326" strokeWidth="1" opacity=".35">
+          <g className="pizza-preview__cuts" clipPath={paint('surface')} fill="none" stroke="#6e4326" strokeWidth="1" opacity=".35">
             <path d="M38 120H202M79 49L161 191M79 191L161 49" />
           </g>
         ) : null}
       </g>
+      {burnt ? (
+        <>
+          <path d={CRUST} fill="#737471" opacity=".12" />
+          <path d="M116 57C104 47 130 40 119 30S118 16 125 11M135 48C146 37 128 31 139 22" fill="none" stroke="#aaa9a4" strokeWidth="2.5" strokeLinecap="round" opacity=".5" />
+        </>
+      ) : null}
+      </g>
+      </g>
+      {sliceWiggle ? Array.from({ length: 6 }, (_, index) => (
+        <g key={index} className="pizza-preview__slice" style={{ '--slice-turn': `${index % 2 ? 1.5 : -1.5}deg` }}>
+          <g clipPath={paint(`slice-${index}`)}><use href={`#${id('food')}`} /></g>
+        </g>
+      )) : null}
+      {TOPPINGS.map((topping, index) => {
+        const missing = ghosts.includes(topping)
+        if (!missing && !extras.includes(topping)) return null
+        const { x, y } = toppingSlots(topping, index)[0]
+        return (
+          <g key={`mark-${topping}`} className={missing ? 'pizza-preview__ghost' : 'pizza-preview__extra'}>
+            {missing ? toppingSlots(topping, index).map((slot, piece) => (
+              <g key={piece}>
+                <ellipse cx={slot.x} cy={slot.y} rx="13" ry="11" fill="#fff8e7" fillOpacity=".6" stroke="#785a3d" strokeWidth="1.8" strokeDasharray="3 2" />
+                <use href={`#${id(`${topping}-piece`)}`} x="-16" y="-16" width="32" height="32" transform={`translate(${slot.x} ${slot.y}) rotate(${slot.rotation}) scale(${slot.scale})`} opacity=".22" />
+              </g>
+            )) : null}
+            <circle cx={x + 10} cy={y - 10} r="9" fill="#fff8e7" stroke={missing ? '#785a3d' : '#c82932'} strokeWidth="1" />
+            <text x={x + 10} y={y - 5} textAnchor="middle" fontSize="15" fontWeight="800" fill={missing ? '#785a3d' : '#c82932'}>{missing ? '?' : '×'}</text>
+          </g>
+        )
+      })}
+      {face !== 'none' ? (
+        <g className={`pizza-preview__face pizza-preview__face--${face}`} stroke="#392b21" strokeWidth="3" strokeLinecap="round">
+          <rect x="88" y="96" width="64" height="49" rx="21" fill="#fff0bd" fillOpacity=".94" stroke="#d5b67c" strokeWidth="1" />
+          <ellipse cx="106" cy="113" rx="3" ry="4" fill="#392b21" stroke="none" />
+          <ellipse cx="135" cy="113" rx="3" ry="4" fill="#392b21" stroke="none" />
+          <path className="pizza-preview__mouth" d={face === 'happy' ? 'M109 126Q120 141 132 126' : face === 'worried' ? 'M110 134Q120 123 131 134' : 'M110 130q4-4 8 0t8 0'} fill="none" />
+          {face === 'nervous' ? <path d="M148 106q-9 12 0 12t0-12" fill="#80bcd5" stroke="#508da9" strokeWidth="1" /> : null}
+        </g>
+      ) : null}
     </svg>
   )
 }

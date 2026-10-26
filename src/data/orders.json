@@ -31,28 +31,28 @@
       "id": 1,
       "name": "Aprendiz",
       "minPassedLevels": 1,
-      "timeSeconds": 75,
+      "timeSeconds": 65,
       "basePoints": 2
     },
     {
       "id": 2,
       "name": "Cocinero",
       "minPassedLevels": 2,
-      "timeSeconds": 60,
+      "timeSeconds": 50,
       "basePoints": 3
     },
     {
       "id": 3,
       "name": "Pizzaiolo",
       "minPassedLevels": 4,
-      "timeSeconds": 50,
+      "timeSeconds": 40,
       "basePoints": 4
     },
     {
       "id": 4,
       "name": "Maestro",
       "minPassedLevels": 7,
-      "timeSeconds": 45,
+      "timeSeconds": 35,
       "basePoints": 5
     }
   ],

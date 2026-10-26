@@ -221,7 +221,9 @@ label {
   position: absolute;
   left: 0.75rem;
   width: 34px;
-  height: 42px;
+  height: 44px;
+  max-height: 100%;
+  object-fit: contain;
 }
 
 .level-header__title {
@@ -1509,7 +1511,8 @@ label {
 }
 
 .progress-map__title {
-  margin: 1.15rem 0 0.2rem 16%;
+  margin: 1.15rem 0 0.2rem;
+  text-align: center;
   color: #fff;
   font-family: 'Fredoka', var(--sans);
   font-size: 1.15rem;
@@ -1525,6 +1528,7 @@ label {
   display: flex;
   flex-direction: column;
   align-items: center;
+  align-self: stretch;
   gap: 0.15rem;
   margin: 0.35rem 1rem 0.45rem;
   text-align: center;
@@ -1537,6 +1541,10 @@ label {
 
 .progress-map__orders-button {
   width: auto;
+  max-width: 100%;
+  text-align: center;
+  white-space: normal;
+  overflow-wrap: anywhere;
   min-width: 136px;
   min-height: 36px;
   padding: 0.35rem 1rem;
@@ -1572,6 +1580,7 @@ label {
   width: 100%;
   height: 100%;
   overflow: visible;
+  pointer-events: none;
 }
 
 .progress-map__rows {
@@ -1662,6 +1671,7 @@ label {
 .progress-map__chef {
   width: 54px;
   height: 72px;
+  object-fit: contain;
 }
 
 .progress-map__star {
@@ -1954,6 +1964,46 @@ label {
   background-size: 144.11% 120%;
   aspect-ratio: 229 / 150;
   text-align: center;
+}
+
+.orders-mode__ticket-slot {
+  position: relative;
+  width: var(--level-answer-column-width);
+  flex: 0 0 auto;
+}
+
+.orders-mode__ticket-slot .orders-mode__ticket {
+  width: 100%;
+  padding: 10cqw 11cqw 13cqw;
+}
+
+.orders-mode__ticket-slot.has-pizza .orders-mode__ticket {
+  visibility: hidden;
+}
+
+.orders-mode__ticket.is-resolved {
+  animation: none;
+  opacity: 1;
+  transform: none;
+}
+
+.orders-mode__ticket-pizza {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: order-ticket-pizza-in 300ms ease-out both;
+}
+
+.orders-mode__ticket-pizza svg {
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes order-ticket-pizza-in {
+  from { opacity: 0; transform: scale(.9); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 .orders-mode__ticket .orders-mode__customer {
@@ -2740,7 +2790,7 @@ label {
     margin-bottom: 0 !important;
   }
 
-  .orders-mode__ticket {
+  .orders-mode__ticket-slot {
     grid-column: 1 / -1;
     grid-row: 2;
     width: 100%;
@@ -2817,6 +2867,205 @@ label {
 
 .chat-message strong {
   font-size: 0.8rem;
+}
+
+.orders-mode__preview-slot {
+  --pizza-live-size: clamp(72px, 13cqh, 120px);
+  width: 100%;
+  height: var(--pizza-live-size);
+  flex: 0 0 var(--pizza-live-size);
+  grid-column: 1 / -1;
+  position: static;
+}
+
+.orders-mode__pizza-stage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  pointer-events: none;
+}
+
+.orders-mode__pizza-art {
+  width: var(--pizza-live-size);
+  height: var(--pizza-live-size);
+  flex: 0 0 auto;
+}
+
+.orders-mode__pizza-stage.is-active {
+  position: absolute;
+  inset: clamp(40px, 5.5dvh, 50px) 0 0;
+  z-index: 5;
+  height: auto;
+  background: rgb(18 13 10 / 35%);
+  flex-direction: column;
+  gap: 12px;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.orders-mode__pizza-stage.is-active .orders-mode__pizza-art {
+  width: clamp(160px, 58cqw, 250px);
+  height: clamp(160px, 58cqw, 250px);
+}
+
+.orders-mode:has(.orders-mode__pizza-stage.is-active) .orders-mode__actions {
+  z-index: 6;
+}
+
+.orders-mode__verdict-bubble {
+  position: absolute;
+  top: calc(50% + 125px);
+  max-width: 85%;
+  padding: 10px 14px;
+  border: 2px solid #765132;
+  border-radius: 18px;
+  background: #fff5d9;
+  color: #442c1b;
+  text-align: center;
+  font-weight: 700;
+  font-size: clamp(1rem, 4cqw, 1.25rem);
+}
+
+.orders-mode__verdict-bubble small {
+  display: block;
+  color: #af2932;
+  margin-top: 4px;
+}
+
+.orders-mode__skip-hint {
+  position: absolute;
+  top: calc(50% - 160px);
+  color: #fff8e7;
+  background: #44372c;
+  padding: 3px 9px;
+  border-radius: 9px;
+}
+
+.orders-mode__baking {
+  position: absolute;
+  top: calc(50% - 125px);
+  width: 130px;
+  height: 60px;
+  pointer-events: none;
+}
+
+.orders-mode__baking i {
+  position: absolute;
+  left: 20%;
+  top: 24px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgb(255 244 217 / 65%);
+  animation: order-pizza-steam 500ms ease-out 300ms both;
+}
+
+.orders-mode__baking i:nth-child(2) { left: 48%; animation-delay: 350ms; }
+.orders-mode__baking i:nth-child(3) { left: 75%; animation-delay: 400ms; }
+.orders-mode__baking span {
+  position: absolute;
+  left: 70%;
+  top: 0;
+  padding: 4px 9px;
+  border-radius: 10px;
+  background: #fff4d3;
+  border: 1px solid #765132;
+  color: #442c1b;
+  animation: order-pizza-ding 500ms ease-out 300ms both;
+}
+
+.orders-mode__leaf-sparkle {
+  position: absolute;
+  top: calc(50% - 95px);
+  color: #fff2a5;
+  font-size: 34px;
+  animation: order-pizza-ding 300ms ease-out both;
+}
+
+.orders-mode .pizza-preview__layer,
+.orders-mode .pizza-preview__topping {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.orders-mode .pizza-preview__face--nervous .pizza-preview__mouth {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: order-pizza-nervous 400ms ease-in-out infinite alternate;
+}
+
+.orders-mode__pizza-stage.is-worried .orders-mode__pizza-art {
+  animation: order-pizza-shake 300ms ease-out;
+}
+
+.orders-mode__pizza-stage.is-happy .pizza-preview__slice {
+  transform-origin: 120px 120px;
+  animation: order-pizza-settle 400ms ease-out;
+}
+
+.orders-mode__pizza-stage.is-verdict .pizza-preview__extra {
+  animation: order-pizza-mark 450ms ease-in-out 2 alternate;
+}
+
+.orders-mode__pizza-stage.is-happy .pizza-preview__cuts path {
+  stroke-dasharray: 240;
+  stroke-dashoffset: 240;
+  animation: order-pizza-cut 450ms ease-out forwards;
+}
+
+.orders-mode__pizza-stage.is-skipped * {
+  animation: none !important;
+}
+.orders-mode__pizza-stage.is-skipped .pizza-preview__cuts path {
+  stroke-dashoffset: 0;
+}
+
+@keyframes order-pizza-steam {
+  from { opacity: 0; transform: translateY(10px) scale(.7); }
+  30% { opacity: .65; }
+  to { opacity: 0; transform: translateY(-24px) scale(1.3); }
+}
+@keyframes order-pizza-ding {
+  from { opacity: 0; transform: scale(.6); }
+  40% { opacity: 1; transform: scale(1.05); }
+  to { opacity: 0; transform: scale(1); }
+}
+@keyframes order-pizza-nervous {
+  from { transform: rotate(-5deg); }
+  to { transform: rotate(5deg); }
+}
+@keyframes order-pizza-shake {
+  25% { transform: translateX(-5px) rotate(-2deg); }
+  75% { transform: translateX(5px) rotate(2deg); }
+}
+@keyframes order-pizza-settle {
+  30% { transform: rotate(var(--slice-turn)) scale(1.025); }
+  65% { transform: rotate(0deg) scale(.99); }
+}
+@keyframes order-pizza-mark {
+  to { opacity: .45; }
+}
+@keyframes order-pizza-cut {
+  to { stroke-dashoffset: 0; }
+}
+
+@media (max-width: 600px) {
+  .orders-mode__preview-slot { --pizza-live-size: clamp(72px, 13cqh, 140px); }
+}
+@media (max-height: 600px) {
+  .orders-mode__preview-slot { --pizza-live-size: 72px; }
+  .orders-mode__verdict-bubble { top: calc(50% + 90px); }
+  .orders-mode__pizza-stage.is-active .orders-mode__pizza-art { width: 170px; height: 170px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .orders-mode__pizza-stage *,
+  .orders-mode__ticket-pizza,
+  .orders-mode .pizza-preview__mouth {
+    animation: none !important;
+    transition: none !important;
+  }
+  .orders-mode__pizza-stage.is-happy .pizza-preview__cuts path { stroke-dashoffset: 0; }
 }
 
 .chat-message p {
