@@ -274,7 +274,7 @@ function ResultLayout({
             </p>
             <div className="level-result__scores">
               <p>{pointsLabel}: <strong>{pointsDisplay}</strong></p>
-              <p>Puntaje acumulado: <strong>{totalDisplay}</strong></p>
+              <p>Total ganado: <strong>{totalDisplay}</strong></p>
             </div>
             {summary}
             <ul className="level-result__answers">

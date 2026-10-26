@@ -39,7 +39,8 @@ export default function ProgressFoodTrail({ path, height }) {
     const count = Math.min(120, Math.ceil(length / 18))
     const spacing = length / (count - 1)
     const sequence = ingredientSequence(INGREDIENTS, count)
-    const finish = ingredientSequence(FINISH, count)
+    const finishStart = count - Math.ceil(count * 0.2)
+    const finish = ingredientSequence(FINISH, count - finishStart)
     setPieces(Array.from({ length: count }, (_, index) => {
       const distance = Math.max(0, Math.min(length,
         index * spacing + (index === 0 || index === count - 1 ? 0 : (randomAt(index, 1) - 0.5) * 2),
@@ -48,14 +49,14 @@ export default function ProgressFoodTrail({ path, height }) {
       const before = guide.getPointAtLength(Math.max(0, distance - 1))
       const after = guide.getPointAtLength(Math.min(length, distance + 1))
       const angle = Math.atan2(after.y - before.y, after.x - before.x)
-      const offset = (randomAt(index, 2) - 0.5) * 6
+      const offset = index === count - 1 ? 0 : (randomAt(index, 2) - 0.5) * 6
       return {
         x: point.x - Math.sin(angle) * offset,
         y: point.y + Math.cos(angle) * offset,
         angle,
         turn: (randomAt(index, 3) - 0.5) * 110,
         size: 21 * (0.85 + randomAt(index, 4) * 0.3),
-        ingredient: index < START.length ? START[index] : index > count * 0.8 ? finish[index] : sequence[index - START.length],
+        ingredient: index < START.length ? START[index] : index >= finishStart ? finish[index - finishStart] : sequence[index - START.length],
       }
     }))
   }, [path])

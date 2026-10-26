@@ -30,7 +30,7 @@ export function RewardHeader({ availablePoints, totalScore }) {
         <h1>{rewardText('scoreTitle')}</h1>
         <p>{rewardText('totalScore', { total: totalScore })}</p>
       </div>
-      <div className="rewards-badge" aria-label={`${rewardText('availablePoints')}: ${availablePoints}`}>
+      <div className="rewards-badge" aria-live="polite" aria-atomic="true" aria-label={`${rewardText('availablePoints')}: ${availablePoints}. ${rewardText('totalScore', { total: totalScore })}`}>
         <span aria-hidden="true" className="rewards-coin">Ⓟ</span>
         <div><AnimatedPoints value={availablePoints} /><span>{rewardText('availablePoints')}</span></div>
       </div>

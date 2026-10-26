@@ -60,22 +60,21 @@ function getLevelImage(levelId) {
 }
 
 function makeProgressPath(rowCount, offset) {
-  const rowPaths = []
-  for (let row = 0; row < rowCount; row += 1) {
+  const rowPaths = [`M 60 ${69 + offset}`]
+  // The final row starts at level 10; its arrival curve is the trail's endpoint.
+  for (let row = 0; row < rowCount - 1; row += 1) {
     const y = row * ROW_HEIGHT + 69 + offset
-    rowPaths.push(`M 60 ${y} C 84 ${y - 8}, 94 ${y + 8}, 120 ${y}`)
+    rowPaths.push(`C 84 ${y - 8}, 94 ${y + 8}, 120 ${y}`)
     rowPaths.push(`C 146 ${y - 8}, 154 ${y + 8}, 180 ${y}`)
     rowPaths.push(`C 206 ${y - 8}, 214 ${y + 8}, 240 ${y}`)
     rowPaths.push(`C 266 ${y - 8}, 276 ${y + 8}, 300 ${y}`)
-    if (row < rowCount - 1) {
-      const nextY = (row + 1) * ROW_HEIGHT + 69 + offset
-      rowPaths.push(
-        `C 348 ${y}, 356 ${y + 42}, 330 ${y + 63}` +
-          ` C 302 ${y + 88}, 246 ${y + 82}, 180 ${y + 83}` +
-          ` C 116 ${y + 84}, 60 ${y + 80}, 34 ${y + 100}` +
-          ` C 14 ${y + 116}, 20 ${nextY - 10}, 60 ${nextY}`,
-      )
-    }
+    const nextY = (row + 1) * ROW_HEIGHT + 69 + offset
+    rowPaths.push(
+      `C 348 ${y}, 356 ${y + 42}, 330 ${y + 63}` +
+        ` C 302 ${y + 88}, 246 ${y + 82}, 180 ${y + 83}` +
+        ` C 116 ${y + 84}, 60 ${y + 80}, 34 ${y + 100}` +
+        ` C 14 ${y + 116}, 20 ${nextY - 10}, 60 ${nextY}`,
+    )
   }
   return rowPaths.join(' ')
 }
@@ -101,6 +100,7 @@ export default function GameHubScreen() {
   const navigate = useNavigate()
   const {
     totalScore,
+    availablePoints,
     currentLevel,
     unlockedLevel,
     createdPizza,
@@ -148,9 +148,10 @@ export default function GameHubScreen() {
           <span>{userName || 'Chef'}</span>
           <span>Nivel {currentLevelId} - {displayLevel?.title}</span>
         </div>
-        <div className="progress-map__score" aria-label={`Puntaje: ${totalScore}`}>
-          <strong>{totalScore}</strong>
-          <span>Puntaje</span>
+        <div className="progress-map__score" aria-live="polite" aria-atomic="true" aria-label={`Puntos: ${availablePoints}. Total ganado: ${totalScore}`}>
+          <strong>{availablePoints}</strong>
+          <span>Puntos</span>
+          <small>Total ganado: {totalScore}</small>
         </div>
       </header>
 

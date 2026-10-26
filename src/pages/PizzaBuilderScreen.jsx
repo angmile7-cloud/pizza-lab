@@ -51,7 +51,7 @@ export default function PizzaBuilderScreen() {
           </p>
           <h1>¡Pizza lista!</h1>
           <p>Nivel 8 · {level.title}</p>
-          <p>Puntaje acumulado: {totalScore}</p>
+          <p>Total ganado: {totalScore}</p>
           <ul>
             {slots.map((slot) => (
               <li key={slot.id}>

@@ -9,6 +9,10 @@ fantasy voucher copy, six selectable secret recipes, seven chef topics with
 helper controls unlock; reward costs never change earned scores, progress,
 tiers, shifts or the maximum score.
 
+Map, rewards and chat headers show the spendable balance as **Puntos** and the
+earned score as **Total ganado: N**. Level/order/result progress badges retain
+the earned `N/715` value and use **Total ganado**; spending never lowers them.
+
 `GameContext` exposes `spentPoints`, `redemptions`, `availablePoints`,
 `unlockedRecipeIds`, `answeredQuestionIds` and
 `redeemReward(rewardId, optionId?, requestId?)`. Recipe/question purchases require

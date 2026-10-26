@@ -788,7 +788,7 @@ export default function OrdersModeScreen() {
                 <li>Pedidos atendidos: {ordersServed}</li>
                 <li>Pedidos fallidos: {ordersFailed}</li>
                 <li>Puntaje del turno: {summaryScoreDisplay}</li>
-                <li>Puntaje acumulado: {totalScore}</li>
+                <li>Total ganado: {totalScore}</li>
               </ul>
               {confetti.length > 0 ? (
                 <div className="orders-mode__confetti-layer" aria-hidden="true">

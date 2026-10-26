@@ -16,7 +16,7 @@ export default function StatusBar() {
     <p className="status-bar">
       <Link to="/jugar">Dodo&apos;s Pizza Lab</Link>
       {' · '}
-      Puntos: {totalScore} / {getMaxScore()}
+      Total ganado: {totalScore} / {getMaxScore()}
       {' · '}
       Nivel {Math.min(currentLevel, LEVELS.length)}/{LEVELS.length}
     </p>

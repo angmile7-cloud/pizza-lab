@@ -281,8 +281,9 @@ label {
 }
 
 .level-score-badge__copy span {
-  font-size: 0.75rem;
-  letter-spacing: 0.1em;
+  font-size: 0.6rem;
+  letter-spacing: 0;
+  white-space: nowrap;
 }
 
 .level-scene__content {
@@ -1508,6 +1509,13 @@ label {
 .progress-map__score span {
   font-size: 0.8rem;
   letter-spacing: 0.08em;
+}
+
+.progress-map__score small {
+  margin-top: 0.3rem;
+  color: #655548;
+  font-size: 0.6rem;
+  white-space: nowrap;
 }
 
 .progress-map__title {

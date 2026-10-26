@@ -3,8 +3,8 @@
   "labels": {
     "brand": "DODO'S PIZZA LAB",
     "scoreTitle": "TU PUNTAJE",
-    "totalScore": "Puntaje total: {total}",
-    "availablePoints": "Puntos canjeables",
+    "totalScore": "Total ganado: {total}",
+    "availablePoints": "Puntos",
     "points": "{cost} Puntos",
     "optionCost": "{cost} puntos",
     "rewardsTitle": "Canjea Recompensas",
