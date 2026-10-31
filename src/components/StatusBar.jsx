@@ -8,7 +8,12 @@ export default function StatusBar() {
   const { pathname } = useLocation()
   const { totalScore, currentLevel } = useGame()
 
-  if (HIDDEN_ON.has(pathname) || pathname.startsWith('/nivel/')) {
+  if (
+    HIDDEN_ON.has(pathname) ||
+    pathname.startsWith('/nivel/') ||
+    pathname === '/comunidad' ||
+    pathname.startsWith('/comunidad/')
+  ) {
     return null
   }
 

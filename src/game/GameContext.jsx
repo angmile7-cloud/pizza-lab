@@ -16,6 +16,7 @@ import {
   getPassedLevelIds,
 } from './ordersModeUtils'
 import rewardsData from '../data/rewards.json'
+import { createCommunityService } from './communityService'
 import { areRewardsUnlocked, createVoucherCode, getRewardOption, rewardError, rewardText } from './rewardsUtils'
 
 export const GameContext = createContext(null)
@@ -36,6 +37,7 @@ function answerKey(levelId, questionId) {
 export function GameProvider({ children }) {
   const [userName, setUserNameState] = useState(readUserName)
   const [gameState, setGameState] = useState(createInitialGameState)
+  const [communityService] = useState(createCommunityService)
   const {
     levelScore,
     orderScore,
@@ -73,11 +75,12 @@ export function GameProvider({ children }) {
   )
 
   const resetProgress = useCallback(() => {
+    communityService.reset()
     setGameState(createInitialGameState())
     scoredKeysRef.current = new Set()
     scoredOrderKeysRef.current = new Set()
     rewardLedgerRef.current = { spentPoints: 0, redemptions: [], requests: new Map() }
-  }, [])
+  }, [communityService])
 
   const redeemReward = useCallback((rewardId, optionId, requestId) => {
     const ledger = rewardLedgerRef.current
@@ -423,6 +426,7 @@ export function GameProvider({ children }) {
   const value = useMemo(
     () => ({
       userName,
+      communityService,
       setUserName,
       startNewGame,
       levelScore,
@@ -459,6 +463,7 @@ export function GameProvider({ children }) {
     }),
     [
       userName,
+      communityService,
       setUserName,
       startNewGame,
       levelScore,

@@ -1,5 +1,43 @@
 # React + Vite
 
+## Community challenges (educational, browser-only demo)
+
+The always-enabled Comunidad map link opens `/comunidad`. Five fictional
+challenges, chef bios, starting hearts, optional photo credits and the publishing
+threshold live in [`src/data/community.json`](./src/data/community.json).
+[`src/game/communityService.js`](./src/game/communityService.js) is the only
+data adapter: it resolves local photos by basename with eager `import.meta.glob`,
+exposes challenge/entry queries, voting, publishing and removal, and owns a
+subscribable in-memory store instantiated by `GameProvider`. UI code never
+imports the JSON. Missing/unreadable photos use the existing PizzaPreview.
+
+Voting is free from level 1, with one vote per challenge stored as a
+challenge ID -> entry ID map. Choosing a different pizza moves the vote in one
+atomic store update; choosing the same pizza removes it. Other challenges keep
+their votes. Counts derive from starting hearts plus the single selected vote,
+so rapid taps cannot accumulate duplicates. Personal pizzas cannot receive the
+player's own vote. Top cards and galleries share the same selection and politely
+announce vote changes/removal, never individual count updates.
+Publishing requires every level to be passed using
+the existing passed-level helper, not just reaching level 10. One personal photo
+per challenge is allowed. JPEG/PNG/WebP files up to 5 MB are decoded locally,
+resized to at most 720 px on the long side and re-encoded as WebP through canvas
+to strip original metadata. Temporary decoding URLs are always revoked; final
+data URLs remain only in memory. Names are trimmed, limited to 30 characters and
+rendered as plain text. Nothing is uploaded, fetched externally or persisted.
+
+Personal pizzas start at zero hearts. A deterministic name/challenge-seeded
+schedule adds 1–7 hearts every 3–7 visible seconds, ending after at most 60
+reactions or before the challenge leader's initial count. The timer exists only
+on this screen while the document is visible; navigation, tab hiding, completion
+and reset stop it. The schedule resumes where it paused when returning.
+Reset/new-game clears votes, personal photos and simulated reactions. Community
+hearts never change score, spending, rewards, tiers, shifts or level access.
+Prizes are explicitly fictional game benefits. Credits show a pending message
+until credits are filled in. Sheets reuse the in-phone focus trap and Escape
+behavior from rewards; live announcements are limited to voting, publication/removal
+and actionable errors, never simulated heart increments.
+
 ## Rewards (front-end only)
 
 The map links to `/recompensas`, including before unlock. Catalog, unlock level,

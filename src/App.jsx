@@ -14,6 +14,7 @@ import Chat from './pages/Chat'
 import OrdersModeScreen from './pages/OrdersModeScreen'
 import OrdersShiftsScreen from './pages/OrdersShiftsScreen'
 import RewardsScreen from './pages/RewardsScreen'
+import CommunityScreen from './pages/CommunityScreen'
 
 export default function App() {
   return (
@@ -28,6 +29,7 @@ export default function App() {
             <Route path="/chat" element={<Chat />} />
             <Route path="/jugar" element={<GameHubScreen />} />
             <Route path="/recompensas" element={<RewardsScreen />} />
+            <Route path="/comunidad" element={<CommunityScreen />} />
             <Route path="/pedidos" element={<OrdersShiftsScreen />} />
             <Route path="/pedidos/:stage" element={<OrdersModeScreen />} />
             <Route path="/nivel/:levelId" element={<QuestionScreen />} />

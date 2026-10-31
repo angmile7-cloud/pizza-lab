@@ -142,7 +142,7 @@ export default function GameHubScreen() {
   )
 
   return (
-    <section className="progress-map">
+    <section className="progress-map progress-map--community">
       <header className="progress-map__header">
         <div className="progress-map__identity">
           <span>{userName || 'Chef'}</span>
@@ -195,6 +195,9 @@ export default function GameHubScreen() {
           <Link className="progress-map__orders-button" to="/recompensas">
             {!rewardsUnlocked && <span aria-label="Bloqueado">🔒 </span>}
             Recompensas
+          </Link>
+          <Link className="progress-map__orders-button progress-map__community-button" to="/comunidad">
+            Comunidad
           </Link>
         </div>
       </div>

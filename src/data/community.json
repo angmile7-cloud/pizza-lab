@@ -1,0 +1,24 @@
+{
+  "publishingUnlocksAfterLevel": 10,
+  "challenges": [
+    { "id": "margherita", "title": "La mejor Margherita", "description": "¡Prepara tu mejor pizza Margherita y compártela!", "hint": "Una Margherita lleva salsa de tomate, mozzarella y albahaca" },
+    { "id": "vegetariana", "title": "Pizza vegetariana", "description": "¡Dale color a tu pizza con tus verduras favoritas!", "hint": "Combina verduras de temporada y deja que brillen sus sabores" },
+    { "id": "sin_queso", "title": "Pizza sin queso", "description": "¡Crea una pizza deliciosa sin una pizca de queso!", "hint": "Prueba tomate, ajo, hierbas y un toque de aceite de oliva" },
+    { "id": "blanca", "title": "Pizza blanca", "description": "¡Comparte tu mejor pizza sin salsa de tomate!", "hint": "Una base blanca combina muy bien con queso, espinacas y champiñones" },
+    { "id": "completa", "title": "La más completa", "description": "¡Reúne tus ingredientes favoritos en una pizza llena de sabor!", "hint": "Equilibra los ingredientes para que cada bocado tenga de todo" }
+  ],
+  "entries": [
+    { "id": "margherita_01", "challengeId": "margherita", "pizzaName": "Margherita de sartén", "handle": "Luis.90", "hearts": 1257, "credit": "", "bio": "Chef ficticio que practica con su sartén favorita." },
+    { "id": "margherita_02", "challengeId": "margherita", "pizzaName": "Margherita de la esquina", "handle": "AnaPizza", "hearts": 950, "credit": "", "bio": "Chef ficticia que cultiva albahaca en su imaginación." },
+    { "id": "completa_01", "challengeId": "completa", "pizzaName": "Capricciosa de pizarra", "handle": "ChefMartina", "hearts": 842, "credit": "", "bio": "Chef ficticia que dibuja sus recetas en una pizarra." },
+    { "id": "completa_02", "challengeId": "completa", "pizzaName": "Pepperoni al aire libre", "handle": "BosqueFornero", "hearts": 615, "credit": "", "bio": "Chef ficticio que sueña con un horno entre árboles." },
+    { "id": "completa_03", "challengeId": "completa", "pizzaName": "La del barrio", "handle": "NonoPepe", "hearts": 403, "credit": "", "bio": "Chef ficticio que inventa recetas para su barrio de cuento." },
+    { "id": "vegetariana_01", "challengeId": "vegetariana", "pizzaName": "Burrata y verduras asadas", "handle": "VerdeLucia", "hearts": 1034, "credit": "", "bio": "Chef ficticia enamorada de las verduras de colores." },
+    { "id": "vegetariana_02", "challengeId": "vegetariana", "pizzaName": "Rúcula, parmesano y tomates secos", "handle": "RuculaRocio", "hearts": 721, "credit": "", "bio": "Chef ficticia que colecciona combinaciones de hojas y sabores." },
+    { "id": "blanca_01", "challengeId": "blanca", "pizzaName": "Blanca de espinacas y champiñones", "handle": "CremaCarla", "hearts": 689, "credit": "", "bio": "Chef ficticia que experimenta con bases cremosas." },
+    { "id": "blanca_02", "challengeId": "blanca", "pizzaName": "Blanca de tomatitos de colores", "handle": "TomatinaTeo", "hearts": 512, "credit": "", "bio": "Chef ficticio que imagina un huerto de tomatitos." },
+    { "id": "blanca_03", "challengeId": "blanca", "pizzaName": "Blanca de queso gratinado", "handle": "DoraditaD", "hearts": 377, "credit": "", "bio": "Chef ficticia que busca el gratinado dorado perfecto." },
+    { "id": "sin_queso_01", "challengeId": "sin_queso", "pizzaName": "Marinara con albahaca", "handle": "SalsaSofi", "hearts": 458, "credit": "", "bio": "Chef ficticia que mezcla tomates e historias." },
+    { "id": "sin_queso_02", "challengeId": "sin_queso", "pizzaName": "Marinara de ajo y orégano", "handle": "AjoAndres", "hearts": 296, "credit": "", "bio": "Chef ficticio que disfruta de los aromas del orégano." }
+  ]
+}
