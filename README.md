@@ -1,5 +1,27 @@
 # React + Vite
 
+## Chef profile (in memory only)
+
+Welcome opens `/chef`: a nickname (2–16 characters after normalization) and
+one of eight original illustrated avatars. Nicknames allow letters, numbers,
+spaces, `.`, `_` and `-`, require a letter or number, and are rendered as plain
+text. Repeated spaces collapse, surrounding whitespace is trimmed, and accents
+are normalized to NFC. The avatar picker supports arrows, Home/End and a single
+Tab stop, with a selection ring and check mark. Reduced motion disables the
+preview bob.
+
+There are no accounts, email/password fields, storage writes or external calls.
+External Google Fonts links were removed to keep the app local-only; the existing
+CSS font stacks use their system fallbacks when game fonts are not installed.
+The legacy `pizza-lab:userName` localStorage key is removed once on startup.
+All game routes require an in-memory profile; reloading them redirects to `/`.
+Old `/registro` and `/login` URLs also redirect to `/` through the fallback.
+Restart clears progress but keeps the nickname/avatar; returning to the menu
+and opening `/chef` prefills both. Starting from that screen starts a new game.
+The map and personal community entries share this identity; fictional chefs
+retain initials. Existing publishing, voting, rewards and orders rules remain
+unchanged.
+
 ## Community challenges (educational, browser-only demo)
 
 The always-enabled Comunidad map link opens `/comunidad`. Five fictional
@@ -38,6 +60,19 @@ until credits are filled in. Sheets reuse the in-phone focus trap and Escape
 behavior from rewards; live announcements are limited to voting, publication/removal
 and actionable errors, never simulated heart increments.
 
+Community photo buttons open a compact, in-phone viewer, including personal
+in-memory photos and illustration fallbacks. The viewer shares the existing
+vote handler and live counts with Top (three entries) and Ver Todos (all entries).
+Margherita has four local photos; the other challenges are unchanged.
+Previous/next buttons, arrow keys and horizontal swipes follow the gallery's
+heart-sorted order and stop at either end. Close with the close button, backdrop
+or Escape; focus is trapped and restored to the opening thumbnail. Background
+scroll is locked and restored, including when viewing from the gallery sheet.
+The square image is contained, at most 300 px or 70% of the frame width, with a
+reserved loading placeholder. The card is capped at 70% of the community frame's
+height and scrolls internally on short frames. Its 180 ms fade/scale entrance
+is disabled by reduced-motion preferences.
+
 ## Rewards (front-end only)
 
 The map links to `/recompensas`, including before unlock. Catalog, unlock level,
@@ -46,6 +81,11 @@ fantasy voucher copy, six selectable secret recipes, seven chef topics with
 [`src/data/rewards.json`](./src/data/rewards.json). The existing passed-level
 helper controls unlock; reward costs never change earned scores, progress,
 tiers, shifts or the maximum score.
+
+Under TU PROGRESO, Recompensas and Comunidad share the first centered row.
+The orders-mode button occupies its own centered row, with its existing
+`orders-mode-lock` helper directly underneath while locked. Link behavior,
+lock indicators and all orders-mode state labels remain unchanged.
 
 Map, rewards and chat headers show the spendable balance as **Puntos** and the
 earned score as **Total ganado: N**. Level/order/result progress badges retain

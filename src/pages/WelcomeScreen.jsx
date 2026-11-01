@@ -18,11 +18,8 @@ export default function WelcomeScreen() {
         />
       </div>
       <div className="menu-actions">
-        <Link className="btn-yellow" to="/registro">
-          Crear cuenta
-        </Link>
-        <Link className="btn-yellow" to="/login">
-          Iniciar sesión
+        <Link className="btn-yellow" to="/chef">
+          ¡Empezar!
         </Link>
       </div>
     </section>

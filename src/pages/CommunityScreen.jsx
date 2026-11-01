@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react'
+import { useCallback, useEffect, useId, useRef, useState, useSyncExternalStore } from 'react'
 import { Link } from 'react-router-dom'
 import LevelHeader from '../components/LevelHeader'
+import ChefAvatar from '../components/ChefAvatar'
 import PizzaPreview from '../components/PizzaPreview'
 import { RewardDialog } from '../components/RewardUI'
 import { useGame } from '../game/useGame'
@@ -8,13 +9,19 @@ import { getPassedLevelIds } from '../game/ordersModeUtils'
 import { LEVELS } from '../game/gameUtils'
 import { prepareCommunityPhoto } from '../game/communityPhoto'
 
-function CommunityPhoto({ photo, pizzaName }) {
+function CommunityPhoto({ photo, pizzaName, onOpen, viewer = false }) {
   const [failed, setFailed] = useState(false)
-  return <div className="community-photo">
+  const [loaded, setLoaded] = useState(false)
+  const content = <>
     {photo && !failed
-      ? <img src={photo} alt={pizzaName} loading="lazy" decoding="async" onError={() => setFailed(true)} />
+      ? <img src={photo} alt={pizzaName} loading={viewer ? 'eager' : 'lazy'} decoding="async"
+        style={{ opacity: loaded ? 1 : 0 }} onLoad={() => setLoaded(true)} onError={() => setFailed(true)} />
       : <div role="img" aria-label={`${pizzaName}, ilustración de pizza`}><PizzaPreview /></div>}
-  </div>
+  </>
+  return onOpen
+    ? <button type="button" className="community-photo community-photo-button"
+      aria-label={`Ampliar foto de ${pizzaName}`} onClick={onOpen}>{content}</button>
+    : <div className="community-photo">{content}</div>
 }
 
 function HeartButton({ entry, onVote }) {
@@ -37,12 +44,19 @@ function VoteHint({ chosen }) {
   </div>
 }
 
-function EntryRow({ entry, rank, gallery, onVote }) {
+function CommunityAvatar({ entry }) {
+  return <span className="community-avatar" style={{ background: entry.color }} aria-hidden="true">
+    {entry.own ? <ChefAvatar id={entry.avatarId} /> : entry.initials}
+  </span>
+}
+
+function EntryRow({ entry, rank, gallery, onVote, onOpen }) {
   return <li className={`community-entry${entry.own ? ' community-entry--own' : ''}${gallery ? ' community-entry--gallery' : ''}`}>
     <strong className="community-rank">{rank}.</strong>
-    <CommunityPhoto photo={entry.photo} pizzaName={entry.pizzaName} />
+    <CommunityPhoto key={entry.photo} photo={entry.photo} pizzaName={entry.pizzaName}
+      onOpen={(event) => onOpen(entry.id, event.currentTarget)} />
     <div className="community-chef">
-      <span className="community-avatar" style={{ background: entry.color }} aria-hidden="true">{entry.initials}</span>
+      <CommunityAvatar entry={entry} />
       <div>
         {gallery && <strong className="community-pizza-name">{entry.pizzaName}</strong>}
         <span className="community-handle">{entry.handle}</span>
@@ -53,6 +67,101 @@ function EntryRow({ entry, rank, gallery, onVote }) {
     <span className="community-count">{entry.hearts}</span>
     <HeartButton entry={entry} onVote={onVote} />
   </li>
+}
+
+function PhotoViewer({ entries, entryId, onChange, onVote, onClose, opener }) {
+  const titleId = useId()
+  const dialogRef = useRef(null)
+  const touchRef = useRef(null)
+  const index = entries.findIndex((entry) => entry.id === entryId)
+  const entry = entries[index]
+  const previous = entries[index - 1]
+  const next = entries[index + 1]
+
+  useEffect(() => {
+    const dialog = dialogRef.current
+    const overflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    dialog.querySelector('button').focus({ preventScroll: true })
+    return () => {
+      document.body.style.overflow = overflow
+      queueMicrotask(() => {
+        if (!dialog.isConnected && opener?.isConnected) opener.focus({ preventScroll: true })
+      })
+    }
+  }, [opener])
+
+  useEffect(() => {
+    const dialog = dialogRef.current
+    if (!dialog.contains(document.activeElement) || document.activeElement.matches(':disabled')) {
+      dialog.querySelector('button').focus({ preventScroll: true })
+    }
+  }, [entryId, previous?.id, next?.id])
+
+  function handleKey(event) {
+    if (event.key === 'Escape') {
+      event.preventDefault()
+      onClose()
+    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+      event.preventDefault()
+      const target = event.key === 'ArrowLeft' ? previous : next
+      if (target) onChange(target.id)
+    } else if (event.key === 'Tab') {
+      const buttons = [...dialogRef.current.querySelectorAll('button:not(:disabled)')]
+      const first = buttons[0]
+      const last = buttons.at(-1)
+      if (event.shiftKey && (document.activeElement === first || !buttons.includes(document.activeElement))) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && (document.activeElement === last || !buttons.includes(document.activeElement))) {
+        event.preventDefault()
+        first.focus()
+      }
+    }
+  }
+
+  return <div className="community-viewer-overlay" onClick={(event) => {
+    if (event.target === event.currentTarget) onClose()
+  }}>
+    <div ref={dialogRef} className="community-viewer-card" role="dialog" aria-modal="true"
+      aria-labelledby={titleId} onKeyDown={handleKey}>
+      <div className="community-viewer-toolbar">
+        <button type="button" aria-label="Cerrar foto" onClick={onClose}>×</button>
+      </div>
+      <div className="community-viewer-image" onTouchStart={(event) => {
+        const touch = event.touches[0]
+        touchRef.current = event.touches.length === 1 ? { x: touch.clientX, y: touch.clientY } : null
+      }} onTouchCancel={() => { touchRef.current = null }} onTouchEnd={(event) => {
+        const start = touchRef.current
+        touchRef.current = null
+        if (!start) return
+        const touch = event.changedTouches[0]
+        const dx = touch.clientX - start.x
+        const dy = touch.clientY - start.y
+        if (Math.abs(dx) < 40 || Math.abs(dx) <= Math.abs(dy)) return
+        const target = dx > 0 ? previous : next
+        if (target) onChange(target.id)
+      }}>
+        <CommunityPhoto key={`${entry.id}:${entry.photo}`} photo={entry.photo} pizzaName={entry.pizzaName} viewer />
+      </div>
+      <h2 id={titleId}>{entry.pizzaName}</h2>
+      <div className="community-viewer-details">
+        <div className="community-chef">
+          <CommunityAvatar entry={entry} />
+          <span className="community-handle">{entry.handle}</span>
+        </div>
+        <span className="community-count">{entry.hearts}</span>
+        <HeartButton entry={entry} onVote={onVote} />
+      </div>
+      <nav className="community-viewer-navigation" aria-label="Fotos del reto">
+        <button type="button" aria-label="Foto anterior" disabled={!previous}
+          onClick={() => onChange(previous.id)}>‹</button>
+        <span>{index + 1} / {entries.length}</span>
+        <button type="button" aria-label="Foto siguiente" disabled={!next}
+          onClick={() => onChange(next.id)}>›</button>
+      </nav>
+    </div>
+  </div>
 }
 
 function UploadForm({ challenge, onPublish, onClose }) {
@@ -143,15 +252,19 @@ function useCommunityReactions(service) {
 }
 
 export default function CommunityScreen() {
-  const { communityService: service, answersByLevel, orderResultsByLevel, createdPizza } = useGame()
+  const { communityService: service, answersByLevel, orderResultsByLevel, createdPizza, userName, avatarId } = useGame()
   useSyncExternalStore(service.subscribe, service.getSnapshot)
   useCommunityReactions(service)
   const challenges = service.getChallenges()
   const [challengeId, setChallengeId] = useState('margherita')
   const [dialog, setDialog] = useState(null)
+  const [viewer, setViewer] = useState(null)
   const [announcement, setAnnouncement] = useState('')
   const [error, setError] = useState('')
   const closeDialog = useCallback(() => setDialog(null), [])
+  function openViewer(entryId, opener) {
+    setViewer({ entryId, opener })
+  }
   const challenge = challenges.find((item) => item.id === challengeId)
   const entries = service.getEntries(challengeId)
   const own = entries.find((entry) => entry.own)
@@ -176,12 +289,12 @@ export default function CommunityScreen() {
   }
   function publish(entry) {
     if (!publishingUnlocked) throw new Error(`Termina los ${unlockLevel} niveles para subir tu pizza`)
-    service.publishEntry(challengeId, entry)
+    service.publishEntry(challengeId, { ...entry, handle: userName, avatarId })
     setAnnouncement('Pizza publicada')
     closeDialog()
   }
-  return <section className="rewards-screen community-screen">
-    <div className="rewards-layout" inert={Boolean(dialog)}>
+  return <section className={`rewards-screen community-screen${viewer ? ' community-screen--viewing' : ''}`}>
+    <div className="rewards-layout" inert={Boolean(dialog || viewer)}>
       <LevelHeader title="DODO'S PIZZA LAB" />
       <main className="community-scroll">
         <h2 className="community-title">Reto Semanal</h2>
@@ -198,7 +311,8 @@ export default function CommunityScreen() {
         <section className="community-upload" aria-label="Tu pizza">
           <div className="community-upload-frame">
             {own
-              ? <><CommunityPhoto key={own.photo} photo={own.photo} pizzaName={own.pizzaName} />
+              ? <><CommunityPhoto key={own.photo} photo={own.photo} pizzaName={own.pizzaName}
+                onOpen={(event) => openViewer(own.id, event.currentTarget)} />
                 <span className="community-upload-hearts">{own.hearts} ♥ · Tu pizza</span></>
               : <span className="community-upload-placeholder" aria-hidden="true">{publishingUnlocked ? '📷' : '🔒'}</span>}
             <button type="button" className="btn-yellow" disabled={!own && !publishingUnlocked}
@@ -211,14 +325,18 @@ export default function CommunityScreen() {
           <div>
             <p>¡Sube tu pizza y comparte el resultado!</p>
             {!publishingUnlocked && <small id="community-upload-lock">Termina los {unlockLevel} niveles para subir tu pizza</small>}
-            {own && <strong className="community-pizza-name">{own.pizzaName}</strong>}
+            {own && <>
+              <strong className="community-pizza-name">{own.pizzaName}</strong>
+              <div className="community-chef"><CommunityAvatar entry={own} /><span className="community-handle">{own.handle}</span></div>
+            </>}
           </div>
         </section>
         <section className="community-top">
           <h3>TOP PIZZAS</h3>
           <VoteHint chosen={chosen} />
           <ol className="community-entries">
-            {entries.slice(0, 3).map((entry, index) => <EntryRow key={entry.id} entry={entry} rank={index + 1} onVote={vote} />)}
+            {entries.slice(0, 3).map((entry, index) => <EntryRow key={entry.id} entry={entry} rank={index + 1}
+              onVote={vote} onOpen={openViewer} />)}
           </ol>
           <button type="button" className="btn-yellow" onClick={() => setDialog({ type: 'gallery' })}>Ver Todos</button>
         </section>
@@ -234,7 +352,7 @@ export default function CommunityScreen() {
     </div>
     <p className="rewards-announcement" role="status" aria-atomic="true">{announcement}</p>
     {error && <p className="community-error community-screen-error" role="alert">{error}</p>}
-    {dialog && <RewardDialog title={dialog.type === 'upload' ? 'Publica tu pizza'
+    {dialog && <div inert={Boolean(viewer)}><RewardDialog title={dialog.type === 'upload' ? 'Publica tu pizza'
       : dialog.type === 'gallery' ? `${challenge.title} · Todas las pizzas`
         : dialog.type === 'credits' ? 'Créditos de las fotos' : dialog.title} onClose={closeDialog}>
       {dialog.type === 'upload'
@@ -243,7 +361,8 @@ export default function CommunityScreen() {
           {dialog.type === 'gallery' && <>
             <VoteHint chosen={chosen} />
             <ol className="community-entries community-gallery">
-              {entries.map((entry, index) => <EntryRow key={entry.id} entry={entry} rank={index + 1} gallery onVote={vote} />)}
+              {entries.map((entry, index) => <EntryRow key={entry.id} entry={entry} rank={index + 1}
+                gallery onVote={vote} onOpen={openViewer} />)}
             </ol>
           </>}
           {dialog.type === 'prize' && <p>Parte de la fantasía del juego: el chef Dodo las entrega dentro de Dodo's Pizza Lab. No son premios canjeables en el mundo real.</p>}
@@ -251,6 +370,9 @@ export default function CommunityScreen() {
             ? <ul>{credits.map((credit) => <li key={credit.pizzaName}><strong>{credit.pizzaName}</strong>: {credit.credit}</li>)}</ul>
             : <p>Créditos de las fotos: pendientes de completar</p>)}
         </>}
-    </RewardDialog>}
+    </RewardDialog></div>}
+    {viewer && <PhotoViewer entries={entries} entryId={viewer.entryId} opener={viewer.opener}
+      onChange={(entryId) => setViewer((current) => ({ ...current, entryId }))}
+      onVote={vote} onClose={() => setViewer(null)} />}
   </section>
 }

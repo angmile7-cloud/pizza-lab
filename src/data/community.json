@@ -10,6 +10,8 @@
   "entries": [
     { "id": "margherita_01", "challengeId": "margherita", "pizzaName": "Margherita de sartén", "handle": "Luis.90", "hearts": 1257, "credit": "", "bio": "Chef ficticio que practica con su sartén favorita." },
     { "id": "margherita_02", "challengeId": "margherita", "pizzaName": "Margherita de la esquina", "handle": "AnaPizza", "hearts": 950, "credit": "", "bio": "Chef ficticia que cultiva albahaca en su imaginación." },
+    { "id": "margherita_03", "challengeId": "margherita", "pizzaName": "Margherita en porciones", "handle": "PizzaiolaM7", "hearts": 700, "credit": "", "bio": "Chef ficticia que comparte porciones con amigos imaginarios." },
+    { "id": "margherita_04", "challengeId": "margherita", "pizzaName": "Margherita napolitana de borde tostado", "handle": "NapoliNina", "hearts": 540, "credit": "", "bio": "Chef ficticia que sueña con bordes tostados en un horno napolitano." },
     { "id": "completa_01", "challengeId": "completa", "pizzaName": "Capricciosa de pizarra", "handle": "ChefMartina", "hearts": 842, "credit": "", "bio": "Chef ficticia que dibuja sus recetas en una pizarra." },
     { "id": "completa_02", "challengeId": "completa", "pizzaName": "Pepperoni al aire libre", "handle": "BosqueFornero", "hearts": 615, "credit": "", "bio": "Chef ficticio que sueña con un horno entre árboles." },
     { "id": "completa_03", "challengeId": "completa", "pizzaName": "La del barrio", "handle": "NonoPepe", "hearts": 403, "credit": "", "bio": "Chef ficticio que inventa recetas para su barrio de cuento." },

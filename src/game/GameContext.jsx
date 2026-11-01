@@ -1,4 +1,5 @@
-import { createContext, useCallback, useMemo, useRef, useState } from 'react'
+import { createContext, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { CHEF_AVATARS, validateChefProfile } from './chefProfile'
 import {
   clampScore,
   createInitialGameState,
@@ -20,22 +21,24 @@ import { createCommunityService } from './communityService'
 import { areRewardsUnlocked, createVoucherCode, getRewardOption, rewardError, rewardText } from './rewardsUtils'
 
 export const GameContext = createContext(null)
-const USER_NAME_KEY = 'pizza-lab:userName'
-
-function readUserName() {
-  try {
-    return window.localStorage.getItem(USER_NAME_KEY)?.trim() ?? ''
-  } catch {
-    return ''
-  }
-}
 
 function answerKey(levelId, questionId) {
   return `${levelId}:${questionId}`
 }
 
 export function GameProvider({ children }) {
-  const [userName, setUserNameState] = useState(readUserName)
+  const [userName, setUserNameState] = useState('')
+  const [avatarId, setAvatarId] = useState(CHEF_AVATARS[0].id)
+  const cleanedLegacyNameRef = useRef(false)
+  useEffect(() => {
+    if (cleanedLegacyNameRef.current) return
+    cleanedLegacyNameRef.current = true
+    try {
+      window.localStorage.removeItem('pizza-lab:userName')
+    } catch (reason) {
+      console.warn('No se pudo borrar el apodo antiguo del navegador.', reason)
+    }
+  }, [])
   const [gameState, setGameState] = useState(createInitialGameState)
   const [communityService] = useState(createCommunityService)
   const {
@@ -124,25 +127,11 @@ export function GameProvider({ children }) {
     return result
   }, [redemptions, rewardsUnlocked, totalScore])
 
-  const setUserName = useCallback((name) => {
-    const nextName = typeof name === 'string' ? name.trim() : ''
-    setUserNameState(nextName)
-    try {
-      window.localStorage.setItem(USER_NAME_KEY, nextName)
-    } catch {
-      // Keep the in-memory name if storage is unavailable.
-    }
-  }, [])
-
-  const startNewGame = useCallback((name) => {
+  const startNewGame = useCallback((name, selectedAvatarId) => {
+    const nextName = validateChefProfile(name, selectedAvatarId)
     resetProgress()
-    const nextName = typeof name === 'string' ? name.trim() : ''
     setUserNameState(nextName)
-    try {
-      window.localStorage.setItem(USER_NAME_KEY, nextName)
-    } catch {
-      // Keep the in-memory name if storage is unavailable.
-    }
+    setAvatarId(selectedAvatarId)
   }, [resetProgress])
 
   const recordAnswer = useCallback((levelId, question, selectedOptionId) => {
@@ -426,8 +415,8 @@ export function GameProvider({ children }) {
   const value = useMemo(
     () => ({
       userName,
+      avatarId,
       communityService,
-      setUserName,
       startNewGame,
       levelScore,
       orderScore,
@@ -463,8 +452,8 @@ export function GameProvider({ children }) {
     }),
     [
       userName,
+      avatarId,
       communityService,
-      setUserName,
       startNewGame,
       levelScore,
       orderScore,

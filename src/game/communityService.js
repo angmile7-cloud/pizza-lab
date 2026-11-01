@@ -1,4 +1,5 @@
 import communityData from '../data/community.json'
+import { validateChefProfile } from './chefProfile'
 
 const photos = import.meta.glob('../assets/Comunidad/*.{jpg,jpeg,webp,png}', {
   eager: true,
@@ -81,6 +82,7 @@ export function createCommunityService() {
       challengeFor(challengeId)
       if (snapshot.ownEntries[challengeId]) throw new Error('Retira tu pizza antes de publicar otra en este reto.')
       const pizzaName = entry.pizzaName?.trim()
+      const handle = validateChefProfile(entry.handle, entry.avatarId)
       if (!pizzaName || pizzaName.length > 30) throw new Error('Escribe un nombre de entre 1 y 30 caracteres.')
       if (!/^data:image\/webp;base64,/.test(entry.photo)) throw new Error('Selecciona una foto de tu pizza antes de publicar.')
       const id = `player-${challengeId}`
@@ -90,7 +92,7 @@ export function createCommunityService() {
         ownEntries: {
           ...snapshot.ownEntries,
           [challengeId]: {
-            id, challengeId, pizzaName, photo: entry.photo, handle: 'Tú',
+            id, challengeId, pizzaName, photo: entry.photo, handle, avatarId: entry.avatarId,
             bio: 'Tu pizza en esta comunidad ficticia.', credit: '', own: true,
             hearts: 0, step: 0, elapsed: 0, nextAt: 3 + seed % 4, seed,
           },

@@ -1,4 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom'
+import ChefAvatar from '../components/ChefAvatar'
 import { LEVELS, getLevel, levelPath } from '../game/gameUtils'
 import { useGame } from '../game/useGame'
 import { getPassedLevelIds } from '../game/ordersModeUtils'
@@ -106,6 +107,7 @@ export default function GameHubScreen() {
     createdPizza,
     gameCompleted,
     userName,
+    avatarId,
     restartGame,
     answersByLevel,
     orderResultsByLevel,
@@ -145,7 +147,10 @@ export default function GameHubScreen() {
     <section className="progress-map progress-map--community">
       <header className="progress-map__header">
         <div className="progress-map__identity">
-          <span>{userName || 'Chef'}</span>
+          <div className="progress-map__player">
+            <ChefAvatar id={avatarId} />
+            <strong>{userName}</strong>
+          </div>
           <span>Nivel {currentLevelId} - {displayLevel?.title}</span>
         </div>
         <div className="progress-map__score" aria-live="polite" aria-atomic="true" aria-label={`Puntos: ${availablePoints}. Total ganado: ${totalScore}`}>
@@ -159,6 +164,15 @@ export default function GameHubScreen() {
 
       <div className="progress-map__orders">
         <div className="progress-map__mode-buttons">
+          <Link className="progress-map__orders-button" to="/recompensas">
+            {!rewardsUnlocked && <span aria-label="Bloqueado">🔒 </span>}
+            Recompensas
+          </Link>
+          <Link className="progress-map__orders-button progress-map__community-button" to="/comunidad">
+            Comunidad
+          </Link>
+        </div>
+        <div className="progress-map__orders-control">
         {!ordersUnlocked ? (
           <>
             <button
@@ -192,13 +206,6 @@ export default function GameHubScreen() {
               : `Turnos al día. Supera el nivel ${unlockedStage + 1} para desbloquear otro.`}
           </button>
         )}
-          <Link className="progress-map__orders-button" to="/recompensas">
-            {!rewardsUnlocked && <span aria-label="Bloqueado">🔒 </span>}
-            Recompensas
-          </Link>
-          <Link className="progress-map__orders-button progress-map__community-button" to="/comunidad">
-            Comunidad
-          </Link>
         </div>
       </div>
 
