@@ -1,13 +1,12 @@
-import levelKitchen from '../assets/Niveles/fondo_cocina.png'
+import levelKitchen from '../assets/Niveles/fondo_cocina.webp'
 import { useGame } from '../game/useGame'
-import { getMaxScore, LEVELS } from '../game/gameUtils'
+import { LEVELS } from '../game/gameUtils'
 import LevelHeader, { ScoreBadge } from './LevelHeader'
 
 export default function LevelScene({
   levelId,
   children,
   title,
-  maximum: maximumOverride,
   scoreDisplay,
   scoreBounceKey,
 }) {
@@ -21,7 +20,6 @@ export default function LevelScene({
       <LevelHeader levelId={levelId} levelCount={LEVELS.length} title={title} />
       <ScoreBadge
         totalScore={scoreDisplay ?? totalScore}
-        maximum={maximumOverride ?? getMaxScore()}
         bounceKey={scoreBounceKey}
       />
       <div className="level-scene__content">{children}</div>

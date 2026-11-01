@@ -80,7 +80,7 @@ fantasy voucher copy, six selectable secret recipes, seven chef topics with
 28 guided questions, and all rewards/chat UI copy live in
 [`src/data/rewards.json`](./src/data/rewards.json). The existing passed-level
 helper controls unlock; reward costs never change earned scores, progress,
-tiers, shifts or the maximum score.
+tiers or shifts.
 
 Under TU PROGRESO, Recompensas and Comunidad share the first centered row.
 The orders-mode button occupies its own centered row, with its existing
@@ -88,8 +88,9 @@ The orders-mode button occupies its own centered row, with its existing
 lock indicators and all orders-mode state labels remain unchanged.
 
 Map, rewards and chat headers show the spendable balance as **Puntos** and the
-earned score as **Total ganado: N**. Level/order/result progress badges retain
-the earned `N/715` value and use **Total ganado**; spending never lowers them.
+earned score as **Total ganado: N**. Level/order/result/builder progress badges
+show only the earned `N` value and use **Total ganado**; spending never lowers
+them. Score displays and live announcements do not include a possible maximum.
 
 `GameContext` exposes `spentPoints`, `redemptions`, `availablePoints`,
 `unlockedRecipeIds`, `answeredQuestionIds` and
@@ -118,6 +119,9 @@ The count animation respects reduced motion. Clipboard permission failures use
 a selected-code fallback and display manual-copy instructions if that fails.
 
 ## Levels pizza artwork
+
+The shared kitchen background uses `src/assets/Niveles/fondo_cocina.webp`
+(941 x 1672), with the existing background sizing and positioning unchanged.
 
 `src/components/PizzaPreview.jsx` is a decorative, SVG-only illustration with
 instance-scoped definitions. It accepts `selection` (`masa`, `salsa`, `queso`,
@@ -162,7 +166,7 @@ The next order restores the normal paper entrance and empty preview.
 Tier durations come from `src/data/orders.json`: Aprendiz 65s, Cocinero 50s,
 Pizzaiolo 40s and Maestro 35s. Amber begins at 35s remaining for the first three
 tiers and at 21s for Maestro (the existing 60% short-order threshold). Red begins
-at 10s for every tier. Base points, the maximum time bonus and maximum score
+at 10s for every tier. Base points and the maximum time bonus
 remain unchanged; the bonus still uses the fraction of the order's time left.
 
 This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.

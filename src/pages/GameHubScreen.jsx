@@ -6,7 +6,7 @@ import { getPassedLevelIds } from '../game/ordersModeUtils'
 import ChefLogo from '../components/ChefLogo'
 import ProgressFoodTrail from '../components/ProgressFoodTrail'
 
-const levelImages = import.meta.glob('../assets/Niveles/*.png', {
+const levelImages = import.meta.glob('../assets/Niveles/{nivel,Nivel}*.png', {
   eager: true,
   import: 'default',
 })

@@ -1,5 +1,4 @@
 import levelsData from '../data/levels.json'
-import ordersData from '../data/orders.json'
 
 export const POINTS_PER_CORRECT = levelsData.pointsPerCorrect
 export const POINTS_PER_WRONG = levelsData.pointsPerWrong
@@ -13,30 +12,6 @@ export function getLevel(levelId) {
 
 export function getTriviaLevels() {
   return LEVELS.filter((level) => level.type === 'trivia')
-}
-
-export function getMaxScore() {
-  const triviaMaximum = getTriviaLevels().reduce(
-    (total, level) => total + level.questions.length * POINTS_PER_CORRECT,
-    0,
-  )
-  const orderMaximum = LEVELS.filter((level) => level.type === 'order').reduce(
-    (total, level) =>
-      total +
-      level.orders.length * level.scoring.pointsPerSatisfiedOrder,
-    0,
-  )
-  const ordersModeMaximum = LEVELS.reduce((total, level) => {
-    const shiftSize = ordersData.shiftSizes.find(
-      (item) => level.id >= item.minStage && level.id <= item.maxStage,
-    )?.size
-    const tier = [...ordersData.tiers]
-      .reverse()
-      .find((item) => level.id >= item.minPassedLevels)
-    if (!shiftSize || !tier) return total
-    return total + shiftSize * (tier.basePoints + ordersData.timeBonusMax)
-  }, 0)
-  return triviaMaximum + orderMaximum + ordersModeMaximum
 }
 
 export function clampScore(value) {

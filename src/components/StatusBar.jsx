@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import { useGame } from '../game/useGame'
-import { getMaxScore, LEVELS } from '../game/gameUtils'
+import { LEVELS } from '../game/gameUtils'
 
 const HIDDEN_ON = new Set(['/', '/chef', '/jugar', '/pedidos', '/recompensas', '/chat'])
 
@@ -21,7 +21,7 @@ export default function StatusBar() {
     <p className="status-bar">
       <Link to="/jugar">Dodo&apos;s Pizza Lab</Link>
       {' · '}
-      Total ganado: {totalScore} / {getMaxScore()}
+      Total ganado: {totalScore}
       {' · '}
       Nivel {Math.min(currentLevel, LEVELS.length)}/{LEVELS.length}
     </p>
