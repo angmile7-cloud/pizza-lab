@@ -45,59 +45,63 @@ export default function PizzaBuilderScreen() {
   if (submitted && pizza) {
     return (
       <LevelScene levelId={level.id}>
-        <section className="page level-page level-builder level-builder--complete">
+        <section className="page level-page level-builder level-builder--complete scene-zones">
+          <div className="scene-zones__scroll">
+              <p className="level-nav">
+                <Link to="/jugar">Inicio</Link>
+              </p>
+              <h1>¡Pizza lista!</h1>
+              <p>Nivel 8 · {level.title}</p>
+              <p>Total ganado: {totalScore}</p>
+              <ul>
+                {slots.map((slot) => (
+                  <li key={slot.id}>
+                    <strong>{slot.label}:</strong>{' '}
+                    {slot.multiple
+                      ? pizza[slot.id]?.length
+                        ? pizza[slot.id].map((id) => choiceName(slot.id, id)).join(', ')
+                        : 'Sin toppings extra'
+                      : choiceName(slot.id, pizza[slot.id])}
+                  </li>
+                ))}
+              </ul>
+              <p>
+                Terminaste tu pizza y ya puedes aplicar lo aprendido sobre ingredientes,
+                armado y cocción en los siguientes niveles.
+              </p>
+            </div>
+            <div className="scene-zones__actions">
+              <Link className="btn-yellow level-action" to={levelPath(getLevel(9))}>
+                Continuar al nivel 9
+              </Link>
+            </div>
+          </section>
+        </LevelScene>
+      )
+    }
+
+    return (
+      <LevelScene levelId={level.id}>
+        <section className="page level-page level-builder scene-zones">
+          <div className="scene-zones__scroll">
           <p className="level-nav">
             <Link to="/jugar">Inicio</Link>
           </p>
-          <h1>¡Pizza lista!</h1>
-          <p>Nivel 8 · {level.title}</p>
-          <p>Total ganado: {totalScore}</p>
-          <ul>
-            {slots.map((slot) => (
-              <li key={slot.id}>
-                <strong>{slot.label}:</strong>{' '}
-                {slot.multiple
-                  ? pizza[slot.id]?.length
-                    ? pizza[slot.id].map((id) => choiceName(slot.id, id)).join(', ')
-                    : 'Sin toppings extra'
-                  : choiceName(slot.id, pizza[slot.id])}
-              </li>
-            ))}
-          </ul>
-          <p>
-            Terminaste tu pizza y ya puedes aplicar lo aprendido sobre ingredientes,
-            armado y cocción en los siguientes niveles.
-          </p>
-          <p>
-            <Link className="btn-yellow level-action" to={levelPath(getLevel(9))}>
-              Continuar al nivel 9
-            </Link>
-          </p>
-        </section>
-      </LevelScene>
-    )
-  }
-
-  return (
-    <LevelScene levelId={level.id}>
-      <section className="page level-page level-builder">
-        <p className="level-nav">
-          <Link to="/jugar">Inicio</Link>
-        </p>
-        <h1>
-          Nivel {level.id}: {level.title}
-        </h1>
-        <p>{level.description}</p>
-        <PizzaBuilderControls
-          slots={slots}
-          selection={selection}
-          setSelection={setSelection}
-        />
-        <p>
+          <h1>
+            Nivel {level.id}: {level.title}
+          </h1>
+          <p>{level.description}</p>
+          <PizzaBuilderControls
+            slots={slots}
+            selection={selection}
+            setSelection={setSelection}
+          />
+        </div>
+        <div className="scene-zones__actions">
           <button className="btn-yellow level-action" type="button" onClick={handleSave} disabled={!ready}>
             Hornear pizza
           </button>
-        </p>
+        </div>
       </section>
     </LevelScene>
   )

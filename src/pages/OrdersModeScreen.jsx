@@ -628,190 +628,194 @@ export default function OrdersModeScreen() {
       scoreBounceKey={scoreBounceTick || undefined}
     >
       <section className="page level-page level-builder orders-mode scene-zones">
-        <div className="orders-mode__fixed-top">
-          <h1 className="level-question__level orders-mode__tier">
-            Nivel: {tier.name}
-          </h1>
-          {phase === 'play' && currentOrder ? (
-            <>
-              <p className="level-progress">
-                Pedido {orderIndex + 1} de {shiftSize}
-                <span className="orders-mode__sr-only">
-                  {' '}
-                  Puntaje del turno: {shift?.score ?? 0}
-                </span>
-              </p>
-              <div className={`orders-mode__ticket-slot${ticketPizzaVisible ? ' has-pizza' : ''}`} key={`${stage}-${orderIndex}`}>
-              <article
-                className={[
-                  'orders-mode__ticket',
-                  currentOrder.text.length > 120 ? 'is-long' : '',
-                  cardPhase === 'correct' ? 'is-correct' : '',
-                  cardPhase === 'timeout' && exiting ? 'is-timeout' : '',
-                  orderResult && !orderResult.satisfied && (cardPhase === 'idle' || (cardPhase === 'timeout' && !exiting)) ? 'is-resolved' : '',
-                  cardPhase === 'wrong' ? 'is-wrong' : '',
-                ].filter(Boolean).join(' ')}
-                style={{ '--order-paper-image': `url("${orderPaper}")` }}
-              >
-                <h2 className="orders-mode__customer">
-                  Pedido de {currentOrder.customer}
-                </h2>
-                <p className="orders-mode__quote">“{currentOrder.text}”</p>
-                <p className="orders-mode__topics orders-mode__sr-only">
-                  {currentOrder.topics.map((topic) => ORDER_TOPIC_LABELS[topic] ?? topic).join(' · ')}
+        <div className="orders-mode__body">
+          <div className="orders-mode__fixed-top">
+            <h1 className="level-question__level orders-mode__tier">
+              Nivel: {tier.name}
+            </h1>
+            {phase === 'play' && currentOrder ? (
+              <>
+                <p className="level-progress">
+                  Pedido {orderIndex + 1} de {shiftSize}
+                  <span className="orders-mode__sr-only">
+                    {' '}
+                    Puntaje del turno: {shift?.score ?? 0}
+                  </span>
+                </p>
+                <div className="orders-mode__order-row" key={`${stage}-${orderIndex}`}>
+                <div className="orders-mode__ticket-slot">
+                <article
+                  className={[
+                    'orders-mode__ticket',
+                    currentOrder.text.length > 120 ? 'is-long' : '',
+                    cardPhase === 'correct' && !ticketPizzaVisible ? 'is-correct' : '',
+                    cardPhase === 'timeout' && exiting ? 'is-timeout' : '',
+                    ticketPizzaVisible || (orderResult && !orderResult.satisfied && (cardPhase === 'idle' || (cardPhase === 'timeout' && !exiting))) ? 'is-resolved' : '',
+                    cardPhase === 'wrong' ? 'is-wrong' : '',
+                  ].filter(Boolean).join(' ')}
+                  style={{ '--order-paper-image': `url("${orderPaper}")` }}
+                >
+                  <h2 className="orders-mode__customer">
+                    Pedido de {currentOrder.customer}
+                  </h2>
+                  <p className="orders-mode__quote">“{currentOrder.text}”</p>
+                  <p className="orders-mode__topics orders-mode__sr-only">
+                    {currentOrder.topics.map((topic) => ORDER_TOPIC_LABELS[topic] ?? topic).join(' · ')}
+                  </p>
+                </article>
+                </div>
+                  <div className="orders-mode__preview-slot" aria-hidden="true">
+                    {ticketPizzaVisible ? (
+                      <div className="orders-mode__ticket-pizza">
+                        <PizzaPreview selection={selection} glow cutLines face="happy" />
+                      </div>
+                    ) : (
+                    <div
+                      className={`orders-mode__pizza-stage${pizzaActive ? ' is-active' : ''}${verdictVisible ? ` is-verdict ${orderResult.satisfied ? 'is-happy' : 'is-worried'}` : ''}${pizzaPhase === 'leaves' ? ' is-leaves' : ''}${pizzaSkipped ? ' is-skipped' : ''}`}
+                      onClick={pizzaActive ? skipPizzaStage : undefined}
+                    >
+                      <AnimatedOrderPizza
+                        key={currentOrder.id}
+                        selection={selection}
+                        reduced={prefersReducedMotion || pizzaSkipped}
+                        scheduleTimeout={scheduleTimeout}
+                        stageActive={pizzaActive}
+                        face={verdictVisible ? orderResult.satisfied ? 'happy' : 'worried' : !orderResult && timerUrgency === 'red' ? 'nervous' : 'none'}
+                        hold={heldLeaves}
+                        glow={pizzaActive && (!verdictVisible || orderResult.satisfied)}
+                        cutLines={verdictVisible && orderResult.satisfied}
+                        sliceWiggle={verdictVisible && orderResult.satisfied && !prefersReducedMotion && !pizzaSkipped}
+                        {...pizzaMarks}
+                      />
+                      {pizzaPhase === 'oven' ? <div className="orders-mode__baking"><i /><i /><i /><span>¡Ding!</span></div> : null}
+                      {pizzaPhase === 'leaves' && selection.toppings.some((id) => DELICATE_LEAVES.includes(id)) ? <span className="orders-mode__leaf-sparkle">✦</span> : null}
+                      {verdictVisible ? (
+                        <div className="orders-mode__verdict-bubble">
+                          {orderResult.satisfied ? `¡Gracias, ${currentOrder.customer}!` : 'Eso no es lo que pedí…'}
+                          {pizzaMarks.extras?.length > 0 ? <small>× de más</small> : null}
+                        </div>
+                      ) : null}
+                      {pizzaActive && skipHint ? <small className="orders-mode__skip-hint">Toca para saltar</small> : null}
+                    </div>
+                    )}
+                  </div>
+                </div>
+                <div className="orders-mode__timer-hint">
+                  <div className="orders-mode__timer" aria-hidden="true">
+                    <div className="orders-mode__timer-label">
+                      <span>Tiempo</span>
+                      <span
+                        className={[
+                          'orders-mode__timer-seconds',
+                          timerUrgency === 'red' ? 'is-urgent' : '',
+                          timerUrgency === 'amber' ? 'is-urgent-soft' : '',
+                        ].filter(Boolean).join(' ')}
+                      >
+                        {Math.ceil(remainingMs / 1000)} s
+                      </span>
+                    </div>
+                    <div className="orders-mode__timer-track">
+                      <div
+                        className={`orders-mode__timer-fill${timerUrgency !== 'normal' ? ` is-${timerUrgency}` : ''}`}
+                        style={{ '--timer-progress': Math.max(0, Math.min(1, remainingMs / durationMs)) }}
+                      />
+                    </div>
+                  </div>
+                  <p className="orders-mode__hint">
+                    Elige los ingredientes para preparar la pizza
+                  </p>
+                </div>
+                <p className="orders-mode__sr-only" aria-live="polite" aria-atomic="true">
+                  {announcement}
+                </p>
+              </>
+            ) : (
+              <p className="level-progress">Turno de {shiftSize} pedidos</p>
+            )}
+          </div>
+
+          <div className="orders-mode__scroll scene-zones__scroll">
+            {phase === 'intro' ? (
+              <article className="orders-mode__intro">
+                <h2>{tier.name} · Etapa {stage}</h2>
+                <p><strong>Este turno evalúa: {joinTopicNames(topics)}</strong></p>
+                <p>
+                  {shift?.results.length
+                    ? `Continúas tu turno: ${shift.results.length} de ${shiftSize} pedidos ya resueltos.`
+                    : `Prepara ${shiftSize} pedidos. Cada pedido tiene su propio reloj.`}
+                </p>
+                <p className="orders-mode__warning">
+                  Cada turno se juega una sola vez. No podrás repetirlo.
                 </p>
               </article>
-              {ticketPizzaVisible ? (
-                <div className="orders-mode__ticket-pizza" aria-hidden="true">
-                  <PizzaPreview selection={selection} glow cutLines face="happy" />
-                </div>
-              ) : null}
+            ) : null}
+
+            {phase === 'play' && currentOrder && !orderResult ? (
+              <div className="orders-mode__options" key={`options-${stage}-${orderIndex}`}>
+                <PizzaBuilderControls
+                  slots={slots}
+                  selection={selection}
+                  setSelection={setSelection}
+                  orderMode
+                />
               </div>
-              <div className="orders-mode__timer-hint">
-                <div className="orders-mode__timer" aria-hidden="true">
-                  <div className="orders-mode__timer-label">
-                    <span>Tiempo</span>
-                    <span
-                      className={[
-                        'orders-mode__timer-seconds',
-                        timerUrgency === 'red' ? 'is-urgent' : '',
-                        timerUrgency === 'amber' ? 'is-urgent-soft' : '',
-                      ].filter(Boolean).join(' ')}
-                    >
-                      {Math.ceil(remainingMs / 1000)} s
-                    </span>
-                  </div>
-                  <div className="orders-mode__timer-track">
-                    <div
-                      className={`orders-mode__timer-fill${timerUrgency !== 'normal' ? ` is-${timerUrgency}` : ''}`}
-                      style={{ '--timer-progress': Math.max(0, Math.min(1, remainingMs / durationMs)) }}
-                    />
-                  </div>
-                </div>
-                <p className="orders-mode__hint">
-                  Elige los ingredientes para preparar la pizza
+            ) : null}
+
+            {phase === 'play' && currentOrder && orderResult && !pizzaActive ? (
+              <div className={`level-feedback ${orderResult.satisfied ? 'is-correct' : 'is-incorrect'}`}>
+                <p className="level-feedback__result">
+                  {orderResult.expired
+                    ? 'Se acabó el tiempo: el pedido se perdió. 0 puntos.'
+                    : orderResult.satisfied
+                      ? `¡Pedido cumplido! +${orderResult.pointsAwarded} puntos`
+                      : 'El pedido quedó incompleto. No se suman puntos.'}
                 </p>
-              </div>
-                <div className="orders-mode__preview-slot" aria-hidden="true" style={ticketPizzaVisible ? { visibility: 'hidden' } : undefined}>
-                  <div
-                    className={`orders-mode__pizza-stage${pizzaActive ? ' is-active' : ''}${verdictVisible ? ` is-verdict ${orderResult.satisfied ? 'is-happy' : 'is-worried'}` : ''}${pizzaPhase === 'leaves' ? ' is-leaves' : ''}${pizzaSkipped ? ' is-skipped' : ''}`}
-                    onClick={pizzaActive ? skipPizzaStage : undefined}
-                  >
-                    <AnimatedOrderPizza
-                      key={currentOrder.id}
-                      selection={selection}
-                      reduced={prefersReducedMotion || pizzaSkipped}
-                      scheduleTimeout={scheduleTimeout}
-                      stageActive={pizzaActive}
-                      face={verdictVisible ? orderResult.satisfied ? 'happy' : 'worried' : !orderResult && timerUrgency === 'red' ? 'nervous' : 'none'}
-                      hold={heldLeaves}
-                      glow={pizzaActive && (!verdictVisible || orderResult.satisfied)}
-                      cutLines={verdictVisible && orderResult.satisfied}
-                      sliceWiggle={verdictVisible && orderResult.satisfied && !prefersReducedMotion && !pizzaSkipped}
-                      {...pizzaMarks}
-                    />
-                    {pizzaPhase === 'oven' ? <div className="orders-mode__baking"><i /><i /><i /><span>¡Ding!</span></div> : null}
-                    {pizzaPhase === 'leaves' && selection.toppings.some((id) => DELICATE_LEAVES.includes(id)) ? <span className="orders-mode__leaf-sparkle">✦</span> : null}
-                    {verdictVisible ? (
-                      <div className="orders-mode__verdict-bubble">
-                        {orderResult.satisfied ? `¡Gracias, ${currentOrder.customer}!` : 'Eso no es lo que pedí…'}
-                        {pizzaMarks.extras?.length > 0 ? <small>× de más</small> : null}
-                      </div>
-                    ) : null}
-                    {pizzaActive && skipHint ? <small className="orders-mode__skip-hint">Toca para saltar</small> : null}
-                  </div>
-                </div>
-              <p className="orders-mode__sr-only" aria-live="polite" aria-atomic="true">
-                {announcement}
-              </p>
-            </>
-          ) : (
-            <p className="level-progress">Turno de {shiftSize} pedidos</p>
-          )}
-        </div>
-
-        <div className="orders-mode__scroll scene-zones__scroll">
-          {phase === 'intro' ? (
-            <article className="orders-mode__intro">
-              <h2>{tier.name} · Etapa {stage}</h2>
-              <p><strong>Este turno evalúa: {joinTopicNames(topics)}</strong></p>
-              <p>
-                {shift?.results.length
-                  ? `Continúas tu turno: ${shift.results.length} de ${shiftSize} pedidos ya resueltos.`
-                  : `Prepara ${shiftSize} pedidos. Cada pedido tiene su propio reloj.`}
-              </p>
-              <p className="orders-mode__warning">
-                Cada turno se juega una sola vez. No podrás repetirlo.
-              </p>
-            </article>
-          ) : null}
-
-          {phase === 'play' && currentOrder && !orderResult ? (
-            <div className="orders-mode__options" key={`options-${stage}-${orderIndex}`}>
-              <PizzaBuilderControls
-                slots={slots}
-                selection={selection}
-                setSelection={setSelection}
-                orderMode
-              />
-            </div>
-          ) : null}
-
-          {phase === 'play' && currentOrder && orderResult && !pizzaActive ? (
-            <div className={`level-feedback ${orderResult.satisfied ? 'is-correct' : 'is-incorrect'}`}>
-              <p className="level-feedback__result">
-                {orderResult.expired
-                  ? 'Se acabó el tiempo: el pedido se perdió. 0 puntos.'
-                  : orderResult.satisfied
-                    ? `¡Pedido cumplido! +${orderResult.pointsAwarded} puntos`
-                    : 'El pedido quedó incompleto. No se suman puntos.'}
-              </p>
-              <ul className="level-order__requirements">
-                {orderResult.evaluation.requirements.map((requirement) => (
-                  <li
-                    className={requirement.met ? 'is-correct' : 'is-incorrect'}
-                    key={requirement.requirementId}
-                  >
-                    <strong>{requirement.met ? 'Cumplido' : 'Pendiente'}:</strong>{' '}
-                    {requirement.feedback}
-                  </li>
-                ))}
-              </ul>
-              <p className="orders-mode__tip"><strong>Consejo:</strong> {currentOrder.tip}</p>
-            </div>
-          ) : null}
-
-          {phase === 'summary' ? (
-            <article className="orders-mode__summary">
-              <h2 className="level-question__prompt">Fin del turno</h2>
-              <ul>
-                <li>Pedidos atendidos: {ordersServed}</li>
-                <li>Pedidos fallidos: {ordersFailed}</li>
-                <li>Puntaje del turno: {summaryScoreDisplay}</li>
-                <li>Total ganado: {totalScore}</li>
-              </ul>
-              {confetti.length > 0 ? (
-                <div className="orders-mode__confetti-layer" aria-hidden="true">
-                  {confetti.map((piece) => (
-                    <span
-                      key={piece.id}
-                      className="orders-mode__confetti"
-                      style={{
-                        '--confetti-left': `${piece.left}%`,
-                        '--confetti-color': piece.color,
-                        '--confetti-delay': `${piece.delay}ms`,
-                        '--confetti-duration': `${piece.duration}ms`,
-                        '--confetti-drift': `${piece.drift}px`,
-                        '--confetti-spin': `${piece.spin}deg`,
-                      }}
-                    />
+                <ul className="level-order__requirements">
+                  {orderResult.evaluation.requirements.map((requirement) => (
+                    <li
+                      className={requirement.met ? 'is-correct' : 'is-incorrect'}
+                      key={requirement.requirementId}
+                    >
+                      <strong>{requirement.met ? 'Cumplido' : 'Pendiente'}:</strong>{' '}
+                      {requirement.feedback}
+                    </li>
                   ))}
-                </div>
-              ) : null}
-            </article>
-          ) : null}
-        </div>
+                </ul>
+                <p className="orders-mode__tip"><strong>Consejo:</strong> {currentOrder.tip}</p>
+              </div>
+            ) : null}
 
+            {phase === 'summary' ? (
+              <article className="orders-mode__summary">
+                <h2 className="level-question__prompt">Fin del turno</h2>
+                <ul>
+                  <li>Pedidos atendidos: {ordersServed}</li>
+                  <li>Pedidos fallidos: {ordersFailed}</li>
+                  <li>Puntaje del turno: {summaryScoreDisplay}</li>
+                  <li>Total ganado: {totalScore}</li>
+                </ul>
+                {confetti.length > 0 ? (
+                  <div className="orders-mode__confetti-layer" aria-hidden="true">
+                    {confetti.map((piece) => (
+                      <span
+                        key={piece.id}
+                        className="orders-mode__confetti"
+                        style={{
+                          '--confetti-left': `${piece.left}%`,
+                          '--confetti-color': piece.color,
+                          '--confetti-delay': `${piece.delay}ms`,
+                          '--confetti-duration': `${piece.duration}ms`,
+                          '--confetti-drift': `${piece.drift}px`,
+                          '--confetti-spin': `${piece.spin}deg`,
+                        }}
+                      />
+                    ))}
+                  </div>
+                ) : null}
+              </article>
+            ) : null}
+          </div>
+        </div>
         <div className="orders-mode__actions scene-zones__actions">
           {phase === 'intro' ? (
             <button

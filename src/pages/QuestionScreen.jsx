@@ -57,60 +57,66 @@ export default function QuestionScreen() {
 
   return (
     <LevelScene levelId={level.id}>
-      <section className="page level-page level-question">
-        <h1 className="level-question__level">{level.title}:</h1>
-        <p className="level-progress">
-          Pregunta {questionIndex + 1} de {total} (avanzas con al menos{' '}
-          {MIN_CORRECT_TO_UNLOCK} aciertos)
-        </p>
-        <h2 className="level-question__prompt">{question.prompt}</h2>
-        <ul className="level-options">
-          {question.options.map((option) => (
-            <li key={option.id}>
-              <label
-                className={`level-option${selectedOptionId === option.id ? ' is-selected' : ''}${feedback && option.id === question.correctOptionId ? ' is-correct' : ''}${feedback && selectedOptionId === option.id && !feedback.correct ? ' is-incorrect' : ''}`}
-              >
-                <input
-                  type="radio"
-                  name={question.id}
-                  value={option.id}
-                  checked={selectedOptionId === option.id}
-                  disabled={Boolean(feedback)}
-                  onChange={() => setSelectedOptionId(option.id)}
-                />{' '}
-                <span className="level-option__dot" aria-hidden="true" />
-                <span className="level-option__text">{option.text}</span>
-              </label>
-            </li>
-          ))}
-        </ul>
-        {!feedback ? (
-          <button
-            className="level-action level-action--confirm"
-            type="button"
-            onClick={handleConfirm}
-            disabled={!selectedOptionId}
-          >
-            Confirmar
-          </button>
-        ) : (
-          <div className={`level-feedback ${feedback.correct ? 'is-correct' : 'is-incorrect'}`}>
-            <p className="level-feedback__result">
-              {feedback.correct
-                ? `¡Correcto! +${feedback.appliedDelta} puntos`
-                : feedback.appliedDelta === 0
-                  ? 'Respuesta incorrecta. El puntaje no baja de 0.'
-                  : `Respuesta incorrecta. ${feedback.appliedDelta} puntos.`}
-            </p>
-            <p>{question.explanation}</p>
+      <section className="page level-page level-question scene-zones">
+        <div className="scene-zones__scroll">
+          <h1 className="level-question__level">{level.title}:</h1>
+          <p className="level-progress">
+            Pregunta {questionIndex + 1} de {total} (avanzas con al menos{' '}
+            {MIN_CORRECT_TO_UNLOCK} aciertos)
+          </p>
+          <h2 className="level-question__prompt">{question.prompt}</h2>
+          <ul className="level-options">
+            {question.options.map((option) => (
+              <li key={option.id}>
+                <label
+                  className={`level-option${selectedOptionId === option.id ? ' is-selected' : ''}${feedback && option.id === question.correctOptionId ? ' is-correct' : ''}${feedback && selectedOptionId === option.id && !feedback.correct ? ' is-incorrect' : ''}`}
+                >
+                  <input
+                    type="radio"
+                    name={question.id}
+                    value={option.id}
+                    checked={selectedOptionId === option.id}
+                    disabled={Boolean(feedback)}
+                    onChange={() => setSelectedOptionId(option.id)}
+                  />{' '}
+                  <span className="level-option__dot" aria-hidden="true" />
+                  <span className="level-option__text">{option.text}</span>
+                </label>
+              </li>
+            ))}
+          </ul>
+          {feedback && (
+            <div className={`level-feedback ${feedback.correct ? 'is-correct' : 'is-incorrect'}`}>
+              <p className="level-feedback__result">
+                {feedback.correct
+                  ? `¡Correcto! +${feedback.appliedDelta} puntos`
+                  : feedback.appliedDelta === 0
+                    ? 'Respuesta incorrecta. El puntaje no baja de 0.'
+                    : `Respuesta incorrecta. ${feedback.appliedDelta} puntos.`}
+              </p>
+              <p>{question.explanation}</p>
+            </div>
+          )}
+        </div>
+        <div className="scene-zones__actions">
+          {!feedback ? (
+            <button
+              className="level-action level-action--confirm"
+              type="button"
+              onClick={handleConfirm}
+              disabled={!selectedOptionId}
+            >
+              Confirmar
+            </button>
+          ) : (
             <button className="btn-yellow level-action" type="button" onClick={handleNext}>
               {questionIndex + 1 >= total ? 'Ver resultado del nivel' : 'Siguiente pregunta'}
             </button>
-          </div>
-        )}
-        <Link className="level-action level-action--home" to="/jugar">
-          Inicio
-        </Link>
+          )}
+          <Link className="level-action level-action--home" to="/jugar">
+            Inicio
+          </Link>
+        </div>
       </section>
     </LevelScene>
   )

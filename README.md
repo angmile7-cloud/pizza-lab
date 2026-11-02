@@ -1,5 +1,36 @@
 # React + Vite
 
+## Responsive layout
+
+Below 560 CSS pixels, the game fills the viewport without a bezel and reserves
+the four device safe-area insets. At 560 pixels and above, the centered frame
+remains at most 430 pixels wide and `min(852px, 100dvh - 32px)` tall. The shared
+viewport variable falls back to `100vh` when dynamic viewport units are
+unavailable. The outer page does not scroll; game content scrolls inside it.
+
+Question and pizza-builder actions use the existing scroll/actions layout.
+At viewport heights of 600 pixels or less, orders put the ticket, preview and
+ingredients in one scrolling middle area, keeping the action bar inside the
+frame. Longer text wraps, and constrained header/footer copy can scroll rather
+than pushing controls outside the frame. Narrow community leaderboards move
+vote counts beneath chef identities only when their container is at most
+260 pixels wide. Touch controls have at least 44-pixel targets.
+
+For responsive regression checks, use an in-memory chef profile and navigate
+within the app (a reload resets progress). Check portrait, landscape and short
+desktop viewports, 150%/200% root text size, community gallery/photo overlays,
+and active orders as well as their intro screen. `npm run lint` and
+`npm run build` validate the source and production bundle.
+
+Order mode alone centers its score badge 6px below the header and keeps the
+level/progress block compact. The content-sized paper ticket and square live
+pizza share a 90%-wide row (57:40 tracks with an 8px gap); the timer and hint
+follow at that same full row width. Quotes use 15px text, or 14px for long
+orders, and the paper grows to fit. After a successful delivery the ticket
+returns on the left and the finished pizza occupies only the right column.
+Below 340px, or in landscape at heights up to 600px, the row stacks with a
+72px pizza. Shared level/map badge layouts are unchanged.
+
 ## Chef profile (in memory only)
 
 Welcome opens `/chef`: a nickname (2–16 characters after normalization) and

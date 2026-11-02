@@ -114,7 +114,7 @@
       "id": "s01-03",
       "stage": 1,
       "customer": "Sofía",
-      "text": "Jamón y aceitunas, nada más.",
+      "text": "Jamón y aceitunas, sin queso.",
       "requirements": [
         {
           "type": "toppingIncluded",
@@ -134,7 +134,7 @@
       "id": "s01-04",
       "stage": 1,
       "customer": "Tomás",
-      "text": "Quiero una pizza de champiñones con salsa de tomate.",
+      "text": "Quiero champiñones con salsa de tomate, sin queso.",
       "requirements": [
         {
           "type": "toppingIncluded",
@@ -155,7 +155,7 @@
       "id": "s01-05",
       "stage": 1,
       "customer": "Valeria",
-      "text": "Solo dos toppings: pepperoni y cebolla.",
+      "text": "Solo dos toppings: pepperoni y cebolla, sin queso.",
       "requirements": [
         {
           "type": "toppingIncluded",
@@ -197,7 +197,7 @@
       "id": "s01-07",
       "stage": 1,
       "customer": "Camila",
-      "text": "Jamón con champiñones, solo esos dos.",
+      "text": "Jamón con champiñones, solo esos dos y sin queso.",
       "requirements": [
         {
           "type": "toppingIncluded",
@@ -217,7 +217,7 @@
       "id": "s01-08",
       "stage": 1,
       "customer": "Julián",
-      "text": "Albahaca y aceitunas sobre salsa de tomate.",
+      "text": "Albahaca y aceitunas sobre tomate, sin queso.",
       "requirements": [
         {
           "type": "toppingIncluded",
@@ -242,7 +242,7 @@
       "id": "s02-01",
       "stage": 2,
       "customer": "Elena",
-      "text": "Masa napolitana (harina 00, borde alto) con tomate y albahaca.",
+      "text": "Masa napolitana (harina 00, borde alto) con tomate y albahaca, sin queso.",
       "requirements": [
         {
           "type": "slotIs",
@@ -268,7 +268,7 @@
       "id": "s02-02",
       "stage": 2,
       "customer": "Pablo",
-      "text": "Masa fina y crocante con pepperoni.",
+      "text": "Masa fina y crocante con pepperoni, sin queso.",
       "requirements": [
         {
           "type": "slotIs",
@@ -289,7 +289,7 @@
       "id": "s02-03",
       "stage": 2,
       "customer": "Rosa",
-      "text": "Masa integral con champiñones y cebolla.",
+      "text": "Masa integral con champiñones y cebolla, sin queso.",
       "requirements": [
         {
           "type": "slotIs",
@@ -314,7 +314,7 @@
       "id": "s02-04",
       "stage": 2,
       "customer": "Diego",
-      "text": "Quiero base fina y crocante con jamón y aceitunas.",
+      "text": "Quiero base fina y crocante con jamón y aceitunas, sin queso.",
       "requirements": [
         {
           "type": "slotIs",
@@ -423,7 +423,7 @@
       "id": "s02-08",
       "stage": 2,
       "customer": "Hugo",
-      "text": "Base fina con rúcula y jamón.",
+      "text": "Base fina con rúcula y jamón, sin queso.",
       "requirements": [
         {
           "type": "slotIs",
@@ -474,7 +474,7 @@
       "id": "s03-02",
       "stage": 3,
       "customer": "Ramiro",
-      "text": "Pesto sobre masa fina con aceitunas.",
+      "text": "Pesto sobre masa fina con aceitunas, sin queso.",
       "requirements": [
         {
           "type": "slotIs",
@@ -584,7 +584,7 @@
       "id": "s03-06",
       "stage": 3,
       "customer": "Fabián",
-      "text": "Tomate sobre masa integral con pepperoni y cebolla.",
+      "text": "Tomate sobre masa integral con pepperoni y cebolla, sin queso.",
       "requirements": [
         {
           "type": "slotIs",
@@ -614,7 +614,7 @@
       "id": "s03-07",
       "stage": 3,
       "customer": "Clara",
-      "text": "Base fina con salsa bianca, champiñones y aceitunas.",
+      "text": "Base fina con salsa bianca, champiñones y aceitunas, sin queso.",
       "requirements": [
         {
           "type": "slotIs",
@@ -1027,7 +1027,7 @@
       "id": "s05-04",
       "stage": 5,
       "customer": "Berta",
-      "text": "Masa integral con tomate, champiñones y cebolla.",
+      "text": "Masa integral con tomate, champiñones y cebolla, sin queso.",
       "requirements": [
         {
           "type": "slotIs",
@@ -1159,7 +1159,7 @@
       "id": "s05-08",
       "stage": 5,
       "customer": "Teresa",
-      "text": "Masa napolitana, tomate, pepperoni y albahaca.",
+      "text": "Masa napolitana, tomate, pepperoni y albahaca, sin queso.",
       "requirements": [
         {
           "type": "slotIs",
