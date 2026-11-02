@@ -25,11 +25,37 @@ and active orders as well as their intro screen. `npm run lint` and
 Order mode alone centers its score badge 6px below the header and keeps the
 level/progress block compact. The content-sized paper ticket and square live
 pizza share a 90%-wide row (57:40 tracks with an 8px gap); the timer and hint
-follow at that same full row width. Quotes use 15px text, or 14px for long
+follow directly over the wall without a panel. The centered hint occupies 72%
+of the scene width (14% side margins); the timer inside it occupies 60% of the
+scene width (20% side margins). Original text, bar styles and vertical spacing
+are preserved. Timer colors and urgency thresholds are unchanged.
+At 320x568, the single-line hint can reach the oven's brick edge; retaining
+its original font and height takes precedence over wrapping it onto another line.
+Quotes use 15px text, or 14px for long
 orders, and the paper grows to fit. After a successful delivery the ticket
 returns on the left and the finished pizza occupies only the right column.
 Below 340px, or in landscape at heights up to 600px, the row stacks with a
 72px pizza. Shared level/map badge layouts are unchanged.
+
+The hub places "Canjea tus puntos" and "Reto del mes" in an equal-width row
+inside the player header, above its divider. Both pills are at least 44px tall
+with 14px semibold dark-green text, a green border, cream fill and original
+gift/trophy icons (the existing lock replaces the gift when locked).
+The identity and points occupy separate grid columns, with a 12px gap before
+the buttons and at least 12px between the divider and "TU PROGRESO".
+"Preparar pedidos" is a stronger solid-green pill at least 52px tall between
+"TU PROGRESO" and the slice map, regardless of shift status. Existing lock
+indicators and order status messages stay with their own control. The map and
+ingredient trail retain their shared canvas, row spacing and level-10 endpoint.
+Destination routes and unlock rules are unchanged.
+Order notices use centered 13px text and an 8px gap below the button.
+Only the level-1-locked primary is dimmed; exhausted shifts retain primary green
+without changing the existing disabled state.
+
+The orders-stage selector reuses LevelHeader with "DODO'S PIZZA LAB" and no
+level suffix, without screen-specific header style overrides.
+Its "Preparar pedidos" title and 14px dark subtitle share a rounded cream plate with
+no text shadow or outline; stage cards and their states are unchanged.
 
 ## Chef profile (in memory only)
 
@@ -55,7 +81,7 @@ unchanged.
 
 ## Community challenges (educational, browser-only demo)
 
-The always-enabled Comunidad map link opens `/comunidad`. Five fictional
+The always-enabled "Reto del mes" map link opens `/comunidad`. Five fictional
 challenges, chef bios, starting hearts, optional photo credits and the publishing
 threshold live in [`src/data/community.json`](./src/data/community.json).
 [`src/game/communityService.js`](./src/game/communityService.js) is the only

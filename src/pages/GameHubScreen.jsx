@@ -121,9 +121,6 @@ export default function GameHubScreen() {
     createdPizza,
   })
   const ordersUnlocked = passedLevelIds.includes(1)
-  const inProgressShift = Object.values(ordersMode.shifts).some(
-    (shift) => shift.status === 'inProgress',
-  )
   const pendingShiftCount = Array.from(
     { length: unlockedStage },
     (_, index) => index + 1,
@@ -158,32 +155,39 @@ export default function GameHubScreen() {
           <span>Puntos</span>
           <small>Total ganado: {totalScore}</small>
         </div>
+        <div className="progress-map__mode-buttons">
+          <Link className={`progress-map__orders-button${!rewardsUnlocked ? ' is-locked' : ''}`} to="/recompensas">
+            {!rewardsUnlocked ? <span aria-label="Bloqueado">🔒 </span> : (
+              <svg className="progress-map__cta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M4 10h16v4H4zM6 14v7h12v-7M12 10v11M12 10H8a3 3 0 1 1 3-3l1 3Zm0 0h4a3 3 0 1 0-3-3l-1 3Z" />
+              </svg>
+            )}
+            <span>Canjea tus puntos</span>
+          </Link>
+          <Link className="progress-map__orders-button progress-map__community-button" to="/comunidad">
+            <svg className="progress-map__cta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M7 3h10v6a5 5 0 0 1-10 0V3ZM7 5H3v3a4 4 0 0 0 5 4M17 5h4v3a4 4 0 0 1-5 4M12 14v6M8 21h8M9 18h6" />
+            </svg>
+            <span>Reto del mes</span>
+          </Link>
+        </div>
       </header>
 
       <h1 className="progress-map__title">TU PROGRESO</h1>
 
       <div className="progress-map__orders">
-        <div className="progress-map__mode-buttons">
-          <Link className="progress-map__orders-button" to="/recompensas">
-            {!rewardsUnlocked && <span aria-label="Bloqueado">🔒 </span>}
-            Recompensas
-          </Link>
-          <Link className="progress-map__orders-button progress-map__community-button" to="/comunidad">
-            Comunidad
-          </Link>
-        </div>
         <div className="progress-map__orders-control">
         {!ordersUnlocked ? (
           <>
             <button
-              className="btn-green progress-map__orders-button"
+              className="btn-green progress-map__orders-button is-locked"
               type="button"
               disabled
               aria-describedby="orders-mode-lock"
             >
-              Modo pedidos
+              <span aria-label="Bloqueado">🔒 </span>Preparar pedidos
             </button>
-            <p id="orders-mode-lock">Supera el nivel 1 para desbloquearlo</p>
+            <p id="orders-mode-lock">Supera el nivel 1 para preparar pedidos.</p>
           </>
         ) : pendingShiftCount > 0 ? (
           <button
@@ -191,20 +195,22 @@ export default function GameHubScreen() {
             type="button"
             onClick={() => navigate('/pedidos')}
           >
-            {inProgressShift
-              ? 'Continuar turno'
-              : `${pendingShiftCount} turnos pendientes`}
+            Preparar pedidos
           </button>
         ) : (
-          <button
-            className="btn-green progress-map__orders-button"
-            type="button"
-            disabled
-          >
-            {unlockedStage >= LEVELS.length
-              ? 'Turnos al día. Completaste todos los turnos.'
-              : `Turnos al día. Supera el nivel ${unlockedStage + 1} para desbloquear otro.`}
-          </button>
+          <>
+            <button
+              className="btn-green progress-map__orders-button"
+              type="button"
+              disabled
+              aria-describedby="orders-mode-status"
+            >
+              Preparar pedidos
+            </button>
+            <p id="orders-mode-status">{unlockedStage >= LEVELS.length
+              ? 'Completaste todos los pedidos.'
+              : `Supera el nivel ${unlockedStage + 1} para desbloquear más pedidos.`}</p>
+          </>
         )}
         </div>
       </div>

@@ -50,11 +50,11 @@ export default function OrdersShiftsScreen() {
   )
 
   return (
-    <LevelScene levelId={unlockedStage || 1} title="TURNOS DE PEDIDOS">
+    <LevelScene levelId={unlockedStage || 1} title="DODO'S PIZZA LAB">
       <section className="orders-shifts scene-zones">
         <header className="orders-shifts__header">
-          <h1 className="level-question__level">Turnos de pedidos</h1>
-          <p>Elige un turno pendiente. Cada uno se juega una sola vez.</p>
+          <h1 className="level-question__level">Preparar pedidos</h1>
+          <p>Elige una etapa. Cada una se juega una sola vez.</p>
         </header>
         <div className="orders-shifts__scroll scene-zones__scroll">
           {rows.map((stage) => {
