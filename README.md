@@ -43,19 +43,47 @@ with 14px semibold dark-green text, a green border, cream fill and original
 gift/trophy icons (the existing lock replaces the gift when locked).
 The identity and points occupy separate grid columns, with a 12px gap before
 the buttons and at least 12px between the divider and "TU PROGRESO".
-"Preparar pedidos" is a stronger solid-green pill at least 52px tall between
+"Preparar pedidos" is a stronger yellow pill at least 52px tall between
 "TU PROGRESO" and the slice map, regardless of shift status. Existing lock
 indicators and order status messages stay with their own control. The map and
 ingredient trail retain their shared canvas, row spacing and level-10 endpoint.
 Destination routes and unlock rules are unchanged.
 Order notices use centered 13px text and an 8px gap below the button.
-Only the level-1-locked primary is dimmed; exhausted shifts retain primary green
-without changing the existing disabled state.
+Locked and exhausted-shift buttons use desaturated yellow without changing
+the existing disabled state, padlock or notices.
 
 The orders-stage selector reuses LevelHeader with "DODO'S PIZZA LAB" and no
 level suffix, without screen-specific header style overrides.
 Its "Preparar pedidos" title and 14px dark subtitle share a rounded cream plate with
 no text shadow or outline; stage cards and their states are unchanged.
+
+## Orders invitation (session-only UI)
+
+On a completed, passed level-1 trivia result, the first tap on the level-2
+continue link opens an invitation instead of navigating. There is no timer or
+delay. Failed/incomplete results do not trigger it. Trivia and order levels
+share the result layout; the pizza
+builder retains its separate completion screen. Result scoring, advancement,
+animations, unlock rules and routes are unchanged.
+
+`GameProvider` keeps `ordersInvitationShown` and `ordersModeVisited` outside
+gameplay state. These flags last until reload, including across game restarts.
+The first flag is set on the intercepted continue tap.
+The second is set on opening an accessible orders selector or orders stage.
+Until that visit, a passed level 1 adds an absolutely positioned "Nuevo" badge
+to the map's existing orders button without resizing it. The badge is green
+with white text; the map and dialog primary buttons share yellow, dark text,
+a yellow-brown border and a subtle shadow.
+
+[`InvitationDialog`](./src/components/InvitationDialog.jsx) accepts `title`,
+`body`, `primaryAction`/`secondaryAction` (`label`, `onClick`) and `onClose`.
+It portals into the phone frame, makes background content inert, traps focus,
+and restores previous focus on close. Escape/backdrop dismiss it without
+navigating, and the next continue tap goes straight to level 2. Its primary
+action opens the existing `/pedidos` route; "Ir al nivel 2" follows the original
+continue destination. Unmounting removes the dialog and restores background
+interaction. The card scrolls internally on short
+screens, and reduced motion disables its fade/scale entrance.
 
 ## Chef profile (in memory only)
 

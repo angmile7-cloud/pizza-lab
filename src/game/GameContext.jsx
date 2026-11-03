@@ -40,6 +40,10 @@ export function GameProvider({ children }) {
     }
   }, [])
   const [gameState, setGameState] = useState(createInitialGameState)
+  const [ordersInvitationShown, setOrdersInvitationShown] = useState(false)
+  const [ordersModeVisited, setOrdersModeVisited] = useState(false)
+  const markOrdersInvitationShown = useCallback(() => setOrdersInvitationShown(true), [])
+  const markOrdersModeVisited = useCallback(() => setOrdersModeVisited(true), [])
   const [communityService] = useState(createCommunityService)
   const {
     levelScore,
@@ -435,6 +439,10 @@ export function GameProvider({ children }) {
       createdPizza,
       gameCompleted,
       ordersMode,
+      ordersInvitationShown,
+      ordersModeVisited,
+      markOrdersInvitationShown,
+      markOrdersModeVisited,
       unlockedStage,
       recordAnswer,
       recordOrderResult,
@@ -472,6 +480,10 @@ export function GameProvider({ children }) {
       createdPizza,
       gameCompleted,
       ordersMode,
+      ordersInvitationShown,
+      ordersModeVisited,
+      markOrdersInvitationShown,
+      markOrdersModeVisited,
       unlockedStage,
       recordAnswer,
       recordOrderResult,

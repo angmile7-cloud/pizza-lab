@@ -166,6 +166,137 @@ body {
   min-width: 0;
 }
 
+.invitation-overlay {
+  --level-gold: #ffd54a;
+  position: absolute;
+  z-index: 20;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(25 18 13 / 58%);
+  animation: invitation-fade 200ms ease-out;
+}
+
+.invitation-dialog {
+  width: 86%;
+  max-height: calc(100% - 32px - var(--safe-top) - var(--safe-bottom));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 20px;
+  border: 2px solid #74563a;
+  border-top: 10px solid var(--level-gold);
+  border-radius: 24px;
+  background: #fff4d3;
+  color: #321d13;
+  text-align: center;
+  font-size: 16px;
+  text-shadow: none;
+  -webkit-text-stroke: 0;
+  box-shadow: 0 12px 32px rgb(25 18 13 / 30%);
+  animation: invitation-enter 200ms ease-out;
+}
+
+.invitation-dialog__logo {
+  display: block;
+  width: 84px;
+  height: 84px;
+  object-fit: contain;
+  margin: 0 auto 12px;
+}
+
+.invitation-dialog h2 {
+  margin: 0 0 12px;
+  color: inherit;
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.invitation-dialog p {
+  margin: 0 0 20px;
+}
+
+.invitation-dialog__actions {
+  display: grid;
+  gap: 10px;
+}
+
+.invitation-dialog__actions button {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid #36764b;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.invitation-dialog__primary {
+  min-height: 48px;
+}
+
+.invitation-dialog__actions .invitation-dialog__primary,
+.progress-map__orders-control .progress-map__orders-button {
+  border: 2px solid #a47b20;
+  background: var(--level-gold, #ffd54a);
+  color: #321d13;
+  box-shadow: 0 3px 6px rgb(90 62 18 / 20%);
+}
+
+.invitation-dialog__actions .invitation-dialog__primary:hover,
+.invitation-dialog__actions .invitation-dialog__primary:active,
+.progress-map__orders-control .progress-map__orders-button:not(:disabled):hover,
+.progress-map__orders-control .progress-map__orders-button:not(:disabled):active {
+  background: #f4c638;
+}
+
+.invitation-dialog__secondary {
+  min-height: 44px;
+  background: #fff4d3;
+  color: #285b39;
+}
+
+.invitation-dialog__actions button:focus-visible {
+  outline: 3px solid #321d13;
+  outline-offset: 3px;
+}
+
+.progress-map__orders-control .progress-map__orders-button {
+  position: relative;
+}
+
+.progress-map__new-badge {
+  position: absolute;
+  top: -8px;
+  right: 8px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #36764b;
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.4;
+  text-shadow: none;
+  -webkit-text-stroke: 0;
+  pointer-events: none;
+}
+
+@keyframes invitation-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes invitation-enter {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .invitation-overlay,
+  .invitation-dialog {
+    animation: none;
+  }
+}
+
 h1,
 h2 {
   color: var(--ink);
@@ -1748,25 +1879,18 @@ label {
 .progress-map__orders-control .progress-map__orders-button {
   min-height: 52px;
   padding: 10px 24px;
-  border-color: #28633d;
-  background: #28633d;
-  color: #fff;
   font-size: 18px;
-  box-shadow: 0 3px 6px rgba(35, 67, 41, 0.2);
 }
 
 .progress-map__orders-control .progress-map__orders-button:disabled {
   opacity: 1;
+  background: #dfcc86;
+  border-color: #a18c55;
 }
 
 .progress-map__orders-control .progress-map__orders-button.is-locked {
-  background: #526a53;
-  border-color: #526a53;
-}
-
-.progress-map__orders-control .progress-map__orders-button:not(:disabled):hover,
-.progress-map__orders-control .progress-map__orders-button:not(:disabled):active {
-  background: #1e5131;
+  background: #dfcc86;
+  border-color: #a18c55;
 }
 
 .community-scroll {

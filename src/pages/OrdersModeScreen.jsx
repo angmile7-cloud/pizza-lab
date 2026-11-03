@@ -233,9 +233,15 @@ export default function OrdersModeScreen() {
     startShift,
     recordShiftOrderResult,
     markActiveOrder,
+    markOrdersModeVisited,
   } = useGame()
   const validStage = Number.isInteger(stage) && stage >= 1 && stage <= LEVELS.length
   const shift = ordersMode.shifts[stage]
+  useEffect(() => {
+    if (validStage && stage <= unlockedStage && shift?.status !== 'completed') {
+      markOrdersModeVisited()
+    }
+  }, [validStage, stage, unlockedStage, shift?.status, markOrdersModeVisited])
   const tier = getTierForStage(stage)
   const topics = getOrderTopicsForStage(stage)
   const slots = getLevel(8)?.builder?.slots ?? EMPTY_SLOTS

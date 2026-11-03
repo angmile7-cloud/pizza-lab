@@ -21,7 +21,12 @@ export default function OrdersShiftsScreen() {
     ordersMode,
     unlockedStage,
     recordShiftOrderResult,
+    markOrdersModeVisited,
   } = useGame()
+
+  useEffect(() => {
+    if (unlockedStage > 0) markOrdersModeVisited()
+  }, [unlockedStage, markOrdersModeVisited])
 
   useEffect(() => {
     const active = ordersMode.activeOrder

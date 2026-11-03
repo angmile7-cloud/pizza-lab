@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import LevelScene from '../components/LevelScene'
+import InvitationDialog from '../components/InvitationDialog'
 import PizzaPreview from '../components/PizzaPreview'
 import { useGame } from '../game/useGame'
 import {
@@ -160,6 +161,10 @@ function ResultLayout({
   nextLevel,
   onRetry,
 }) {
+  const navigate = useNavigate()
+  const { ordersInvitationShown, markOrdersInvitationShown } = useGame()
+  const [invitationOpen, setInvitationOpen] = useState(false)
+  const closeInvitation = useCallback(() => setInvitationOpen(false), [])
   const reduced = usePrefersReducedMotion()
   const [skipped, setSkipped] = useState(reduced)
   const [countsStarted, setCountsStarted] = useState(reduced)
@@ -303,7 +308,15 @@ function ResultLayout({
               <Link
                 className="level-action level-action--confirm level-result__primary"
                 to={levelPath(nextLevel)}
-                onClick={() => setPrimaryTapped(true)}
+                onClick={(event) => {
+                  if (level.id === 1 && nextLevel.id === 2 && !ordersInvitationShown) {
+                    event.preventDefault()
+                    markOrdersInvitationShown()
+                    setInvitationOpen(true)
+                    return
+                  }
+                  setPrimaryTapped(true)
+                }}
               >
                 <span>Siguiente: Nivel {nextLevel.id}</span>
                 <small>{nextLevel.title}</small>
@@ -334,6 +347,28 @@ function ResultLayout({
           </Link>
         </footer>
       </section>
+      {level.id === 1 && passed && invitationOpen ? (
+        <InvitationDialog
+          title="¡Dodo necesita tu ayuda!"
+          body="Ya sabes lo básico. Practica lo aprendido preparando pedidos de clientes y gana más puntos."
+          primaryAction={{
+            label: 'Preparar pedidos',
+            onClick: () => {
+              closeInvitation()
+              navigate('/pedidos')
+            },
+          }}
+          secondaryAction={{
+            label: 'Ir al nivel 2',
+            onClick: () => {
+              closeInvitation()
+              setPrimaryTapped(true)
+              navigate(levelPath(nextLevel))
+            },
+          }}
+          onClose={closeInvitation}
+        />
+      ) : null}
     </LevelScene>
   )
 }

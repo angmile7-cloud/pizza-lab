@@ -112,6 +112,7 @@ export default function GameHubScreen() {
     answersByLevel,
     orderResultsByLevel,
     ordersMode,
+    ordersModeVisited,
     unlockedStage,
     rewardsUnlocked,
   } = useGame()
@@ -196,6 +197,7 @@ export default function GameHubScreen() {
             onClick={() => navigate('/pedidos')}
           >
             Preparar pedidos
+            {!ordersModeVisited ? <span className="progress-map__new-badge">Nuevo</span> : null}
           </button>
         ) : (
           <>
@@ -206,6 +208,7 @@ export default function GameHubScreen() {
               aria-describedby="orders-mode-status"
             >
               Preparar pedidos
+              {!ordersModeVisited ? <span className="progress-map__new-badge">Nuevo</span> : null}
             </button>
             <p id="orders-mode-status">{unlockedStage >= LEVELS.length
               ? 'Completaste todos los pedidos.'
