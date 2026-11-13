@@ -58,16 +58,28 @@
   ],
   "timeBonusMax": 2,
   "shiftSizes": [
-    { "minStage": 1, "maxStage": 2, "size": 5 },
-    { "minStage": 3, "maxStage": 5, "size": 6 },
-    { "minStage": 6, "maxStage": 10, "size": 7 }
+    {
+      "minStage": 1,
+      "maxStage": 2,
+      "size": 5
+    },
+    {
+      "minStage": 3,
+      "maxStage": 5,
+      "size": 6
+    },
+    {
+      "minStage": 6,
+      "maxStage": 10,
+      "size": 7
+    }
   ],
   "orders": [
     {
       "id": "s01-01",
       "stage": 1,
       "customer": "Marta",
-      "text": "Quiero una Margherita de verdad: salsa de tomate, mozzarella y albahaca.",
+      "text": "Quiero una pizza con salsa de tomate, mozzarella y albahaca: una Margherita de verdad.",
       "requirements": [
         {
           "type": "slotIs",
@@ -93,7 +105,7 @@
       "id": "s01-02",
       "stage": 1,
       "customer": "Luis",
-      "text": "Una pizza de pepperoni con mozzarella, por favor.",
+      "text": "Quiero una pizza con salsa de tomate, mozzarella y pepperoni, por favor.",
       "requirements": [
         {
           "type": "toppingIncluded",
@@ -103,6 +115,11 @@
           "type": "slotIs",
           "slot": "queso",
           "value": "mozzarella"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
         }
       ],
       "topics": [
@@ -114,7 +131,7 @@
       "id": "s01-03",
       "stage": 1,
       "customer": "Sofía",
-      "text": "Jamón y aceitunas, sin queso.",
+      "text": "Quiero una pizza con salsa blanca, jamón y aceitunas, sin queso.",
       "requirements": [
         {
           "type": "toppingIncluded",
@@ -123,6 +140,11 @@
         {
           "type": "toppingIncluded",
           "id": "aceitunas"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "bianca"
         }
       ],
       "topics": [
@@ -134,7 +156,7 @@
       "id": "s01-04",
       "stage": 1,
       "customer": "Tomás",
-      "text": "Quiero champiñones con salsa de tomate, sin queso.",
+      "text": "Quiero una pizza con salsa de tomate, champiñones, sin queso.",
       "requirements": [
         {
           "type": "toppingIncluded",
@@ -155,7 +177,7 @@
       "id": "s01-05",
       "stage": 1,
       "customer": "Valeria",
-      "text": "Solo dos toppings: pepperoni y cebolla, sin queso.",
+      "text": "Quiero una pizza con salsa de tomate, solo pepperoni y cebolla, sin queso.",
       "requirements": [
         {
           "type": "toppingIncluded",
@@ -164,6 +186,11 @@
         {
           "type": "toppingIncluded",
           "id": "cebolla"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
         }
       ],
       "topics": [
@@ -175,7 +202,7 @@
       "id": "s01-06",
       "stage": 1,
       "customer": "Andrés",
-      "text": "Una pizza de queso: tomate y mozzarella, sin ningún topping.",
+      "text": "Quiero una pizza con salsa de tomate, mozzarella, sin ningún topping.",
       "requirements": [
         {
           "type": "slotIs",
@@ -197,7 +224,7 @@
       "id": "s01-07",
       "stage": 1,
       "customer": "Camila",
-      "text": "Jamón con champiñones, solo esos dos y sin queso.",
+      "text": "Quiero una pizza con salsa blanca, jamón y champiñones, solo esos dos y sin queso.",
       "requirements": [
         {
           "type": "toppingIncluded",
@@ -206,6 +233,11 @@
         {
           "type": "toppingIncluded",
           "id": "champinones"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "bianca"
         }
       ],
       "topics": [
@@ -217,7 +249,7 @@
       "id": "s01-08",
       "stage": 1,
       "customer": "Julián",
-      "text": "Albahaca y aceitunas sobre tomate, sin queso.",
+      "text": "Quiero una pizza con salsa de tomate, albahaca y aceitunas, sin queso.",
       "requirements": [
         {
           "type": "toppingIncluded",
@@ -242,7 +274,7 @@
       "id": "s02-01",
       "stage": 2,
       "customer": "Elena",
-      "text": "Masa napolitana (harina 00, borde alto) con tomate y albahaca, sin queso.",
+      "text": "Quiero una pizza con salsa de tomate, masa napolitana de harina 00 y borde alto, albahaca y sin queso.",
       "requirements": [
         {
           "type": "slotIs",
@@ -268,7 +300,7 @@
       "id": "s02-02",
       "stage": 2,
       "customer": "Pablo",
-      "text": "Masa fina y crocante con pepperoni, sin queso.",
+      "text": "Quiero una pizza con salsa de tomate, masa fina y crocante, con pepperoni y sin queso.",
       "requirements": [
         {
           "type": "slotIs",
@@ -278,6 +310,11 @@
         {
           "type": "toppingIncluded",
           "id": "pepperoni"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
         }
       ],
       "topics": [
@@ -289,7 +326,7 @@
       "id": "s02-03",
       "stage": 2,
       "customer": "Rosa",
-      "text": "Masa integral con champiñones y cebolla, sin queso.",
+      "text": "Quiero una pizza con salsa blanca, masa integral, champiñones y cebolla, sin queso.",
       "requirements": [
         {
           "type": "slotIs",
@@ -303,6 +340,11 @@
         {
           "type": "toppingIncluded",
           "id": "cebolla"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "bianca"
         }
       ],
       "topics": [
@@ -314,7 +356,7 @@
       "id": "s02-04",
       "stage": 2,
       "customer": "Diego",
-      "text": "Quiero base fina y crocante con jamón y aceitunas, sin queso.",
+      "text": "Quiero una pizza con salsa blanca, masa fina y crocante, jamón y aceitunas, sin queso.",
       "requirements": [
         {
           "type": "slotIs",
@@ -328,6 +370,11 @@
         {
           "type": "toppingIncluded",
           "id": "aceitunas"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "bianca"
         }
       ],
       "topics": [
@@ -339,7 +386,7 @@
       "id": "s02-05",
       "stage": 2,
       "customer": "Irene",
-      "text": "Napolitana con mozzarella y pepperoni.",
+      "text": "Quiero una pizza con salsa de tomate, masa napolitana, mozzarella y pepperoni.",
       "requirements": [
         {
           "type": "slotIs",
@@ -354,6 +401,11 @@
         {
           "type": "toppingIncluded",
           "id": "pepperoni"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
         }
       ],
       "topics": [
@@ -365,7 +417,7 @@
       "id": "s02-06",
       "stage": 2,
       "customer": "Mateo",
-      "text": "Una Margherita completa sobre masa napolitana: tomate, mozzarella y albahaca.",
+      "text": "Quiero una pizza con salsa de tomate, masa napolitana, mozzarella y albahaca: una Margherita completa.",
       "requirements": [
         {
           "type": "slotIs",
@@ -396,7 +448,7 @@
       "id": "s02-07",
       "stage": 2,
       "customer": "Lucía",
-      "text": "Masa integral, tomate y mozzarella, sin toppings.",
+      "text": "Quiero una pizza con salsa de tomate, masa integral y mozzarella, sin toppings.",
       "requirements": [
         {
           "type": "slotIs",
@@ -423,7 +475,7 @@
       "id": "s02-08",
       "stage": 2,
       "customer": "Hugo",
-      "text": "Base fina con rúcula y jamón, sin queso.",
+      "text": "Quiero una pizza con salsa blanca, masa fina, rúcula y jamón, sin queso.",
       "requirements": [
         {
           "type": "slotIs",
@@ -437,6 +489,11 @@
         {
           "type": "toppingIncluded",
           "id": "jamon"
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "bianca"
         }
       ],
       "topics": [
@@ -448,7 +505,7 @@
       "id": "s03-01",
       "stage": 3,
       "customer": "Paula",
-      "text": "Salsa bianca (aceite y ajo), con mozzarella y cebolla.",
+      "text": "Quiero una pizza con salsa blanca, mozzarella y cebolla.",
       "requirements": [
         {
           "type": "slotIs",
@@ -474,7 +531,7 @@
       "id": "s03-02",
       "stage": 3,
       "customer": "Ramiro",
-      "text": "Pesto sobre masa fina con aceitunas, sin queso.",
+      "text": "Quiero una pizza con salsa pesto, masa fina y aceitunas, sin queso.",
       "requirements": [
         {
           "type": "slotIs",
@@ -500,7 +557,7 @@
       "id": "s03-03",
       "stage": 3,
       "customer": "Nora",
-      "text": "Una Marinara sobre masa napolitana: tomate, sin queso y sin toppings.",
+      "text": "Quiero una pizza con salsa de tomate, masa napolitana, sin queso y sin toppings: una Marinara.",
       "requirements": [
         {
           "type": "slotIs",
@@ -527,7 +584,7 @@
       "id": "s03-04",
       "stage": 3,
       "customer": "Óscar",
-      "text": "Masa napolitana, salsa bianca, mozzarella y rúcula.",
+      "text": "Quiero una pizza con salsa blanca, masa napolitana, mozzarella y rúcula.",
       "requirements": [
         {
           "type": "slotIs",
@@ -558,7 +615,7 @@
       "id": "s03-05",
       "stage": 3,
       "customer": "Alma",
-      "text": "Pesto con mozzarella y champiñones.",
+      "text": "Quiero una pizza con salsa pesto, mozzarella y champiñones.",
       "requirements": [
         {
           "type": "slotIs",
@@ -584,7 +641,7 @@
       "id": "s03-06",
       "stage": 3,
       "customer": "Fabián",
-      "text": "Tomate sobre masa integral con pepperoni y cebolla, sin queso.",
+      "text": "Quiero una pizza con salsa de tomate, masa integral, pepperoni y cebolla, sin queso.",
       "requirements": [
         {
           "type": "slotIs",
@@ -614,7 +671,7 @@
       "id": "s03-07",
       "stage": 3,
       "customer": "Clara",
-      "text": "Base fina con salsa bianca, champiñones y aceitunas, sin queso.",
+      "text": "Quiero una pizza con salsa blanca, masa fina, champiñones y aceitunas, sin queso.",
       "requirements": [
         {
           "type": "slotIs",
@@ -644,7 +701,7 @@
       "id": "s03-08",
       "stage": 3,
       "customer": "Gael",
-      "text": "Masa napolitana con pesto, mozzarella y jamón.",
+      "text": "Quiero una pizza con salsa pesto, masa napolitana, mozzarella y jamón.",
       "requirements": [
         {
           "type": "slotIs",
@@ -675,7 +732,7 @@
       "id": "s04-01",
       "stage": 4,
       "customer": "Marcos",
-      "text": "Mozzarella con parmesano, tomate, masa napolitana y pepperoni.",
+      "text": "Quiero una pizza con salsa de tomate, masa napolitana, mozzarella con parmesano y pepperoni.",
       "requirements": [
         {
           "type": "slotIs",
@@ -706,7 +763,7 @@
       "id": "s04-02",
       "stage": 4,
       "customer": "Eva",
-      "text": "Pizza sin queso: base fina, salsa bianca y rúcula.",
+      "text": "Quiero una pizza con salsa blanca, masa fina y rúcula, sin queso.",
       "requirements": [
         {
           "type": "slotIs",
@@ -737,7 +794,7 @@
       "id": "s04-03",
       "stage": 4,
       "customer": "Raúl",
-      "text": "Salsa bianca, mozzarella con parmesano y champiñones.",
+      "text": "Quiero una pizza con salsa blanca, mozzarella con parmesano y champiñones.",
       "requirements": [
         {
           "type": "slotIs",
@@ -763,7 +820,7 @@
       "id": "s04-04",
       "stage": 4,
       "customer": "Ana",
-      "text": "Margherita con pepperoni: masa napolitana, tomate, mozzarella, albahaca y pepperoni.",
+      "text": "Quiero una pizza con salsa de tomate, masa napolitana, mozzarella, albahaca y pepperoni: una Margherita con pepperoni.",
       "requirements": [
         {
           "type": "slotIs",
@@ -798,7 +855,7 @@
       "id": "s04-05",
       "stage": 4,
       "customer": "Iván",
-      "text": "Masa integral con pesto, mozzarella + parmesano y aceitunas.",
+      "text": "Quiero una pizza con salsa pesto, masa integral, mozzarella con parmesano y aceitunas.",
       "requirements": [
         {
           "type": "slotIs",
@@ -829,7 +886,7 @@
       "id": "s04-06",
       "stage": 4,
       "customer": "Silvia",
-      "text": "Sin queso, por favor: masa integral, tomate y cebolla.",
+      "text": "Quiero una pizza con salsa de tomate, masa integral y cebolla, sin queso, por favor.",
       "requirements": [
         {
           "type": "slotIs",
@@ -860,7 +917,7 @@
       "id": "s04-07",
       "stage": 4,
       "customer": "Daniel",
-      "text": "Base fina, tomate, mozzarella + parmesano y jamón.",
+      "text": "Quiero una pizza con salsa de tomate, masa fina, mozzarella con parmesano y jamón.",
       "requirements": [
         {
           "type": "slotIs",
@@ -891,7 +948,7 @@
       "id": "s04-08",
       "stage": 4,
       "customer": "Marina",
-      "text": "Mozzarella simple, salsa bianca, masa napolitana y cebolla.",
+      "text": "Quiero una pizza con salsa blanca, masa napolitana, mozzarella simple y cebolla.",
       "requirements": [
         {
           "type": "slotIs",
@@ -922,7 +979,7 @@
       "id": "s05-01",
       "stage": 5,
       "customer": "Héctor",
-      "text": "Masa napolitana, tomate, mozzarella, pepperoni y champiñones.",
+      "text": "Quiero una pizza con salsa de tomate, masa napolitana, mozzarella, pepperoni y champiñones.",
       "requirements": [
         {
           "type": "slotIs",
@@ -957,7 +1014,7 @@
       "id": "s05-02",
       "stage": 5,
       "customer": "Lola",
-      "text": "Base fina, salsa bianca y mozzarella, con rúcula y jamón.",
+      "text": "Quiero una pizza con salsa blanca, masa fina, mozzarella, rúcula y jamón.",
       "requirements": [
         {
           "type": "slotIs",
@@ -992,7 +1049,7 @@
       "id": "s05-03",
       "stage": 5,
       "customer": "Nico",
-      "text": "Tomate, mozzarella y albahaca, y además una carne a elegir: pepperoni o jamón.",
+      "text": "Quiero una pizza con salsa de tomate, mozzarella, albahaca y una carne a elegir: pepperoni o jamón.",
       "requirements": [
         {
           "type": "slotIs",
@@ -1027,7 +1084,7 @@
       "id": "s05-04",
       "stage": 5,
       "customer": "Berta",
-      "text": "Masa integral con tomate, champiñones y cebolla, sin queso.",
+      "text": "Quiero una pizza con salsa de tomate, masa integral, champiñones y cebolla, sin queso.",
       "requirements": [
         {
           "type": "slotIs",
@@ -1057,7 +1114,7 @@
       "id": "s05-05",
       "stage": 5,
       "customer": "Álvaro",
-      "text": "Masa napolitana, pesto, mozzarella, jamón y champiñones.",
+      "text": "Quiero una pizza con salsa pesto, masa napolitana, mozzarella, jamón y champiñones.",
       "requirements": [
         {
           "type": "slotIs",
@@ -1092,7 +1149,7 @@
       "id": "s05-06",
       "stage": 5,
       "customer": "Carla",
-      "text": "Base fina con tomate y mozzarella, y exactamente dos toppings entre champiñones, aceitunas y cebolla.",
+      "text": "Quiero una pizza con salsa de tomate, masa fina, mozzarella y exactamente dos toppings: champiñones, aceitunas o cebolla.",
       "requirements": [
         {
           "type": "slotIs",
@@ -1129,7 +1186,7 @@
       "id": "s05-07",
       "stage": 5,
       "customer": "Rubén",
-      "text": "Salsa bianca, mozzarella con parmesano, rúcula y aceitunas.",
+      "text": "Quiero una pizza con salsa blanca, mozzarella con parmesano, rúcula y aceitunas.",
       "requirements": [
         {
           "type": "slotIs",
@@ -1159,7 +1216,7 @@
       "id": "s05-08",
       "stage": 5,
       "customer": "Teresa",
-      "text": "Masa napolitana, tomate, pepperoni y albahaca, sin queso.",
+      "text": "Quiero una pizza con salsa de tomate, masa napolitana, pepperoni y albahaca, sin queso.",
       "requirements": [
         {
           "type": "slotIs",
@@ -1189,7 +1246,7 @@
       "id": "s06-01",
       "stage": 6,
       "customer": "Gonzalo",
-      "text": "Base fina con tomate y mozzarella. Una carne (pepperoni o jamón) y un vegetal (champiñones o cebolla).",
+      "text": "Quiero una pizza con salsa de tomate, masa fina, mozzarella, una carne (pepperoni o jamón) y un vegetal (champiñones o cebolla).",
       "requirements": [
         {
           "type": "slotIs",
@@ -1235,7 +1292,7 @@
       "id": "s06-02",
       "stage": 6,
       "customer": "Ingrid",
-      "text": "Nada de masa integral. Salsa bianca, mozzarella, rúcula y un topping a elegir entre jamón o aceitunas.",
+      "text": "Quiero una pizza con salsa blanca, mozzarella, rúcula y un topping: jamón o aceitunas. Nada de masa integral.",
       "requirements": [
         {
           "type": "slotNotIn",
@@ -1278,7 +1335,7 @@
       "id": "s06-03",
       "stage": 6,
       "customer": "Mauro",
-      "text": "Sin tomate, por favor. Masa napolitana, mozzarella con parmesano y dos toppings entre champiñones, cebolla, aceitunas o albahaca.",
+      "text": "Quiero una pizza con salsa blanca, masa napolitana, mozzarella con parmesano y dos toppings: champiñones, cebolla, aceitunas o albahaca.",
       "requirements": [
         {
           "type": "slotIs",
@@ -1307,6 +1364,11 @@
           ],
           "min": 2,
           "max": 2
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "bianca"
         }
       ],
       "topics": [
@@ -1319,7 +1381,7 @@
       "id": "s06-04",
       "stage": 6,
       "customer": "Noelia",
-      "text": "Napolitana con tomate, albahaca y algún queso (que no falte el queso). Puede llevar pepperoni o jamón, pero no ambos.",
+      "text": "Quiero una pizza con salsa de tomate, masa napolitana, albahaca y queso. Puede llevar pepperoni o jamón, pero no ambos.",
       "requirements": [
         {
           "type": "slotIs",
@@ -1362,7 +1424,7 @@
       "id": "s06-05",
       "stage": 6,
       "customer": "Bruno",
-      "text": "Masa fina con pesto y mozzarella, champiñones y uno entre aceitunas o cebolla.",
+      "text": "Quiero una pizza con salsa pesto, masa fina, mozzarella, champiñones y uno entre aceitunas o cebolla.",
       "requirements": [
         {
           "type": "slotIs",
@@ -1403,7 +1465,7 @@
       "id": "s06-06",
       "stage": 6,
       "customer": "Pilar",
-      "text": "Masa integral, tomate, mozzarella con parmesano y de dos a tres toppings entre champiñones, cebolla y aceitunas.",
+      "text": "Quiero una pizza con salsa de tomate, masa integral, mozzarella con parmesano y dos o tres toppings: champiñones, cebolla y aceitunas.",
       "requirements": [
         {
           "type": "slotIs",
@@ -1441,7 +1503,7 @@
       "id": "s06-07",
       "stage": 6,
       "customer": "Ezequiel",
-      "text": "Napolitana con salsa bianca, rúcula y una carne (pepperoni o jamón). El queso, cualquiera menos mozzarella con parmesano.",
+      "text": "Quiero una pizza con salsa blanca, masa napolitana, rúcula y una carne (pepperoni o jamón). Cualquier queso menos mozzarella con parmesano.",
       "requirements": [
         {
           "type": "slotIs",
@@ -1484,7 +1546,7 @@
       "id": "s06-08",
       "stage": 6,
       "customer": "Adriana",
-      "text": "Base fina, tomate, mozzarella, pepperoni y cebolla. Puede llevar albahaca o rúcula, pero solo una.",
+      "text": "Quiero una pizza con salsa de tomate, masa fina, mozzarella, pepperoni y cebolla. Puede llevar albahaca o rúcula, pero solo una.",
       "requirements": [
         {
           "type": "slotIs",
@@ -1529,7 +1591,7 @@
       "id": "s07-01",
       "stage": 7,
       "customer": "Leandro",
-      "text": "Horno de leña a 450 °C: masa napolitana, tomate, mozzarella, albahaca y una carne a elegir (pepperoni o jamón).",
+      "text": "Quiero una pizza con salsa de tomate, masa napolitana, mozzarella, albahaca y una carne (pepperoni o jamón), al horno de leña a 450 °C.",
       "requirements": [
         {
           "type": "slotIs",
@@ -1569,7 +1631,7 @@
       "id": "s07-02",
       "stage": 7,
       "customer": "Mónica",
-      "text": "Horno casero a 250 °C: masa fina y crocante, tomate, mozzarella, pepperoni y cebolla; si quieres, una de aceitunas o albahaca.",
+      "text": "Quiero una pizza con salsa de tomate, masa fina y crocante, mozzarella, pepperoni y cebolla; opcionalmente aceitunas o albahaca. Horno casero a 250 °C.",
       "requirements": [
         {
           "type": "slotIs",
@@ -1613,7 +1675,7 @@
       "id": "s07-03",
       "stage": 7,
       "customer": "Federico",
-      "text": "Horno de leña: masa napolitana, salsa bianca, mozzarella, rúcula y jamón.",
+      "text": "Quiero una pizza con salsa blanca, masa napolitana, mozzarella, rúcula y jamón, al horno de leña.",
       "requirements": [
         {
           "type": "slotIs",
@@ -1648,7 +1710,7 @@
       "id": "s07-04",
       "stage": 7,
       "customer": "Gabriela",
-      "text": "Horno casero: masa fina, tomate, mozzarella con parmesano, albahaca y dos toppings entre pepperoni, aceitunas y cebolla.",
+      "text": "Quiero una pizza con salsa de tomate, masa fina, mozzarella con parmesano, albahaca y dos toppings: pepperoni, aceitunas o cebolla. Horno casero.",
       "requirements": [
         {
           "type": "slotIs",
@@ -1689,7 +1751,7 @@
       "id": "s07-05",
       "stage": 7,
       "customer": "Santiago",
-      "text": "Horno de leña: napolitana, pesto, algún queso (que no falte), jamón y, si quieres, una de aceitunas o cebolla.",
+      "text": "Quiero una pizza con salsa pesto, masa napolitana, queso y jamón; opcionalmente aceitunas o cebolla. Horno de leña.",
       "requirements": [
         {
           "type": "slotIs",
@@ -1731,7 +1793,7 @@
       "id": "s07-06",
       "stage": 7,
       "customer": "Verónica",
-      "text": "Horno casero: base fina, cualquier salsa menos pesto, mozzarella, aceitunas y una hoja fresca (rúcula o albahaca).",
+      "text": "Quiero una pizza con salsa de tomate, masa fina, mozzarella, aceitunas y una hoja fresca (rúcula o albahaca). Horno casero.",
       "requirements": [
         {
           "type": "slotIs",
@@ -1762,6 +1824,11 @@
           ],
           "min": 1,
           "max": 1
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
         }
       ],
       "topics": [
@@ -1773,7 +1840,7 @@
       "id": "s07-07",
       "stage": 7,
       "customer": "Pedro",
-      "text": "Horno de leña: masa napolitana, tomate, mozzarella, pepperoni, cebolla y albahaca.",
+      "text": "Quiero una pizza con salsa de tomate, masa napolitana, mozzarella, pepperoni, cebolla y albahaca, al horno de leña.",
       "requirements": [
         {
           "type": "slotIs",
@@ -1812,7 +1879,7 @@
       "id": "s07-08",
       "stage": 7,
       "customer": "Daniela",
-      "text": "Horno casero: masa fina, salsa bianca, mozzarella con parmesano, rúcula y uno o dos toppings entre jamón, pepperoni y aceitunas.",
+      "text": "Quiero una pizza con salsa blanca, masa fina, mozzarella con parmesano, rúcula y uno o dos toppings: jamón, pepperoni o aceitunas. Horno casero.",
       "requirements": [
         {
           "type": "slotIs",
@@ -1853,7 +1920,7 @@
       "id": "s08-01",
       "stage": 8,
       "customer": "Karina",
-      "text": "Base fina, tomate y mozzarella con parmesano. Una carne (pepperoni o jamón), uno o dos vegetales (champiñones, cebolla o aceitunas) y como mucho una hoja fresca (albahaca o rúcula).",
+      "text": "Quiero una pizza con salsa de tomate, masa fina, mozzarella con parmesano, una carne (pepperoni o jamón), uno o dos vegetales (champiñones, cebolla o aceitunas) y, opcionalmente, albahaca o rúcula.",
       "requirements": [
         {
           "type": "slotIs",
@@ -1908,7 +1975,7 @@
       "id": "s08-02",
       "stage": 8,
       "customer": "Joaquín",
-      "text": "Nada de masa integral ni de tomate. Mozzarella, rúcula, una carne (jamón o pepperoni) y, si quieres, una de aceitunas o cebolla.",
+      "text": "Quiero una pizza con salsa blanca, mozzarella, rúcula, una carne (jamón o pepperoni) y, si quieres, aceitunas o cebolla. Nada de masa integral.",
       "requirements": [
         {
           "type": "slotNotIn",
@@ -1950,18 +2017,23 @@
           ],
           "min": 0,
           "max": 1
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "bianca"
         }
       ],
       "topics": [
         "armado-final"
       ],
-      "tip": "Quitar el tomate abre otras opciones de base: bianca o pesto."
+      "tip": "Sin tomate, la salsa blanca combina bien con rúcula y mozzarella."
     },
     {
       "id": "s08-03",
       "stage": 8,
       "customer": "Beatriz",
-      "text": "Integral con pesto, mozzarella con parmesano, champiñones, cebolla y albahaca.",
+      "text": "Quiero una pizza con salsa pesto, masa integral, mozzarella con parmesano, champiñones, cebolla y albahaca.",
       "requirements": [
         {
           "type": "slotIs",
@@ -2000,7 +2072,7 @@
       "id": "s08-04",
       "stage": 8,
       "customer": "Manuel",
-      "text": "Napolitana con tomate y algún queso (no sin queso), tres toppings entre pepperoni, champiñones, aceitunas y cebolla, y una hoja fresca: albahaca o rúcula.",
+      "text": "Quiero una pizza con salsa de tomate, masa napolitana, queso (no sin queso), tres toppings (pepperoni, champiñones, aceitunas o cebolla) y albahaca o rúcula.",
       "requirements": [
         {
           "type": "slotIs",
@@ -2049,7 +2121,7 @@
       "id": "s08-05",
       "stage": 8,
       "customer": "Rocío",
-      "text": "Fina, bianca y mozzarella con jamón y champiñones; puede llevar una hoja fresca (albahaca o rúcula) o ninguna.",
+      "text": "Quiero una pizza con salsa blanca, masa fina, mozzarella, jamón y champiñones; si quieres, albahaca o rúcula.",
       "requirements": [
         {
           "type": "slotIs",
@@ -2093,7 +2165,7 @@
       "id": "s08-06",
       "stage": 8,
       "customer": "Esteban",
-      "text": "Masa napolitana, tomate, mozzarella con parmesano, pepperoni, aceitunas y albahaca.",
+      "text": "Quiero una pizza con salsa de tomate, masa napolitana, mozzarella con parmesano, pepperoni, aceitunas y albahaca.",
       "requirements": [
         {
           "type": "slotIs",
@@ -2132,7 +2204,7 @@
       "id": "s08-07",
       "stage": 8,
       "customer": "Alicia",
-      "text": "Nada de masa napolitana ni de mozzarella con parmesano. Pesto, rúcula y jamón.",
+      "text": "Quiero una pizza con salsa pesto, rúcula y jamón. Nada de masa napolitana ni de mozzarella con parmesano.",
       "requirements": [
         {
           "type": "slotNotIn",
@@ -2171,7 +2243,7 @@
       "id": "s08-08",
       "stage": 8,
       "customer": "Ricardo",
-      "text": "Masa integral, tomate, mozzarella, champiñones, cebolla y aceitunas; y si quieres, una hoja fresca (albahaca o rúcula).",
+      "text": "Quiero una pizza con salsa de tomate, masa integral, mozzarella, champiñones, cebolla y aceitunas; si quieres, albahaca o rúcula.",
       "requirements": [
         {
           "type": "slotIs",
@@ -2219,7 +2291,7 @@
       "id": "s09-01",
       "stage": 9,
       "customer": "Chiara",
-      "text": "Una capricciosa napolitana: masa napolitana, tomate, mozzarella, jamón, champiñones y aceitunas.",
+      "text": "Quiero una pizza con salsa de tomate, masa napolitana, mozzarella, jamón, champiñones y aceitunas: una capricciosa.",
       "requirements": [
         {
           "type": "slotIs",
@@ -2258,7 +2330,7 @@
       "id": "s09-02",
       "stage": 9,
       "customer": "Marco",
-      "text": "Estilo romano (base fina y crocante): tomate, mozzarella, pepperoni, cebolla y albahaca.",
+      "text": "Quiero una pizza con salsa de tomate, masa fina y crocante, mozzarella, pepperoni, cebolla y albahaca, al estilo romano.",
       "requirements": [
         {
           "type": "slotIs",
@@ -2297,7 +2369,7 @@
       "id": "s09-03",
       "stage": 9,
       "customer": "Giulia",
-      "text": "Pizza blanca a la romana: base fina, salsa bianca, mozzarella con parmesano, rúcula, jamón y como mucho una de aceitunas o cebolla.",
+      "text": "Quiero una pizza con salsa blanca, masa fina, mozzarella con parmesano, rúcula y jamón; opcionalmente aceitunas o cebolla. Al estilo romano.",
       "requirements": [
         {
           "type": "slotIs",
@@ -2341,7 +2413,7 @@
       "id": "s09-04",
       "stage": 9,
       "customer": "Paolo",
-      "text": "Estilo genovés (con pesto) sobre base fina: mozzarella, champiñones, cebolla y como mucho una de jamón o aceitunas.",
+      "text": "Quiero una pizza con salsa pesto, masa fina, mozzarella, champiñones y cebolla; opcionalmente jamón o aceitunas. Al estilo genovés.",
       "requirements": [
         {
           "type": "slotIs",
@@ -2385,7 +2457,7 @@
       "id": "s09-05",
       "stage": 9,
       "customer": "Dante",
-      "text": "Una versión integral y vegetariana: masa integral, tomate, mozzarella, champiñones, cebolla, aceitunas y albahaca.",
+      "text": "Quiero una pizza con salsa de tomate, masa integral, mozzarella, champiñones, cebolla, aceitunas y albahaca: una vegetariana.",
       "requirements": [
         {
           "type": "slotIs",
@@ -2428,7 +2500,7 @@
       "id": "s09-06",
       "stage": 9,
       "customer": "Bianca",
-      "text": "Estilo napolitano con crudo: masa napolitana, tomate, mozzarella con parmesano, jamón, rúcula y como mucho una de aceitunas o cebolla.",
+      "text": "Quiero una pizza con salsa de tomate, masa napolitana, mozzarella con parmesano, jamón y rúcula; opcionalmente aceitunas o cebolla.",
       "requirements": [
         {
           "type": "slotIs",
@@ -2472,7 +2544,7 @@
       "id": "s09-07",
       "stage": 9,
       "customer": "Jake",
-      "text": "Estilo americano: masa napolitana, tomate, mozzarella, pepperoni, champiñones y cebolla.",
+      "text": "Quiero una pizza con salsa de tomate, masa napolitana, mozzarella, pepperoni, champiñones y cebolla, al estilo americano.",
       "requirements": [
         {
           "type": "slotIs",
@@ -2511,7 +2583,7 @@
       "id": "s09-08",
       "stage": 9,
       "customer": "Lorenzo",
-      "text": "Vegetariana a la italiana: masa napolitana, tomate, mozzarella, champiñones, aceitunas y cebolla.",
+      "text": "Quiero una pizza con salsa de tomate, masa napolitana, mozzarella, champiñones, aceitunas y cebolla: vegetariana a la italiana.",
       "requirements": [
         {
           "type": "slotIs",
@@ -2550,7 +2622,7 @@
       "id": "s10-01",
       "stage": 10,
       "customer": "Sra. Paredes",
-      "text": "Soy vegetariana y no me gusta la masa integral. Quiero tomate, mozzarella, champiñones, cebolla y aceitunas, y una hoja fresca (albahaca o rúcula).",
+      "text": "Quiero una pizza con salsa de tomate, mozzarella, champiñones, cebolla, aceitunas y albahaca o rúcula. Soy vegetariana y no quiero masa integral.",
       "requirements": [
         {
           "type": "slotNotIn",
@@ -2600,7 +2672,7 @@
       "id": "s10-02",
       "stage": 10,
       "customer": "Don Aurelio",
-      "text": "Soy vegano: nada de queso ni de pesto (lleva queso). Masa fina, aceitunas, cebolla y, si quieres, champiñones o albahaca (uno).",
+      "text": "Quiero una pizza con salsa de tomate, masa fina, aceitunas y cebolla; opcionalmente champiñones o albahaca. Soy vegano: sin queso ni pesto.",
       "requirements": [
         {
           "type": "slotIs",
@@ -2635,6 +2707,11 @@
           ],
           "min": 0,
           "max": 1
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "tomate"
         }
       ],
       "topics": [
@@ -2646,7 +2723,7 @@
       "id": "s10-03",
       "stage": 10,
       "customer": "Nadia",
-      "text": "Soy intolerante a la lactosa. Sin queso y sin pesto, con pepperoni y cebolla, y uno más entre aceitunas o champiñones. Nada de masa integral.",
+      "text": "Quiero una pizza con salsa blanca, pepperoni, cebolla y aceitunas o champiñones. Soy intolerante a la lactosa: sin queso, sin pesto y sin masa integral.",
       "requirements": [
         {
           "type": "slotNotIn",
@@ -2683,6 +2760,11 @@
           ],
           "min": 1,
           "max": 1
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "bianca"
         }
       ],
       "topics": [
@@ -2694,7 +2776,7 @@
       "id": "s10-04",
       "stage": 10,
       "customer": "Octavio",
-      "text": "Nada de tomate. Masa napolitana con mozzarella y parmesano, rúcula y jamón, un vegetal entre aceitunas, cebolla o champiñones, y albahaca si quieres.",
+      "text": "Quiero una pizza con salsa blanca, masa napolitana, mozzarella con parmesano, rúcula, jamón, un vegetal (aceitunas, cebolla o champiñones) y albahaca opcional.",
       "requirements": [
         {
           "type": "slotNotIn",
@@ -2738,18 +2820,23 @@
           ],
           "min": 0,
           "max": 1
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "bianca"
         }
       ],
       "topics": [
         "pedido-cliente"
       ],
-      "tip": "Sin tomate, la base puede ser bianca o pesto: ambas encajan con rúcula y jamón."
+      "tip": "Sin tomate, la salsa blanca encaja con rúcula y jamón."
     },
     {
       "id": "s10-05",
       "stage": 10,
       "customer": "Cecilia",
-      "text": "Con prisa y horno casero: base fina, tomate, cualquier queso menos mozzarella con parmesano, pepperoni, uno o dos vegetales entre champiñones, cebolla y aceitunas, y como mucho una hoja fresca.",
+      "text": "Quiero una pizza con salsa de tomate, masa fina, cualquier queso menos mozzarella con parmesano, pepperoni, uno o dos vegetales (champiñones, cebolla o aceitunas) y albahaca o rúcula opcional. Con prisa y horno casero.",
       "requirements": [
         {
           "type": "slotIs",
@@ -2801,7 +2888,7 @@
       "id": "s10-06",
       "stage": 10,
       "customer": "Familia Rojas",
-      "text": "Para una fiesta: masa napolitana, tomate, mozzarella, pepperoni y jamón, uno o dos vegetales entre aceitunas, champiñones y cebolla, y albahaca opcional.",
+      "text": "Quiero una pizza con salsa de tomate, masa napolitana, mozzarella, pepperoni, jamón, uno o dos vegetales (aceitunas, champiñones o cebolla) y albahaca opcional. ¡Para una fiesta!",
       "requirements": [
         {
           "type": "slotIs",
@@ -2854,7 +2941,7 @@
       "id": "s10-07",
       "stage": 10,
       "customer": "Chef invitado",
-      "text": "Algo gourmet: masa napolitana, salsa bianca, mozzarella con parmesano, jamón, rúcula, aceitunas y, si quieres, champiñones o cebolla (uno).",
+      "text": "Quiero una pizza con salsa blanca, masa napolitana, mozzarella con parmesano, jamón, rúcula y aceitunas; opcionalmente champiñones o cebolla. Algo gourmet.",
       "requirements": [
         {
           "type": "slotIs",
@@ -2902,7 +2989,7 @@
       "id": "s10-08",
       "stage": 10,
       "customer": "Rita",
-      "text": "Algo equilibrado: masa integral, cualquier salsa menos bianca, mozzarella, champiñones, una carne entre pepperoni o jamón, y una o dos de aceitunas, cebolla, albahaca o rúcula.",
+      "text": "Quiero una pizza con salsa pesto, masa integral, mozzarella, champiñones, una carne (pepperoni o jamón) y una o dos de aceitunas, cebolla, albahaca o rúcula. Algo equilibrado.",
       "requirements": [
         {
           "type": "slotIs",
@@ -2944,6 +3031,11 @@
           ],
           "min": 1,
           "max": 2
+        },
+        {
+          "type": "slotIs",
+          "slot": "salsa",
+          "value": "pesto"
         }
       ],
       "topics": [

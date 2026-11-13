@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import LevelScene from '../components/LevelScene'
+import OrderResultCard from '../components/OrderResultCard'
 import PizzaBuilderControls from '../components/PizzaBuilderControls'
 import { useGame } from '../game/useGame'
 import { createEmptySelection, getLevel } from '../game/gameUtils'
+import { getOrderRequirementItems } from '../game/orderResultLabels'
 
 const EMPTY_SLOTS = []
 
@@ -91,26 +93,12 @@ export default function OrderScreen() {
             </button>
           </>
         ) : (
-          <div
-            className={`level-feedback ${feedback.satisfied ? 'is-correct' : 'is-incorrect'}`}
-            aria-live="polite"
+          <OrderResultCard
+            key={order.id}
+            state={feedback.satisfied ? 'success' : 'incomplete'}
+            points={feedback.pointsAwarded}
+            items={getOrderRequirementItems(order, feedback.requirements, selection, slots)}
           >
-            <p className="level-feedback__result">
-              {feedback.satisfied
-                ? `¡Pedido cumplido! +${feedback.pointsAwarded} puntos`
-                : 'El pedido quedó incompleto. No se suman puntos.'}
-            </p>
-            <ul className="level-order__requirements">
-              {feedback.requirements.map((requirement) => (
-                <li
-                  className={requirement.met ? 'is-correct' : 'is-incorrect'}
-                  key={requirement.requirementId}
-                >
-                  <strong>{requirement.met ? 'Cumplido' : 'Pendiente'}:</strong>{' '}
-                  {requirement.feedback}
-                </li>
-              ))}
-            </ul>
             <button
               className="btn-yellow level-action"
               type="button"
@@ -118,7 +106,7 @@ export default function OrderScreen() {
             >
               {orderIndex + 1 >= orders.length ? 'Ver resultado del nivel' : 'Siguiente pedido'}
             </button>
-          </div>
+          </OrderResultCard>
         )}
       </section>
     </LevelScene>

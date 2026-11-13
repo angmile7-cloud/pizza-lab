@@ -4,6 +4,7 @@ import { useGame } from '../game/useGame'
 import { createEmptySelection, getLevel, levelPath } from '../game/gameUtils'
 import LevelScene from '../components/LevelScene'
 import PizzaBuilderControls from '../components/PizzaBuilderControls'
+import ResultStatus from '../components/ResultStatus'
 
 const EMPTY_SLOTS = []
 
@@ -52,16 +53,18 @@ export default function PizzaBuilderScreen() {
               </p>
               <h1>¡Pizza lista!</h1>
               <p>Nivel 8 · {level.title}</p>
-              <p>Total ganado: {totalScore}</p>
-              <ul>
+              <div className="builder-result__total"><strong>{totalScore}</strong> Total ganado</div>
+              <ul className="builder-result__list">
                 {slots.map((slot) => (
                   <li key={slot.id}>
-                    <strong>{slot.label}:</strong>{' '}
-                    {slot.multiple
-                      ? pizza[slot.id]?.length
-                        ? pizza[slot.id].map((id) => choiceName(slot.id, id)).join(', ')
-                        : 'Sin toppings extra'
-                      : choiceName(slot.id, pizza[slot.id])}
+                    <ResultStatus met />
+                    <span><strong>{slot.label}:</strong>{' '}
+                      {slot.multiple
+                        ? pizza[slot.id]?.length
+                          ? pizza[slot.id].map((id) => choiceName(slot.id, id)).join(', ')
+                          : 'Sin toppings extra'
+                        : choiceName(slot.id, pizza[slot.id])}
+                    </span>
                   </li>
                 ))}
               </ul>

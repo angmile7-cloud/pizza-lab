@@ -84,6 +84,8 @@ export function GameProvider({ children }) {
   const resetProgress = useCallback(() => {
     communityService.reset()
     setGameState(createInitialGameState())
+    setOrdersInvitationShown(false)
+    setOrdersModeVisited(false)
     scoredKeysRef.current = new Set()
     scoredOrderKeysRef.current = new Set()
     rewardLedgerRef.current = { spentPoints: 0, redemptions: [], requests: new Map() }

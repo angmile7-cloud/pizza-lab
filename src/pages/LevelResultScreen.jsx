@@ -3,6 +3,11 @@ import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import LevelScene from '../components/LevelScene'
 import InvitationDialog from '../components/InvitationDialog'
 import PizzaPreview from '../components/PizzaPreview'
+import ResultAnswerRow from '../components/ResultAnswerRow'
+import ResultStatus from '../components/ResultStatus'
+import ResultSeal from '../components/ResultSeal'
+import { DodoBubble } from '../components/DodoTip'
+import { getOrderRequirementItems } from '../game/orderResultLabels'
 import { useGame } from '../game/useGame'
 import {
   correctCountFromAnswers,
@@ -21,6 +26,7 @@ const RESULT_ANIMATION_MS = {
   answerStartDelay: 3500,
   starDelay: 2750,
   starStagger: 250,
+  meterDelay: 3700,
 }
 
 function usePrefersReducedMotion() {
@@ -157,7 +163,8 @@ function ResultLayout({
   totalScore,
   previousTotal,
   rows,
-  summary,
+  minimum,
+  failureDetail,
   nextLevel,
   onRetry,
 }) {
@@ -271,35 +278,47 @@ function ResultLayout({
                 ))}
               </span>
             </button>
-            <p className="level-result__star-count">
-              Estrellas: {litStars} de 3 · Aciertos: {correctCount} de {questionCount}
-            </p>
             <p className="level-result__live" aria-live="polite" aria-atomic="true">
               {passed ? 'Nivel superado' : 'Nivel no superado'}, {correctCount} de {questionCount} aciertos
             </p>
             <div className="level-result__scores">
-              <p>{pointsLabel}: <strong>{pointsDisplay}</strong></p>
-              <p>Total ganado: <strong>{totalDisplay}</strong></p>
+              <div className="result-stat">
+                <span className="result-stat__icon" aria-hidden="true">P</span>
+                <strong>{pointsDisplay > 0 ? '+' : ''}{pointsDisplay}</strong>
+                <ResultSeal state={passed ? 'success' : 'incomplete'} className="result-stat__seal" />
+                <span>{pointsLabel}</span>
+              </div>
+              <div className="result-stat">
+                <svg className="result-stat__icon result-stat__trophy" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v3h4v2c0 3-2 5-5 5a5 5 0 0 1-3 2v3h3v3H8v-3h3v-3a5 5 0 0 1-3-2C5 13 3 11 3 8V6h4zm0 5H5c0 2 1 3 2 3zm10 0v3c1 0 2-1 2-3z" fill="currentColor" /></svg>
+                <strong>{totalDisplay}</strong>
+                <span>Total ganado</span>
+              </div>
             </div>
-            {summary}
+            <div className="result-meter">
+              <span className="order-result__sr-only">Estrellas: {litStars} de 3. Aciertos: {correctCount} de {questionCount}; necesitas {minimum} para avanzar.</span>
+              {level.type === 'order' ? <span className="order-result__sr-only">Pedidos cumplidos: {correctCount} de {questionCount}.</span> : null}
+              <div className="result-meter__dots" aria-hidden="true" style={{ '--meter-count': questionCount }}>
+                {rows.map((row, index) => (
+                  <div className="result-meter__cell" key={row.id}>
+                    <span className="result-meter__dot" style={{ '--meter-delay': `${RESULT_ANIMATION_MS.meterDelay + index * RESULT_ANIMATION_MS.answerDelay}ms` }}><ResultStatus met={row.correct} /></span>
+                    {index === minimum - 1 ? <span className="result-meter__flag">▲</span> : null}
+                  </div>
+                ))}
+              </div>
+              <p>Mínimo {minimum} para avanzar</p>
+            </div>
+            {!passed ? <DodoBubble>Repasa las explicaciones y vuelve a intentarlo.</DodoBubble> : null}
             <ul className="level-result__answers">
               {rows.map((row, index) => (
-                <li
+                <ResultAnswerRow
                   key={row.id}
-                  className={row.correct ? 'is-correct' : 'is-incorrect'}
-                  style={{ '--result-answer-delay': `${RESULT_ANIMATION_MS.answerStartDelay + index * RESULT_ANIMATION_MS.answerDelay}ms` }}
-                >
-                  <strong>
-                    <span className="level-result__mark" aria-hidden="true">
-                      {row.correct ? '✓' : '✗'}
-                    </span>{' '}
-                    {row.label}
-                  </strong>{' '}
-                  {row.text}
-                  {row.explanation ? <p className="level-result__explanation">{row.explanation}</p> : null}
-                </li>
+                  row={row}
+                  index={index}
+                  delay={`${RESULT_ANIMATION_MS.answerStartDelay + index * RESULT_ANIMATION_MS.answerDelay}ms`}
+                />
               ))}
             </ul>
+            {!passed && failureDetail ? <p className="level-result__failure-detail">{failureDetail}</p> : null}
           </div>
         </div>
         <footer className="level-result__actions scene-zones__actions">
@@ -406,11 +425,19 @@ export default function LevelResultScreen() {
     const satisfiedCount = results.filter((result) => result.satisfied).length
     const pointsApplied = results.reduce((total, result) => total + result.pointsAwarded, 0)
     const previousTotal = totalScore - pointsApplied
+    const slots = getLevel(8)?.builder?.slots ?? []
     const rows = results.map((result) => ({
       id: result.orderId,
       correct: result.satisfied,
-      label: result.satisfied ? 'Cumplido' : 'Incompleto',
-      text: `Pedido de ${result.customerName} (+${result.pointsAwarded})`,
+      statusLabel: result.satisfied ? 'Cumplido' : 'Incompleto',
+      points: result.pointsAwarded,
+      text: `Pedido de ${result.customerName}`,
+      requirements: (() => {
+        const order = level.orders.find((entry) => entry.id === result.orderId)
+        return order && result.requirements
+          ? getOrderRequirementItems(order, result.requirements, {}, slots)
+          : []
+      })(),
     }))
     const handleRetry = () => {
       retryOrderLevel(level.id)
@@ -424,23 +451,12 @@ export default function LevelResultScreen() {
         correctCount={satisfiedCount}
         questionCount={level.orders.length}
         appliedPoints={pointsApplied}
-        pointsLabel="Puntos aplicados en este nivel"
+        pointsLabel="Puntos de este nivel"
         totalScore={totalScore}
         previousTotal={previousTotal}
         rows={rows}
-        summary={(
-          <>
-            <p className="level-result__stat">
-              Pedidos cumplidos: {satisfiedCount} / {level.orders.length} (necesitas{' '}
-              {level.scoring.minimumSatisfiedOrders} para avanzar)
-            </p>
-            {!passed ? (
-              <p className="level-result__stat">
-                No alcanzaste el mínimo de pedidos. Puedes reintentar; se recalcularán los puntos de este nivel.
-              </p>
-            ) : null}
-          </>
-        )}
+        minimum={level.scoring.minimumSatisfiedOrders}
+        failureDetail="No alcanzaste el mínimo de pedidos. Puedes reintentar; se recalcularán los puntos de este nivel."
         nextLevel={nextLevel}
         onRetry={handleRetry}
       />
@@ -455,13 +471,18 @@ export default function LevelResultScreen() {
   const correctCount = correctCountFromAnswers(answers)
   const pointsApplied = answers.reduce((total, answer) => total + answer.appliedDelta, 0)
   const previousTotal = totalScore - pointsApplied
-  const rows = answers.map((answer, index) => ({
-    id: answer.questionId,
-    correct: answer.correct,
-    label: `${index + 1}. ${answer.correct ? 'Bien' : 'Mal'} (${answer.appliedDelta > 0 ? '+' : ''}${answer.appliedDelta})`,
-    text: answer.prompt,
-    explanation: answer.explanation,
-  }))
+  const rows = answers.map((answer) => {
+    const question = level.questions.find((entry) => entry.id === answer.questionId)
+    return {
+      id: answer.questionId,
+      correct: answer.correct,
+      points: answer.appliedDelta,
+      text: answer.prompt,
+      explanation: answer.explanation,
+      selectedAnswer: question?.options.find((option) => option.id === answer.selectedOptionId)?.text,
+      correctAnswer: question?.options.find((option) => option.id === (answer.correctOptionId ?? question.correctOptionId))?.text,
+    }
+  })
   const handleRetry = () => {
     retryLevel(level.id)
     navigate(`/nivel/${level.id}`)
@@ -474,22 +495,12 @@ export default function LevelResultScreen() {
       correctCount={correctCount}
       questionCount={expected}
       appliedPoints={pointsApplied}
-      pointsLabel="Puntos aplicados en este intento"
+      pointsLabel="Puntos de este intento"
       totalScore={totalScore}
       previousTotal={previousTotal}
       rows={rows}
-      summary={(
-        <>
-          <p className="level-result__stat">
-            Aciertos: {correctCount} / {expected} (necesitas {MIN_CORRECT_TO_UNLOCK} para avanzar)
-          </p>
-          {!passed ? (
-            <p className="level-result__stat">
-              No alcanzaste el mínimo. Puedes reintentar este nivel. El puntaje acumulado se mantiene.
-            </p>
-          ) : null}
-        </>
-      )}
+      minimum={MIN_CORRECT_TO_UNLOCK}
+      failureDetail="No alcanzaste el mínimo. Puedes reintentar este nivel. El puntaje acumulado se mantiene."
       nextLevel={nextLevel}
       onRetry={handleRetry}
     />

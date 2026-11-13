@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import LevelScene from '../components/LevelScene'
+import OrderResultCard from '../components/OrderResultCard'
 import PizzaBuilderControls from '../components/PizzaBuilderControls'
 import PizzaPreview from '../components/PizzaPreview'
 import orderPaper from '../assets/papel_pedido.png'
 import { useGame } from '../game/useGame'
+import { getOrderRequirementItems } from '../game/orderResultLabels'
 import {
   createEmptySelection,
   evaluateOrder,
@@ -740,17 +742,17 @@ export default function OrdersModeScreen() {
             )}
           </div>
 
-          <div className="orders-mode__scroll scene-zones__scroll">
+          <div className={`orders-mode__scroll scene-zones__scroll${phase === 'intro' ? ' orders-mode__scroll--intro' : ''}`}>
             {phase === 'intro' ? (
               <article className="orders-mode__intro">
-                <h2>{tier.name} · Etapa {stage}</h2>
-                <p><strong>Este turno evalúa: {joinTopicNames(topics)}</strong></p>
-                <p>
+                <h2 className="level-question__level">{tier.name} · Etapa {stage}</h2>
+                <p className="level-question__prompt"><strong>Este turno evalúa: {joinTopicNames(topics)}</strong></p>
+                <p className="level-question__prompt">
                   {shift?.results.length
                     ? `Continúas tu turno: ${shift.results.length} de ${shiftSize} pedidos ya resueltos.`
                     : `Prepara ${shiftSize} pedidos. Cada pedido tiene su propio reloj.`}
                 </p>
-                <p className="orders-mode__warning">
+                <p className="level-question__prompt orders-mode__warning">
                   Cada turno se juega una sola vez. No podrás repetirlo.
                 </p>
               </article>
@@ -768,27 +770,13 @@ export default function OrdersModeScreen() {
             ) : null}
 
             {phase === 'play' && currentOrder && orderResult && !pizzaActive ? (
-              <div className={`level-feedback ${orderResult.satisfied ? 'is-correct' : 'is-incorrect'}`}>
-                <p className="level-feedback__result">
-                  {orderResult.expired
-                    ? 'Se acabó el tiempo: el pedido se perdió. 0 puntos.'
-                    : orderResult.satisfied
-                      ? `¡Pedido cumplido! +${orderResult.pointsAwarded} puntos`
-                      : 'El pedido quedó incompleto. No se suman puntos.'}
-                </p>
-                <ul className="level-order__requirements">
-                  {orderResult.evaluation.requirements.map((requirement) => (
-                    <li
-                      className={requirement.met ? 'is-correct' : 'is-incorrect'}
-                      key={requirement.requirementId}
-                    >
-                      <strong>{requirement.met ? 'Cumplido' : 'Pendiente'}:</strong>{' '}
-                      {requirement.feedback}
-                    </li>
-                  ))}
-                </ul>
-                <p className="orders-mode__tip"><strong>Consejo:</strong> {currentOrder.tip}</p>
-              </div>
+              <OrderResultCard
+                key={currentOrder.id}
+                state={orderResult.expired ? 'timeout' : orderResult.satisfied ? 'success' : 'incomplete'}
+                points={orderResult.pointsAwarded}
+                items={getOrderRequirementItems(currentOrder, orderResult.evaluation.requirements, selection, slots, orderResult.expired)}
+                tip={currentOrder.tip}
+              />
             ) : null}
 
             {phase === 'summary' ? (
