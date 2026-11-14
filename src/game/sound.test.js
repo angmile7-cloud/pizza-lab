@@ -101,7 +101,7 @@ test('sound unlocks lazily once and resumes with one silent sample on every gest
   assert.equal(gestures.get('pointerdown')[0].options.capture, true)
 })
 
-test('all six synthesized effects have the exact notes, slides, timing and envelopes', async (t) => {
+test('all synthesized effects have the exact notes, slides, timing and envelopes', async (t) => {
   const { sound, contexts, gesture } = await setup(t)
   gesture()
   const ctx = contexts[0]
@@ -112,6 +112,10 @@ test('all six synthesized effects have the exact notes, slides, timing and envel
     oops: [[220, 0, 0.28, 'sawtooth', 0.09, 130], [165, 0.12, 0.3, 'sawtooth', 0.08, 95]],
     win: [523, 659, 784, 1046].map((freq, index) => [freq, index * 0.11, 0.45, 'triangle', 0.16]),
     lose: [[392, 0, 0.3, 'triangle', 0.13, 330], [311, 0.22, 0.5, 'triangle', 0.13, 220]],
+    fanfare: [523, 659, 784, 1046, 1318].flatMap((freq, index) => [
+      [freq, index * 0.12, 0.5, 'triangle', 0.16],
+      [freq, 1.1, 0.9, 'triangle', 0.16],
+    ]),
   }
   for (const [name, notes] of Object.entries(expected)) {
     ctx.oscillators = []
@@ -149,7 +153,7 @@ test('mute silences the master, stops scheduled notes and notifies subscribers',
   assert.equal(sound.isMuted(), true)
   assert.equal(ctx.gains[0].gain.events.at(-1)[1], 0)
   assert.ok(ctx.oscillators.every((node) => node.stops.at(-1) === undefined))
-  sound.playSound('bell')
+  sound.playSound('fanfare')
   assert.equal(ctx.oscillators.length, 4)
   sound.setMuted(false)
   assert.equal(notifications, 2)
@@ -172,6 +176,18 @@ test('delegated clicks tick once, excluding specific-sound and disabled buttons'
   gesture('click', { disabled: true, closest: () => null })
   gesture('click')
   assert.equal(contexts[0].oscillators.length, 1)
+})
+
+test('muting a fanfare stops its rising notes and scheduled final chord', async (t) => {
+  const { sound, contexts, gesture } = await setup(t)
+  gesture()
+  sound.playSound('fanfare')
+  const ctx = contexts[0]
+  assert.equal(ctx.oscillators.length, 10)
+  sound.setMuted(true)
+  assert.ok(ctx.oscillators.every((node) => node.stops.at(-1) === undefined))
+  sound.playSound('fanfare')
+  assert.equal(ctx.oscillators.length, 10)
 })
 
 test('embedded games never create a context or play an effect', async (t) => {

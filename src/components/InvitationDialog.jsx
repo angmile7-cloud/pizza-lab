@@ -2,7 +2,10 @@ import { useId, useLayoutEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import ChefLogo from './ChefLogo'
 
-export default function InvitationDialog({ title, body, primaryAction, secondaryAction, onClose }) {
+export default function InvitationDialog({
+  title, body, primaryAction, secondaryAction, onClose,
+  artwork, children, className = '', staticMotion = false,
+}) {
   const titleId = useId()
   const bodyId = useId()
   const dialogRef = useRef(null)
@@ -44,27 +47,28 @@ export default function InvitationDialog({ title, body, primaryAction, secondary
   }, [onClose])
 
   return createPortal(
-    <div className="invitation-overlay" onClick={(event) => {
+    <div className={`invitation-overlay${staticMotion ? ' is-static' : ''}`} onClick={(event) => {
       if (event.target === event.currentTarget) onClose()
     }}>
       <div
         ref={dialogRef}
-        className="invitation-dialog"
+        className={`invitation-dialog ${className}`}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
         aria-describedby={bodyId}
       >
-        <ChefLogo className="invitation-dialog__logo" />
+        {artwork ?? <ChefLogo className="invitation-dialog__logo" />}
         <h2 id={titleId}>{title}</h2>
         <p id={bodyId}>{body}</p>
+        {children}
         <div className="invitation-dialog__actions">
           <button ref={primaryRef} className="invitation-dialog__primary" type="button" onClick={primaryAction.onClick}>
             {primaryAction.label}
           </button>
-          <button className="invitation-dialog__secondary" type="button" onClick={secondaryAction.onClick}>
+          {secondaryAction ? <button className="invitation-dialog__secondary" type="button" onClick={secondaryAction.onClick}>
             {secondaryAction.label}
-          </button>
+          </button> : null}
         </div>
       </div>
     </div>,

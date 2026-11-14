@@ -42,8 +42,10 @@ export function GameProvider({ children }) {
   const [gameState, setGameState] = useState(createInitialGameState)
   const [ordersInvitationShown, setOrdersInvitationShown] = useState(false)
   const [ordersModeVisited, setOrdersModeVisited] = useState(false)
+  const [gameCompletedShown, setGameCompletedShown] = useState(false)
   const markOrdersInvitationShown = useCallback(() => setOrdersInvitationShown(true), [])
   const markOrdersModeVisited = useCallback(() => setOrdersModeVisited(true), [])
+  const markGameCompletedShown = useCallback(() => setGameCompletedShown(true), [])
   const [communityService] = useState(createCommunityService)
   const {
     levelScore,
@@ -86,6 +88,7 @@ export function GameProvider({ children }) {
     setGameState(createInitialGameState())
     setOrdersInvitationShown(false)
     setOrdersModeVisited(false)
+    setGameCompletedShown(false)
     scoredKeysRef.current = new Set()
     scoredOrderKeysRef.current = new Set()
     rewardLedgerRef.current = { spentPoints: 0, redemptions: [], requests: new Map() }
@@ -443,6 +446,8 @@ export function GameProvider({ children }) {
       ordersMode,
       ordersInvitationShown,
       ordersModeVisited,
+      gameCompletedShown,
+      markGameCompletedShown,
       markOrdersInvitationShown,
       markOrdersModeVisited,
       unlockedStage,
@@ -484,6 +489,8 @@ export function GameProvider({ children }) {
       ordersMode,
       ordersInvitationShown,
       ordersModeVisited,
+      gameCompletedShown,
+      markGameCompletedShown,
       markOrdersInvitationShown,
       markOrdersModeVisited,
       unlockedStage,

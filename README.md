@@ -102,7 +102,8 @@ builder retains its separate completion screen. Result scoring, advancement,
 animations, unlock rules and routes are unchanged.
 
 `GameProvider` keeps `ordersInvitationShown` and `ordersModeVisited` outside
-gameplay state. These flags last until reload, including across game restarts.
+gameplay state. These in-memory flags reset on reload, game restart, or a new
+chef profile, so the invitation and "Nuevo" badge are available to the next player.
 The first flag is set on the intercepted continue tap.
 The second is set on opening an accessible orders selector or orders stage.
 Until that visit, a passed level 1 adds an absolutely positioned "Nuevo" badge
@@ -119,6 +120,23 @@ action opens the existing `/pedidos` route; "Ir al nivel 2" follows the original
 continue destination. Unmounting removes the dialog and restores background
 interaction. The card scrolls internally on short
 screens, and reduced motion disables its fade/scale entrance.
+
+## Game completion celebration
+
+Passing level 10 opens [`GameCompletedDialog`](./src/components/GameCompletedDialog.jsx)
+300ms after the result sequence finishes (after its stars), or after the result
+is revealed by skipping/reduced motion. It reuses the invitation card, modal
+focus handling, chosen avatar and result score badge, with a green dismiss button.
+Closing it leaves the result and its controls unchanged. Failed results never
+open it. The `gameCompletedShown` UI flag is consumed on opening and resets
+with the same progress reset as the orders flags; nothing is persisted.
+
+The trophy, avatar, sparkle and confetti animations use only transform/opacity.
+Confetti falls for 4.8 seconds; reduced motion or a manually skipped, static
+result shows a motionless composition. The opening fanfare uses five rising
+triangle notes followed by their chord, respecting the existing mute setting.
+The shared orders/builder scroll shadows stick to visible edges on phones;
+intro layout spacers stay invisible, and non-scrolling layouts have no shadows.
 
 ## Chef profile (in memory only)
 

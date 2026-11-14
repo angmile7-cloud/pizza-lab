@@ -107,6 +107,12 @@ export function playSound(name) {
         tone(392, t, 0.3, 'triangle', 0.13, 330)
         tone(311, t + 0.22, 0.5, 'triangle', 0.13, 220)
         break
+      case 'fanfare':
+        ;[523, 659, 784, 1046, 1318].forEach((freq, index) => {
+          tone(freq, t + index * 0.12, 0.5, 'triangle', 0.16)
+          tone(freq, t + 1.1, 0.9, 'triangle', 0.16)
+        })
+        break
       default:
         console.warn('Sonido del juego desconocido:', name)
     }

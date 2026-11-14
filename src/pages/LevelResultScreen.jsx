@@ -2,6 +2,7 @@ import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import LevelScene from '../components/LevelScene'
 import InvitationDialog from '../components/InvitationDialog'
+import GameCompletedDialog from '../components/GameCompletedDialog'
 import PizzaPreview from '../components/PizzaPreview'
 import AvatarReaction from '../components/AvatarReaction'
 import ResultAnswerRow from '../components/ResultAnswerRow'
@@ -228,14 +229,27 @@ function ResultLayout({
   onRetry,
 }) {
   const navigate = useNavigate()
-  const { avatarId, ordersInvitationShown, markOrdersInvitationShown } = useGame()
+  const {
+    avatarId, ordersInvitationShown, markOrdersInvitationShown,
+    gameCompletedShown, markGameCompletedShown,
+  } = useGame()
   const [invitationOpen, setInvitationOpen] = useState(false)
   const closeInvitation = useCallback(() => setInvitationOpen(false), [])
+  const [completionOpen, setCompletionOpen] = useState(false)
+  const closeCompletion = useCallback(() => setCompletionOpen(false), [])
   const reduced = usePrefersReducedMotion()
   const [skipped, setSkipped] = useState(reduced)
   const [countsStarted, setCountsStarted] = useState(reduced)
   const [jumped, setJumped] = useState(reduced)
   const [primaryTapped, setPrimaryTapped] = useState(false)
+  useEffect(() => {
+    if (level.id !== 10 || !passed || gameCompletedShown || !(skipped || reduced)) return undefined
+    const id = window.setTimeout(() => {
+      markGameCompletedShown()
+      setCompletionOpen(true)
+    }, 300)
+    return () => window.clearTimeout(id)
+  }, [gameCompletedShown, level.id, markGameCompletedShown, passed, reduced, skipped])
   const scheduleTimeout = useManagedTimeouts()
   const soundPlayedRef = useRef(false)
   useEffect(() => {
@@ -465,6 +479,9 @@ function ResultLayout({
           }}
           onClose={closeInvitation}
         />
+      ) : null}
+      {completionOpen ? (
+        <GameCompletedDialog onClose={closeCompletion} staticMotion={reduced || jumped} />
       ) : null}
     </LevelScene>
   )
