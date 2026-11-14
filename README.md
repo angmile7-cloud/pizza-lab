@@ -1,6 +1,150 @@
-# React + Vite
+# 🍕 Dodo's Pizza Lab
 
-## Game sound (in memory only)
+> **La pizza se aprende con las manos.** Del conocimiento a la experiencia real.
+
+Dodo's Pizza Lab es un videojuego web para aprender sobre pizza (ingredientes, masa, salsas, quesos, toppings, armado y cocción) con **Dodo**, un chef pizzero, como guía. Se juega desde el celular o el computador, directamente en el navegador.
+
+Proyecto Integrador de **Contenidos y Creatividad III** (Videojuegos: Experiencias Interactivas), Licenciatura en Comunicación Digital, Universidad de Palermo. **Momento 3: entrega final.**
+
+| | |
+|---|---|
+| 🎮 **Jugar** | https://pizza-lab-five.vercel.app |
+| 🎬 **Escena de presentación** (computador) | https://pizza-lab-five.vercel.app/presentacion/ |
+| 💻 **Repositorio** | https://github.com/angmile7-cloud/pizza-lab |
+
+> En el celular, `/presentacion/` abre directamente el juego a pantalla completa. En el computador muestra el juego dentro de una escena (un cliente esperando su pizza, mientras el chef la prepara).
+
+---
+
+## Concepto
+
+El juego nace de una idea simple: aprender sobre pizza mientras se espera una. La pizza se aprende con las manos, por eso el jugador no solo responde preguntas: también **arma pizzas y atiende pedidos de clientes** contra el reloj, aplicando lo que aprendió.
+
+Está pensado para acompañar la experiencia de **Dodo Pizza**, una marca de pizza italiana, como una forma de que los clientes se entretengan y aprendan mientras esperan su pedido. A futuro, el chef podría ofrecer cursos, mentorías o caterings privados a partir del juego.
+
+## Público objetivo
+
+Jóvenes y adultos de aproximadamente **18 a 50 años**: clientes o potenciales clientes de Dodo Pizza, interesados en la pizza, la cocina y las experiencias gastronómicas participativas, que quieren aprender sobre pizza y divertirse mientras esperan un pedido.
+
+## Temática y narrativa
+
+- **Ambientación:** una cocina italiana rústica con horno de leña, ladrillos, plantas y tomates. El mismo fondo acompaña todo el juego.
+- **Personaje guía:** Dodo, el chef pizzero, que da consejos cuando algo sale mal.
+- **Identidad del jugador:** solo un **apodo** y un **avatar gracioso** a elección (Pepperoni Pirata, Aceituna Elegante, Champiñón Ninja, Tomate Tímido, Queso Cool, Albahaca Aventurera, Rodillo Rebelde y Piña Polémica). No hay cuentas ni inicio de sesión.
+- **Mensajes de victoria y derrota propios:** el avatar celebra o se lamenta con gestos graciosos al terminar cada nivel, y hay una felicitación especial al completar los 10 niveles.
+- **Paleta y tipografía:** amarillo, crema, verde y terracota; tipografías Fredoka (texto) y Lilita One (títulos).
+
+## Cómo se juega
+
+### 1. Modo niveles (10 niveles en un mapa de progreso)
+
+| Nivel | Tema | Tipo |
+|---|---|---|
+| 1 | Ingredientes | Preguntas |
+| 2 | Masa | Preguntas |
+| 3 | Salsas | Preguntas |
+| 4 | Quesos | Preguntas |
+| 5 | Toppings | Preguntas |
+| 6 | Armado | Preguntas |
+| 7 | Cocción y temperatura | Preguntas |
+| 8 | Crea tu propia pizza | Armar una pizza con lo aprendido |
+| 9 | Tipos de pizza del mundo | Preguntas |
+| 10 | Pedido del cliente | Armar la pizza que pide el cliente |
+
+- Cada nivel de preguntas tiene 3 preguntas: **+10 puntos** por acierto, **−10** por error, y hay que acertar **al menos 2** para avanzar.
+- Tras cada pregunta el juego solo dice si fue correcta o incorrecta; en la pantalla de resultados se muestra qué respuesta era la correcta y una explicación de Dodo.
+- La pantalla de resultados es animada: horno con la pizza (dorada o quemada), estrellas, puntos del nivel y el avatar del jugador celebrando o lamentándose.
+- Los niveles se desbloquean en orden.
+
+### 2. Modo pedidos ("Prepara pedidos")
+
+Se activa al **superar el nivel 1**. El jugador atiende pedidos de clientes con un **límite de tiempo**: lee el pedido (escrito como lo diría el cliente, por ejemplo "Quiero una pizza con salsa de tomate, champiñones, sin queso"), elige los ingredientes y entrega. La pizza se va armando en pantalla. Agregar ingredientes de más también cuenta como error. La dificultad crece según los niveles superados.
+
+### 3. Recompensas y puntos
+
+Con los puntos ganados (de niveles y de pedidos) se pueden canjear **recompensas** (disponibles después del nivel 3). Las recompensas son parte de la fantasía del juego, no son reales.
+
+### 4. Retos de comunidad
+
+Retos tipo "Reto semanal" para votar pizzas con un corazón. Es una comunidad ficticia con fines educativos; subir la propia pizza se desbloquea al completar los 10 niveles.
+
+### 5. Sonido
+
+Sonidos cortos y suaves (acierto, error, ingredientes, victoria), creados con la Web Audio API (sin archivos de audio) y un botón para silenciarlos.
+
+## Proceso de desarrollo con IA
+
+El juego fue programado con asistencia de agentes de IA, y yo dirigí el proceso:
+
+1. **Diseño en Figma.** Primero diseñé los *wireframes* de todas las pantallas (inicio, mapa de progreso, niveles, resultados, modo pedidos, recompensas, comunidad, perfil) y definí la identidad visual.
+2. **Prompts con Claude.** Con los wireframes y capturas, escribí las indicaciones (*prompts*) en inglés para el agente de código, con la ayuda de Claude: qué cambiar, con qué textos exactos, y **qué NO cambiar** (la lógica del juego).
+3. **Iteraciones con GitHub Copilot en VS Code.** El agente programó los cambios en el repositorio; yo revisé cada resultado en el celular y en el computador.
+4. **Ciclo de trabajo:** pedir un cambio → revisar en el celular/computador → ajustar la indicación → *commit* → repetir. Cada prompt incluía restricciones fijas (no tocar la lógica, ejecutar *lint* y *build*, informar los archivos cambiados, no hacer *commit* por su cuenta).
+5. **Control de versiones y despliegue.** Más de 30 *commits* en GitHub; cada *push* se publica automáticamente en Vercel.
+
+**Aprendizajes:** ser específica (capturas, textos exactos, qué no cambiar); pedir cambios pequeños y verificables; probar siempre en un celular real; y usar la IA también para revisar errores y proponer las modificaciones pertinentes.
+
+## Pruebas de usabilidad
+
+Probé el juego con **3 usuarios** viéndolos jugar sin ayudarles. Qué observé y qué cambié:
+
+| Qué observé | Ajuste realizado |
+|---|---|
+| El juego no se veía bien en todas las pantallas. | **Diseño responsive:** el juego se adapta a cualquier pantalla; a pantalla completa en celulares y con marco de teléfono en pantallas grandes. |
+| Los usuarios no sabían que existía el modo pedidos ni cuándo usarlo. | **Ventana de invitación de Dodo** al continuar tras superar el nivel 1: "¡Dodo necesita tu ayuda!". |
+| En el mapa había demasiados botones compitiendo por la atención y los usuarios dudaban si ir a los botones verdes o al nivel de la pizza. | **Menos llamados a la acción y mejor distribución:** los accesos a recompensas, retos y modo pedidos se reubicaron con jerarquía clara, y el camino de niveles quedó como protagonista. |
+
+Después del testing y de las pruebas en distintos dispositivos hubo más ajustes de pulido: encabezado y barra de tiempo, textos del pedido (la salsa se pide primero), tarjetas de resultados animadas, y mayor contraste en textos sobre el fondo.
+
+### Verificación del despliegue en otros dispositivos
+
+El juego publicado en Vercel se verificó en un computador portátil (Mac), un **iPhone 14** y un teléfono **Android**. Esa verificación permitió detectar y corregir problemas de visualización y sonido en celulares.
+
+## Tecnologías
+
+- **React 19** + **Vite 8**
+- **React Router 7** (navegación entre pantallas)
+- **Web Audio API** (sonidos)
+- **Oxlint** (revisión del código)
+- **Vercel** (despliegue) y **GitHub** (repositorio)
+- No hay base de datos ni servidor: el estado vive en memoria y **no se guarda ningún dato del jugador**.
+
+## Ejecutarlo en local
+
+```bash
+npm install
+npm run dev      # servidor de desarrollo en http://localhost:5173
+npm run build    # compilar para producción
+npm run lint     # revisar el código
+node --test src/game/sound.test.js   # pruebas del módulo de sonido
+```
+
+## Estructura del proyecto
+
+```
+src/
+  pages/        pantallas (inicio, mapa, preguntas, constructor de pizza, pedidos, resultados, recompensas, comunidad, perfil)
+  components/   piezas reutilizables (pizza, avatar, encabezado, diálogos, ilustraciones)
+  game/         estado del juego, puntaje, desbloqueos, sonido
+  data/         preguntas y niveles, pedidos, recompensas y retos
+  assets/       imágenes
+public/
+  presentacion/ escena de presentación con el juego dentro (index.html + escena)
+```
+
+## Créditos
+
+- Diseño, dirección y desarrollo asistido por IA: **Angela Moreno**.
+- Materia: Contenidos y Creatividad III, Universidad de Palermo. Docente: Tec. Agustín Lopez.
+- Las imágenes de la escena de presentación fueron generadas con IA.
+
+---
+
+## Documentación técnica
+
+Notas de implementación, por funcionalidad, que quedaron documentadas durante el desarrollo asistido por IA.
+
+### Game sound (in memory only)
 
 [`src/game/sound.js`](./src/game/sound.js) synthesizes short, low-volume Web Audio
 effects without audio assets or libraries. Sound starts enabled; the corner
@@ -19,7 +163,7 @@ Unavailable or blocked audio never interrupts gameplay.
 Run `node --test src/game/sound.test.js` for synthesized-note/envelope, mobile
 unlock, mute, delegated-click, iframe and failure-isolation regressions.
 
-## Responsive layout
+### Responsive layout
 
 Below 560 CSS pixels, the game fills the viewport without a bezel and reserves
 the four device safe-area insets. At 560 pixels and above, the centered frame
@@ -92,7 +236,7 @@ level suffix, without screen-specific header style overrides.
 Its "Preparar pedidos" title and 14px dark subtitle share a rounded cream plate with
 no text shadow or outline; stage cards and their states are unchanged.
 
-## Orders invitation (session-only UI)
+### Orders invitation (session-only UI)
 
 On a completed, passed level-1 trivia result, the first tap on the level-2
 continue link opens an invitation instead of navigating. There is no timer or
@@ -121,7 +265,7 @@ continue destination. Unmounting removes the dialog and restores background
 interaction. The card scrolls internally on short
 screens, and reduced motion disables its fade/scale entrance.
 
-## Game completion celebration
+### Game completion celebration
 
 Passing level 10 opens [`GameCompletedDialog`](./src/components/GameCompletedDialog.jsx)
 300ms after the result sequence finishes (after its stars), or after the result
@@ -138,7 +282,7 @@ triangle notes followed by their chord, respecting the existing mute setting.
 The shared orders/builder scroll shadows stick to visible edges on phones;
 intro layout spacers stay invisible, and non-scrolling layouts have no shadows.
 
-## Chef profile (in memory only)
+### Chef profile (in memory only)
 
 Welcome opens `/chef`: a nickname (2–16 characters after normalization) and
 one of eight original illustrated avatars. Nicknames allow letters, numbers,
@@ -160,7 +304,7 @@ The map and personal community entries share this identity; fictional chefs
 retain initials. Existing publishing, voting, rewards and orders rules remain
 unchanged.
 
-## Community challenges (educational, browser-only demo)
+### Community challenges (educational, browser-only demo)
 
 The always-enabled "Reto del mes" map link opens `/comunidad`. Five fictional
 challenges, chef bios, starting hearts, optional photo credits and the publishing
@@ -211,7 +355,7 @@ reserved loading placeholder. The card is capped at 70% of the community frame's
 height and scrolls internally on short frames. Its 180 ms fade/scale entrance
 is disabled by reduced-motion preferences.
 
-## Rewards (front-end only)
+### Rewards (front-end only)
 
 The map links to `/recompensas`, including before unlock. Catalog, unlock level,
 fantasy voucher copy, six selectable secret recipes, seven chef topics with
@@ -256,7 +400,7 @@ trap keyboard focus, support Escape, and announce redemption results.
 The count animation respects reduced motion. Clipboard permission failures use
 a selected-code fallback and display manual-copy instructions if that fails.
 
-## Levels pizza artwork
+### Levels pizza artwork
 
 The shared kitchen background uses `src/assets/Niveles/fondo_cocina.webp`
 (941 x 1672), with the existing background sizing and positioning unchanged.
@@ -277,7 +421,7 @@ The illustration has no animations of its own; the results oven retains its
 existing motion and reduced-motion behavior. Builder controls and the saved-pizza
 summary intentionally remain text-only to preserve their layout.
 
-## Live orders pizza
+### Live orders pizza
 
 Orders mode uses the same SVG, adding layers as the player chooses them.
 Optional `face`, `ghosts`, `extras`, `badLayers` and `hold` props provide the
@@ -314,10 +458,10 @@ Currently, two official plugins are available:
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-## React Compiler
+### React Compiler
 
 The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-## Expanding the Oxlint configuration
+### Expanding the Oxlint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
