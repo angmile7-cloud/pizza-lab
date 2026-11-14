@@ -460,8 +460,9 @@ label {
 
 .level-scene__content:has(.level-result-layout) {
   top: max(var(--scene-content-top), 20%);
-  right: 22%;
+  right: 6%;
   bottom: 3%;
+  left: 2%;
   overflow: hidden;
   padding: 0.15rem 0 0;
 }
@@ -780,12 +781,17 @@ label {
 
 .level-result__content {
   min-height: 100%;
-  padding: 0 0 0.5rem;
+  /* Preserve the text column while giving the illustration a wider stage. */
+  padding: 0 17.3913% 0.5rem 13.0435%;
   text-align: center;
 }
 
+.level-result__actions {
+  padding-inline: 13.0435% 17.3913%;
+}
+
 .level-result__content .level-question__level {
-  margin: 0.1rem 0 0.25rem !important;
+  margin: 0.1rem 0 0.1rem !important;
   color: #321d13;
   font-family: 'Lilita One', 'Fredoka', var(--sans);
   font-size: clamp(1.1rem, 4.7vw, 1.35rem);
@@ -793,7 +799,7 @@ label {
 }
 
 .level-result__title {
-  margin: 0 0 0.3rem;
+  margin: 0 0 0.1rem;
   font-family: 'Lilita One', 'Fredoka', var(--sans);
   font-size: 1.05rem;
   line-height: 1.1;
@@ -810,9 +816,9 @@ label {
 .result-oven__stage {
   position: relative;
   display: block;
-  width: 100%;
-  margin: 0.1rem auto 0;
-  padding: 0.1rem;
+  width: 143.75%;
+  margin: 0 0 0 -18.75%;
+  padding: 0;
   overflow: hidden;
   border: 0;
   border-radius: 14px;
@@ -831,8 +837,8 @@ label {
   display: block;
   width: max-content;
   max-width: 100%;
-  margin: 0 auto -0.2rem;
-  padding: 0.35rem 0.7rem;
+  margin: 0 auto;
+  padding: 0.1rem 0.7rem;
   border: 2px solid #71431e;
   border-radius: 10px;
   background: #ffd54a;
@@ -857,36 +863,40 @@ label {
   position: relative;
   display: block;
   width: 100%;
-  max-width: 280px;
+  aspect-ratio: 2.133;
+  max-height: 10.75rem;
   margin: 0 auto;
+  overflow: clip;
 }
 
 .result-oven__art {
-  position: relative;
+  position: absolute;
   z-index: 1;
   display: block;
-  width: 100%;
-  max-height: 150px;
+  right: -2.87%;
+  bottom: 0;
+  width: 67.913%;
   overflow: visible;
-  transform: scale(.7);
-  transform-origin: right bottom;
 }
 
 .result-oven__reaction-wrap {
   position: absolute;
   z-index: 0;
-  inset: 0 0 6px;
-  clip-path: inset(-28px 59% 0 -12px);
+  inset: 0;
   pointer-events: none;
 }
 
 .avatar-reaction {
   position: absolute;
-  left: 4%;
+  left: 6.1%;
   bottom: 2%;
-  width: 31%;
-  height: 62%;
+  width: 35.65%;
+  aspect-ratio: 0.89;
   pointer-events: none;
+}
+
+.avatar-reaction--failed {
+  left: 3.9%;
 }
 
 .avatar-reaction__bob,
@@ -1030,8 +1040,8 @@ label {
 }
 
 .avatar-reaction__confetti {
-  inset: 0;
-  width: 100%;
+  inset: 0 auto auto 14%;
+  width: 90%;
   height: 100%;
 }
 
@@ -1419,7 +1429,7 @@ label {
 
 .result-stars {
   display: flex;
-  width: min(74%, 180px);
+  width: min(60%, 150px);
   justify-content: center;
   gap: 0.25rem;
   margin: -0.3rem auto 0;
@@ -2008,17 +2018,13 @@ label {
 
   .level-scene__content:has(.level-result-layout) {
     top: max(var(--scene-content-top), 20%);
-    right: 22%;
+    right: 6%;
     bottom: 3%;
-    left: 14%;
+    left: 2%;
   }
 
   .level-result__content .level-question__level {
     font-size: 1.08rem;
-  }
-
-  .result-oven__art {
-    max-height: 128px;
   }
 
   .orders-shifts__header p {

@@ -143,31 +143,35 @@ function OvenIllustration({ passed, perfect }) {
         <path d="M51 92Q64 41 143 28" fill="none" stroke="#ffe0b0" strokeWidth="3" opacity=".3" strokeLinecap="round" />
         <path d="M263 78Q276 107 273 163H44" fill="none" stroke="#4b241b" strokeWidth="8" opacity=".2" />
       </g>
-      <path d="M74 164V98a86 58 0 0 1 172 0v66h-13V99a73 48 0 0 0-146 0v65z" fill={paint('rim')} stroke="#75412b" strokeWidth="3" />
-      <g fill="none" stroke="#80503a" strokeWidth="1.5" opacity=".75">
-        <path d="M75 143h12m-12-22h12m-10-22 12 3m-6-25 11 7m3-22 10 10m10-21 7 12m22-18 2 13m26-13-2 13m25-8-7 12m22-1-10 10m21 5-11 7m17 15-12 3m14 19h-12m12 22h-12" />
-      </g>
-      <path d={mouth} fill={paint('interior')} stroke="#45251b" strokeWidth="4" />
-      <g clipPath={paint('mouth-clip')}>
-        <path className="result-oven__glow" d={mouth} fill={paint('fire-glow')} />
-        <path d="M91 150Q160 139 229 150v13H91z" fill="#583021" />
-        <path d="M188 149q-6-14 3-24 0 9 5 10 2-17 10-25-2 14 5 19 5-5 5-11 10 18 2 31z" fill="#e86729" opacity=".85" />
-        <path d="M198 149q-4-10 4-18 0 7 5 9 2-5 3-9 7 10 2 18z" fill="#ffca70" opacity=".9" />
-        <path d="M89 103a71 46 0 0 1 142 0v58" fill="none" stroke="#140e0c" strokeWidth="9" opacity=".55" />
-        <path d="M94 111Q96 84 114 72" fill="none" stroke="#f59a51" strokeWidth="3" opacity=".25" />
+      <g transform="translate(160 160) scale(1.1) translate(-160 -160)">
+        <path d="M74 164V98a86 58 0 0 1 172 0v66h-13V99a73 48 0 0 0-146 0v65z" fill={paint('rim')} stroke="#75412b" strokeWidth="3" />
+        <g fill="none" stroke="#80503a" strokeWidth="1.5" opacity=".75">
+          <path d="M75 143h12m-12-22h12m-10-22 12 3m-6-25 11 7m3-22 10 10m10-21 7 12m22-18 2 13m26-13-2 13m25-8-7 12m22-1-10 10m21 5-11 7m17 15-12 3m14 19h-12m12 22h-12" />
+        </g>
+        <path d={mouth} fill={paint('interior')} stroke="#45251b" strokeWidth="4" />
+        <g clipPath={paint('mouth-clip')}>
+          <path className="result-oven__glow" d={mouth} fill={paint('fire-glow')} />
+          <path d="M91 150Q160 139 229 150v13H91z" fill="#583021" />
+          <path d="M188 149q-6-14 3-24 0 9 5 10 2-17 10-25-2 14 5 19 5-5 5-11 10 18 2 31z" fill="#e86729" opacity=".85" />
+          <path d="M198 149q-4-10 4-18 0 7 5 9 2-5 3-9 7 10 2 18z" fill="#ffca70" opacity=".9" />
+          <path d="M89 103a71 46 0 0 1 142 0v58" fill="none" stroke="#140e0c" strokeWidth="9" opacity=".55" />
+          <path d="M94 111Q96 84 114 72" fill="none" stroke="#f59a51" strokeWidth="3" opacity=".25" />
+        </g>
       </g>
       <path d="M42 162h236v17H42z" fill={paint('stone')} stroke="#71432f" strokeWidth="3" />
       <path d="M44 166h231M95 167v10m49-10v10m52-10v10m48-10v10" fill="none" stroke="#704431" strokeWidth="1.5" opacity=".65" />
       <path d="M46 164h228" fill="none" stroke="#f2c99a" strokeWidth="2" opacity=".65" />
       <g className={`result-oven__pizza${passed ? ' is-golden' : ' is-burnt'}${perfect ? ' is-perfect' : ''}`}>
-        <path d="M126 144l-44 12" stroke="#70401f" strokeWidth="6" strokeLinecap="round" />
-        <path d="M126 143l-44 12" stroke="#d7a266" strokeWidth="2" strokeLinecap="round" />
-        <path d="M123 140q4-3 9-3h69q7 0 8 5l-5 8h-84z" fill={paint('peel')} stroke="#75431f" strokeWidth="1" />
-        <ellipse cx="166" cy="143" rx="34" ry="5" fill="#422217" opacity=".35" />
-        <svg x="130" y="81" width="72" height="72" viewBox="0 0 240 240">
-          <PizzaPreview glow={perfect} doneness={passed ? 'golden' : 'burnt'} />
-        </svg>
-        <path d="M145 141q21 10 43 0" fill="none" stroke="#ffc37b" strokeWidth="2" opacity=".65" strokeLinecap="round" />
+        <g transform="translate(166 145) scale(1.4) translate(-166 -145)">
+          <path d="M126 144l-44 12" stroke="#70401f" strokeWidth="6" strokeLinecap="round" />
+          <path d="M126 143l-44 12" stroke="#d7a266" strokeWidth="2" strokeLinecap="round" />
+          <path transform="translate(166 0) scale(.88 1) translate(-166 0)" d="M123 140q4-3 9-3h69q7 0 8 5l-5 8h-84z" fill={paint('peel')} stroke="#75431f" strokeWidth="1" />
+          <ellipse cx="166" cy="143" rx="34" ry="5" fill="#422217" opacity=".35" />
+          <svg x="125" y="71" width="82" height="82" viewBox="0 0 240 240">
+            <PizzaPreview glow={perfect} doneness={passed ? 'golden' : 'burnt'} />
+          </svg>
+          <path d="M145 141q21 10 43 0" fill="none" stroke="#ffc37b" strokeWidth="2" opacity=".65" strokeLinecap="round" />
+        </g>
       </g>
       {!passed ? (
         <g className="result-oven__smoke" fill="#756a63">

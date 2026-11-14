@@ -69,7 +69,7 @@ export default function QuestionScreen() {
             {question.options.map((option) => (
               <li key={option.id}>
                 <label
-                  className={`level-option${selectedOptionId === option.id ? ' is-selected' : ''}${feedback && option.id === question.correctOptionId ? ' is-correct' : ''}${feedback && selectedOptionId === option.id && !feedback.correct ? ' is-incorrect' : ''}`}
+                  className={`level-option${selectedOptionId === option.id ? ' is-selected' : ''}${feedback && selectedOptionId === option.id && feedback.correct ? ' is-correct' : ''}${feedback && selectedOptionId === option.id && !feedback.correct ? ' is-incorrect' : ''}`}
                 >
                   <input
                     type="radio"
@@ -94,7 +94,6 @@ export default function QuestionScreen() {
                     ? 'Respuesta incorrecta. El puntaje no baja de 0.'
                     : `Respuesta incorrecta. ${feedback.appliedDelta} puntos.`}
               </p>
-              <p>{question.explanation}</p>
             </div>
           )}
         </div>
