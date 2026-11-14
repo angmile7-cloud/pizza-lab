@@ -115,6 +115,12 @@ export default function PizzaPreview({
         <radialGradient id={id('toast')} cx=".4" cy=".3">
           <stop stopColor="#a75b25" /><stop offset=".65" stopColor="#d39543" /><stop offset="1" stopColor="#edc47c" stopOpacity="0" />
         </radialGradient>
+        <radialGradient id={id('crust-bubble')} cx=".32" cy=".25" r=".75">
+          <stop stopColor="#ffe7ad" /><stop offset=".5" stopColor="#e9b46b" /><stop offset="1" stopColor="#a55b2b" />
+        </radialGradient>
+        <radialGradient id={id('cheese-bubble')} cx=".3" cy=".25" r=".75">
+          <stop stopColor="#fffef0" /><stop offset=".5" stopColor="#ffe9ad" /><stop offset="1" stopColor="#d2a05b" />
+        </radialGradient>
         <radialGradient id={id('pepperoni')} cx=".3" cy=".25">
           <stop stopColor="#e77f4d" /><stop offset=".6" stopColor="#bd402d" /><stop offset="1" stopColor="#7e281e" />
         </radialGradient>
@@ -143,6 +149,14 @@ export default function PizzaPreview({
           <path d="M-14-8Q-10-15-3-12M0-12L5-13" fill="none" stroke={burnt ? '#bc8c55' : '#fffdf0'} strokeWidth="2" strokeLinecap="round" opacity={burnt ? '.4' : '.85'} />
           <ellipse cx="7" cy="7" rx="6" ry="4" fill={paint('toast')} />
           <ellipse cx="-9" cy="-3" rx="3" ry="2" fill={paint('toast')} />
+          {!burnt ? (
+            <g>
+              <ellipse cx="-5" cy="6" rx="4" ry="3" fill={paint('cheese-bubble')} />
+              <ellipse cx="8" cy="-7" rx="2.8" ry="2" fill={paint('cheese-bubble')} />
+              <path d="M-7 5q1-2 3-2M7-8q1-1 2-1" fill="none" stroke="#fffef3" strokeWidth="1" strokeLinecap="round" opacity=".8" />
+              <ellipse cx="3" cy="12" rx="2.5" ry="1.4" fill="#bb7837" opacity=".45" />
+            </g>
+          ) : null}
           {burnt ? (
             <g fill="#171513">
               <ellipse cx="7" cy="7" rx="4.5" ry="3" />
@@ -187,11 +201,13 @@ export default function PizzaPreview({
           <path d="M-10 12C-17-5-1-16 12-12C15 4 4 17-10 12Z" fill="#233e22" opacity=".22" transform="translate(0 2)" />
           <path d="M-10 12C-17-5-1-16 12-12C15 4 4 17-10 12Z" fill={paint('leaf')} stroke="#356631" strokeWidth=".8" />
           <path d="M-12 15L9-10M-5 6l-5-7M0 0l-3-8M0 0l8 1M-5 6l8 2" fill="none" stroke="#b2cc75" strokeWidth=".8" opacity=".8" />
+          <path d="M-10 3Q-9-6-2-9" fill="none" stroke="#d4e5a2" strokeWidth="1.3" strokeLinecap="round" opacity=".65" />
         </symbol>
         <symbol id={id('rucula-piece')} viewBox="-16 -16 32 32">
           <path d="M-4 14L-10 7L-5 5L-13-1L-6-3L-10-9L-3-8L2-15L6-8L12-8L8-2L13 1L5 5L8 9L1 11Z" fill="#234423" opacity=".2" transform="translate(0 2)" />
           <path d="M-4 14L-10 7L-5 5L-13-1L-6-3L-10-9L-3-8L2-15L6-8L12-8L8-2L13 1L5 5L8 9L1 11Z" fill={paint('leaf')} stroke="#3b7030" strokeWidth=".6" />
           <path d="M-5 17L2-12M-2 6l-5-5M0 0l6-4" fill="none" stroke="#c2d382" strokeWidth=".9" />
+          <path d="M-6-3l4 1 4-9" fill="none" stroke="#e0e9ad" strokeWidth="1" strokeLinecap="round" opacity=".7" />
         </symbol>
       </defs>
       {glow ? <circle cx="120" cy="120" r="120" fill={paint('glow')} /> : null}
@@ -207,14 +223,17 @@ export default function PizzaPreview({
       <g transform={thin ? 'translate(120 120) scale(1.025) translate(-120 -120)' : undefined}>
         <path d={CRUST} fill={paint('crust')} stroke="#9d5a2c" strokeWidth="1" />
         {burnt ? <path d={CRUST} fill={paint('charred-edge')} /> : null}
+        <path d="M32 151Q44 196 97 211T192 190" fill="none" stroke="#743b20" strokeWidth="5" opacity=".25" strokeLinecap="round" />
         <path d="M32 93Q36 63 65 46M78 35Q101 25 120 27M140 29L151 32" fill="none" stroke={burnt ? '#95704c' : '#ffe8b1'} strokeWidth={thin ? 2 : 4} opacity={burnt ? '.3' : '.7'} strokeLinecap="round" />
         {Array.from({ length: 19 }, (_, index) => {
           const angle = index * Math.PI * 2 / 19
           const radius = 94 + Math.sin(index * 7) * 3
           return (
             <g key={index} transform={`translate(${120 + Math.cos(angle) * radius} ${120 + Math.sin(angle) * radius}) rotate(${index * 27})`}>
+              {!burnt && !thin ? <ellipse cy="-1" rx={6 + index % 3} ry="4.5" fill={paint('crust-bubble')} opacity=".8" /> : null}
               <ellipse rx={thin ? 3 : 5 + index % 3} ry={thin ? 1.5 : 3.5} fill={paint('toast')} />
               {index % 3 === 0 ? <ellipse cx="1" cy="1" rx="2.8" ry="1.6" fill="#66381e" opacity=".8" /> : null}
+              {index % 4 === 1 && !burnt ? <ellipse cx="1" cy="1" rx="1.7" ry="1.1" fill="#48291b" opacity=".8" /> : null}
               {!thin ? <path d="M-4-3Q0-6 4-3" fill="none" stroke="#ffdf98" strokeWidth="1" opacity=".8" /> : null}
               {burnt ? <ellipse rx={thin ? 3 : 6 + index % 3} ry={thin ? 1.7 : 4} fill="#141312" opacity={index % 3 === 0 ? '.95' : '.75'} /> : null}
             </g>
