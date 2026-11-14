@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { useGame } from '../game/useGame'
 import { createEmptySelection, getLevel, levelPath } from '../game/gameUtils'
-import LevelScene from '../components/LevelScene'
+import PizzaBuildingLayout from '../components/PizzaBuildingLayout'
+import PizzaPreview from '../components/PizzaPreview'
 import PizzaBuilderControls from '../components/PizzaBuilderControls'
 import ResultStatus from '../components/ResultStatus'
 
@@ -45,67 +46,89 @@ export default function PizzaBuilderScreen() {
 
   if (submitted && pizza) {
     return (
-      <LevelScene levelId={level.id}>
-        <section className="page level-page level-builder level-builder--complete scene-zones">
-          <div className="scene-zones__scroll">
-              <p className="level-nav">
-                <Link to="/jugar">Inicio</Link>
-              </p>
-              <h1>¡Pizza lista!</h1>
-              <p>Nivel 8 · {level.title}</p>
-              <div className="builder-result__total"><strong>{totalScore}</strong> Total ganado</div>
-              <ul className="builder-result__list">
-                {slots.map((slot) => (
-                  <li key={slot.id}>
-                    <ResultStatus met />
-                    <span><strong>{slot.label}:</strong>{' '}
-                      {slot.multiple
-                        ? pizza[slot.id]?.length
-                          ? pizza[slot.id].map((id) => choiceName(slot.id, id)).join(', ')
-                          : 'Sin toppings extra'
-                        : choiceName(slot.id, pizza[slot.id])}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-              <p>
-                Terminaste tu pizza y ya puedes aplicar lo aprendido sobre ingredientes,
-                armado y cocción en los siguientes niveles.
-              </p>
+      <PizzaBuildingLayout
+        levelId={level.id}
+        className="level-builder--complete"
+        title="¡Pizza lista!"
+        subtitle={<p>Nivel 8 · {level.title}</p>}
+        top={
+          <div className="orders-mode__order-row">
+            <div className="builder-result__total">
+              <strong>{totalScore}</strong> Total ganado
             </div>
-            <div className="scene-zones__actions">
-              <Link className="btn-yellow level-action" to={levelPath(getLevel(9))}>
-                Continuar al nivel 9
-              </Link>
+            <div className="orders-mode__preview-slot" aria-hidden="true">
+              <div className="orders-mode__pizza-stage">
+                <PizzaPreview className="orders-mode__pizza-art" selection={pizza} glow cutLines />
+              </div>
             </div>
-          </section>
-        </LevelScene>
-      )
-    }
-
-    return (
-      <LevelScene levelId={level.id}>
-        <section className="page level-page level-builder scene-zones">
-          <div className="scene-zones__scroll">
-          <p className="level-nav">
-            <Link to="/jugar">Inicio</Link>
+          </div>
+        }
+        actions={
+          <Link
+            className="btn-yellow level-action level-action--confirm orders-mode__action--wide"
+            to={levelPath(getLevel(9))}
+          >
+            Continuar al nivel 9
+          </Link>
+        }
+      >
+        <div className="pizza-building__result">
+          <ul className="builder-result__list">
+            {slots.map((slot) => (
+              <li key={slot.id}>
+                <ResultStatus met />
+                <span><strong>{slot.label}:</strong>{' '}
+                  {slot.multiple
+                    ? pizza[slot.id]?.length
+                      ? pizza[slot.id].map((id) => choiceName(slot.id, id)).join(', ')
+                      : 'Sin toppings extra'
+                    : choiceName(slot.id, pizza[slot.id])}
+                </span>
+              </li>
+            ))}
+          </ul>
+          <p className="pizza-building__copy">
+            Terminaste tu pizza y ya puedes aplicar lo aprendido sobre ingredientes,
+            armado y cocción en los siguientes niveles.
           </p>
-          <h1>
-            Nivel {level.id}: {level.title}
-          </h1>
-          <p>{level.description}</p>
-          <PizzaBuilderControls
-            slots={slots}
-            selection={selection}
-            setSelection={setSelection}
-          />
         </div>
-        <div className="scene-zones__actions">
-          <button className="btn-yellow level-action" type="button" onClick={handleSave} disabled={!ready}>
-            Hornear pizza
-          </button>
+      </PizzaBuildingLayout>
+    )
+  }
+
+  return (
+    <PizzaBuildingLayout
+      levelId={level.id}
+      title={`Nivel ${level.id}: ${level.title}`}
+      top={
+        <div className="orders-mode__order-row">
+          <div className="pizza-building__copy">{level.description}</div>
+          <div className="orders-mode__preview-slot" aria-hidden="true">
+            <div className="orders-mode__pizza-stage">
+              <PizzaPreview className="orders-mode__pizza-art" selection={selection} />
+            </div>
+          </div>
         </div>
-      </section>
-    </LevelScene>
+      }
+      actions={
+        <button
+          className="btn-yellow level-action level-action--confirm orders-mode__action--wide"
+          type="button"
+          onClick={handleSave}
+          disabled={!ready}
+        >
+          Hornear pizza
+        </button>
+      }
+    >
+      <div className="orders-mode__options">
+        <PizzaBuilderControls
+          slots={slots}
+          selection={selection}
+          setSelection={setSelection}
+          orderMode
+        />
+      </div>
+    </PizzaBuildingLayout>
   )
 }

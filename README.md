@@ -56,6 +56,22 @@ returns on the left and the finished pizza occupies only the right column.
 Below 340px, or in landscape at heights up to 600px, the row stacks with a
 72px pizza. Shared level/map badge layouts are unchanged.
 
+Levels 8 and 10 share [`PizzaBuildingLayout`](./src/components/PizzaBuildingLayout.jsx)
+and reuse the orders-mode option pills, group labels, scroll regions, pizza-preview
+row and fixed green/yellow actions. [`OrderTicket`](./src/components/OrderTicket.jsx)
+renders the same paper asset and typography in both delivery modes.
+The scene background, header and each screen's existing score-badge position
+remain unchanged. Shared options use Fredoka and paper/tier titles use Lilita One,
+with the game's existing system-font fallbacks.
+
+Builder instructions, headings, metadata and the level-8 closing paragraph use
+opaque cream cards with dark ink, 16px text and 1.5 line height. The completed
+pizza retains its score pill and checked ingredient list. Group labels also have
+cream backplates, and shared actions use dark text for AA contrast.
+At short heights the shared middle region scrolls as one unit; the actions stay
+outside it, so all ingredients and the closing card remain reachable. Copy,
+selection handlers, baking/delivery scoring, sound effects and routes are unchanged.
+
 The hub places "Canjea tus puntos" and "Reto del mes" in an equal-width row
 inside the player header, above its divider. Both pills are at least 44px tall
 with 14px semibold dark-green text, a green border, cream fill and original

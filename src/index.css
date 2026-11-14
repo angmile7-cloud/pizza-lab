@@ -740,7 +740,8 @@ label {
   accent-color: #754321;
 }
 
-.level-action {
+.level-action,
+.orders-mode__actions .level-action {
   display: flex;
   width: 100%;
   min-height: 46px;
@@ -3863,23 +3864,23 @@ label {
   background: #fff4b8;
 }
 
-#root:has(.orders-mode) {
+#root:has(.orders-mode, .pizza-building) {
   overflow: hidden;
 }
 
-.app-main:has(.orders-mode) {
+.app-main:has(.orders-mode, .pizza-building) {
   flex: 1 1 auto;
   min-height: 0;
 }
 
-.level-scene:has(.orders-mode) {
+.level-scene:has(.orders-mode, .pizza-building) {
   display: flex;
   min-height: 0;
   flex-direction: column;
   background-size: 100% 100%;
 }
 
-.level-scene__content:has(.orders-mode) {
+.level-scene__content:has(.orders-mode, .pizza-building) {
   position: relative;
   inset: auto;
   width: 100%;
@@ -3889,7 +3890,8 @@ label {
   padding: 0;
 }
 
-.orders-mode {
+.orders-mode,
+.pizza-building {
   --level-answer-column-width: calc(64% - 3.2px);
   --scene-content-top: calc(var(--header-height) + 66px);
   container-type: size;
@@ -3901,7 +3903,56 @@ label {
   overflow: hidden;
   padding: var(--scene-content-top) 0 0;
   color: #000;
-  font-family: var(--sans);
+  font-family: 'Fredoka', var(--sans);
+}
+
+.pizza-building {
+  --scene-content-top: max(calc(var(--header-height) + 72px), calc(12.5cqh + 64px));
+  --pizza-copy-background: #fff2c6;
+  --pizza-copy-ink: #432d35;
+}
+
+.pizza-building__copy,
+.pizza-building .builder-result__total {
+  padding: 12px;
+  border: 1px solid #d5bd85;
+  border-radius: 14px;
+  background: var(--pizza-copy-background);
+  color: var(--pizza-copy-ink);
+  box-shadow: 0 2px 5px rgb(50 29 19 / 12%);
+  font: 16px/1.5 'Fredoka', var(--sans);
+}
+
+.pizza-building__heading {
+  width: 90%;
+  flex: 0 0 auto;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.pizza-building__hint {
+  width: 90%;
+  flex: 0 0 auto;
+  text-align: center;
+}
+
+.pizza-building__result {
+  width: 90%;
+  margin: 0 auto;
+}
+
+.pizza-building .builder-result__list {
+  padding: 0;
+}
+
+.pizza-building .builder-result__list li {
+  font-family: 'Fredoka', var(--sans);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.pizza-building .order-result {
+  width: 90%;
 }
 
 .orders-mode__body {
@@ -3922,9 +3973,11 @@ label {
 
 .orders-mode__tier {
   margin: 0 !important;
+  font-family: 'Lilita One', 'Fredoka', var(--sans);
 }
 
-.orders-mode .level-progress {
+.orders-mode .level-progress,
+.pizza-building .level-progress {
   margin: 3px 0 5px !important;
   text-align: center;
 }
@@ -3994,7 +4047,7 @@ label {
   width: 100%;
   margin: 0 0 4px !important;
   color: #000;
-  font-family: var(--sans);
+  font-family: 'Lilita One', 'Fredoka', var(--sans);
   font-size: 15px;
   font-weight: 700;
   letter-spacing: 0.2px;
@@ -4006,7 +4059,7 @@ label {
   width: 100%;
   margin: 0 !important;
   color: #000;
-  font-family: var(--sans);
+  font-family: 'Fredoka', var(--sans);
   font-size: 15px;
   font-weight: 400;
   line-height: 1.35;
@@ -4127,14 +4180,16 @@ label {
   display: block;
   width: 100%;
   margin: 0;
-  padding: 0;
-  color: #fff;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #fff2c6;
+  color: #432d35;
   font-family: 'Fredoka', var(--sans);
   font-size: 1.12rem;
   font-weight: 700;
   line-height: 1.15;
   text-align: center;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  text-shadow: none;
 }
 
 .orders-mode__options .level-builder__choice + .level-builder__choice {
@@ -4148,6 +4203,7 @@ label {
   border: 2px solid #ffd54f;
   background: #ffd54f;
   color: #000;
+  font-family: 'Fredoka', var(--sans);
   transition:
     transform 120ms var(--om-ease),
     border-color var(--om-dur-radio) ease;
@@ -4297,16 +4353,20 @@ label {
 
 .orders-mode__actions .level-action {
   margin: 0;
+  color: #432d35;
+  -webkit-text-stroke: 0;
+  text-shadow: none;
 }
 
 .orders-mode__actions .level-action--confirm {
   background: #51a059;
+  color: #102a16;
 }
 
 .orders-mode__actions .level-action--confirm:disabled {
-  background: #43884b;
+  background: #346d3a;
   color: #fff;
-  opacity: 0.7;
+  opacity: 1;
 }
 
 .orders-mode__actions .orders-mode__home {

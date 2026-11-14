@@ -4,7 +4,7 @@ import LevelScene from '../components/LevelScene'
 import OrderResultCard from '../components/OrderResultCard'
 import PizzaBuilderControls from '../components/PizzaBuilderControls'
 import PizzaPreview from '../components/PizzaPreview'
-import orderPaper from '../assets/papel_pedido.png'
+import OrderTicket from '../components/OrderTicket'
 import { useGame } from '../game/useGame'
 import { getOrderRequirementItems } from '../game/orderResultLabels'
 import { playSound } from '../game/sound'
@@ -654,25 +654,20 @@ export default function OrdersModeScreen() {
                 </p>
                 <div className="orders-mode__order-row" key={`${stage}-${orderIndex}`}>
                 <div className="orders-mode__ticket-slot">
-                <article
+                <OrderTicket
+                  customer={currentOrder.customer}
+                  message={currentOrder.text}
                   className={[
-                    'orders-mode__ticket',
-                    currentOrder.text.length > 120 ? 'is-long' : '',
                     cardPhase === 'correct' && !ticketPizzaVisible ? 'is-correct' : '',
                     cardPhase === 'timeout' && exiting ? 'is-timeout' : '',
                     ticketPizzaVisible || (orderResult && !orderResult.satisfied && (cardPhase === 'idle' || (cardPhase === 'timeout' && !exiting))) ? 'is-resolved' : '',
                     cardPhase === 'wrong' ? 'is-wrong' : '',
                   ].filter(Boolean).join(' ')}
-                  style={{ '--order-paper-image': `url("${orderPaper}")` }}
                 >
-                  <h2 className="orders-mode__customer">
-                    Pedido de {currentOrder.customer}
-                  </h2>
-                  <p className="orders-mode__quote">“{currentOrder.text}”</p>
                   <p className="orders-mode__topics orders-mode__sr-only">
                     {currentOrder.topics.map((topic) => ORDER_TOPIC_LABELS[topic] ?? topic).join(' · ')}
                   </p>
-                </article>
+                </OrderTicket>
                 </div>
                   <div className="orders-mode__preview-slot" aria-hidden="true">
                     {ticketPizzaVisible ? (

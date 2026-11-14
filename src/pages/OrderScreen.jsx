@@ -1,6 +1,8 @@
 import { useState } from 'react'
-import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
-import LevelScene from '../components/LevelScene'
+import { Navigate, useNavigate, useParams } from 'react-router-dom'
+import PizzaBuildingLayout from '../components/PizzaBuildingLayout'
+import OrderTicket from '../components/OrderTicket'
+import PizzaPreview from '../components/PizzaPreview'
 import OrderResultCard from '../components/OrderResultCard'
 import PizzaBuilderControls from '../components/PizzaBuilderControls'
 import { useGame } from '../game/useGame'
@@ -63,56 +65,78 @@ export default function OrderScreen() {
   }
 
   return (
-    <LevelScene levelId={level.id}>
-      <section className="page level-page level-builder level-order">
-        <p className="level-nav">
-          <Link to="/jugar">Inicio</Link>
-        </p>
-        <h1>
-          Nivel {level.id}: {level.title}
-        </h1>
+    <PizzaBuildingLayout
+      levelId={level.id}
+      className="level-order"
+      title={`Nivel ${level.id}: ${level.title}`}
+      subtitle={
         <p className="level-progress">
           Pedido {orderIndex + 1} de {orders.length}
         </p>
-        <article className="level-order__customer">
-          <h2>Pedido de {order.customerName}</h2>
-          <p>“{order.message}”</p>
-        </article>
-        {!feedback ? (
-          <>
-            <p>Elige los ingredientes para preparar su pizza.</p>
-            <PizzaBuilderControls
-              slots={slots}
-              selection={selection}
-              setSelection={setSelection}
-            />
-            <button
-              className="btn-yellow level-action level-action--confirm"
-              type="button"
-              onClick={handleSubmit}
-              data-sound="order"
-              disabled={!ready}
-            >
-              ENTREGAR PEDIDO
-            </button>
-          </>
-        ) : (
-          <OrderResultCard
-            key={order.id}
-            state={feedback.satisfied ? 'success' : 'incomplete'}
-            points={feedback.pointsAwarded}
-            items={getOrderRequirementItems(order, feedback.requirements, selection, slots)}
+      }
+      top={
+        <>
+          <div className="orders-mode__order-row">
+            <div className="orders-mode__ticket-slot">
+              <OrderTicket customer={order.customerName} message={order.message} />
+            </div>
+            <div className="orders-mode__preview-slot" aria-hidden="true">
+              <div className="orders-mode__pizza-stage">
+                <PizzaPreview
+                  className="orders-mode__pizza-art"
+                  selection={selection}
+                  glow={Boolean(feedback?.satisfied)}
+                  cutLines={Boolean(feedback?.satisfied)}
+                />
+              </div>
+            </div>
+          </div>
+          {!feedback ? (
+            <p className="pizza-building__copy pizza-building__hint">
+              Elige los ingredientes para preparar su pizza.
+            </p>
+          ) : null}
+        </>
+      }
+      actions={
+        !feedback ? (
+          <button
+            className="btn-yellow level-action level-action--confirm orders-mode__action--wide"
+            type="button"
+            onClick={handleSubmit}
+            data-sound="order"
+            disabled={!ready}
           >
-            <button
-              className="btn-yellow level-action"
-              type="button"
-              onClick={handleNext}
-            >
-              {orderIndex + 1 >= orders.length ? 'Ver resultado del nivel' : 'Siguiente pedido'}
-            </button>
-          </OrderResultCard>
-        )}
-      </section>
-    </LevelScene>
+            ENTREGAR PEDIDO
+          </button>
+        ) : (
+          <button
+            className="btn-yellow level-action level-action--confirm orders-mode__action--wide"
+            type="button"
+            onClick={handleNext}
+          >
+            {orderIndex + 1 >= orders.length ? 'Ver resultado del nivel' : 'Siguiente pedido'}
+          </button>
+        )
+      }
+    >
+      {!feedback ? (
+        <div className="orders-mode__options">
+          <PizzaBuilderControls
+            slots={slots}
+            selection={selection}
+            setSelection={setSelection}
+            orderMode
+          />
+        </div>
+      ) : (
+        <OrderResultCard
+          key={order.id}
+          state={feedback.satisfied ? 'success' : 'incomplete'}
+          points={feedback.pointsAwarded}
+          items={getOrderRequirementItems(order, feedback.requirements, selection, slots)}
+        />
+      )}
+    </PizzaBuildingLayout>
   )
 }
