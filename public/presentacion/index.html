@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Dodo's Pizza Lab - Presentación</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #120a05; overflow: hidden; }
+  body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+  #stage { position: fixed; left: 50%; top: 50%; overflow: hidden; background: #120a05; transform: translate(-50%, -50%); }
+  #scene { position: absolute; left: 0; top: 0; width: 1672px; height: 941px; transform-origin: 0 0; }
+  /* The game lives BEHIND the photo; the photo has a transparent hole where the phone screen is. */
+  #screen { position: absolute; left: 0; top: 0; width: 386px; height: 800px; transform-origin: 0 0;
+            transform: matrix3d(0.968612332,-0.00478592581,0,7.99090431e-06,-0.042143838,0.928898748,0,-7.05849848e-05,0,0,1,0,669.355957,60.4655151,0,1); background: #000; overflow: hidden; }
+  #screen iframe { width: 100%; height: 100%; border: 0; display: block; background: #000; }
+  #photo { position: absolute; left: 0; top: 0; width: 1672px; height: 941px; pointer-events: none; user-select: none; -webkit-user-drag: none; }
+  #hint { position: fixed; left: 16px; bottom: 16px; padding: 8px 12px; border-radius: 10px; background: rgba(0,0,0,.55);
+          color: #fff7e3; font-size: 14px; opacity: 1; transition: opacity .6s ease; pointer-events: none; }
+  #hint.is-hidden { opacity: 0; }
+  @media (max-width: 700px) { #hint { display: none; } }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="scene">
+    <div id="screen"><iframe id="game" src="/" title="Dodo's Pizza Lab, juego" loading="eager" allow="fullscreen"></iframe></div>
+    <img id="photo" src="escena.webp" alt="" draggable="false">
+  </div>
+</div>
+<div id="hint" role="note">F pantalla completa &middot; R reiniciar juego</div>
+<script>
+(function () {
+  var SCENE_W = 1672, SCENE_H = 941;
+  var PHONE = { cx: 867, cy: 458, w: 440, h: 832 };   /* phone bezel in scene pixels */
+  var stage = document.getElementById('stage');
+  var scene = document.getElementById('scene');
+  var hint = document.getElementById('hint');
+  var params = new URLSearchParams(location.search);
+  var ratio = params.get('formato') === '4x5' ? 4 / 5 : null;
+
+  function layout() {
+    var vw = window.innerWidth, vh = window.innerHeight;
+    var sw = vw, sh = vh;
+    if (ratio) { sw = Math.min(vw, vh * ratio); sh = sw / ratio; }
+    stage.style.width = sw + 'px'; stage.style.height = sh + 'px';
+    var cover = Math.max(sw / SCENE_W, sh / SCENE_H);
+    var byH = (sh * 0.97) / PHONE.h, byW = (sw * 0.97) / PHONE.w;
+    var s = Math.max(cover, Math.min(byH, byW));
+    var tx = sw / 2 - PHONE.cx * s, ty = sh / 2 - PHONE.cy * s;
+    tx = Math.min(0, Math.max(sw - SCENE_W * s, tx));
+    ty = Math.min(0, Math.max(sh - SCENE_H * s, ty));
+    scene.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + s + ')';
+  }
+  layout();
+  window.addEventListener('resize', layout);
+
+  var timer;
+  function showHint() { hint.classList.remove('is-hidden'); clearTimeout(timer); timer = setTimeout(function () { hint.classList.add('is-hidden'); }, 6000); }
+  showHint();
+  window.addEventListener('mousemove', showHint);
+
+  /* F = fullscreen, R = restart the game. Works with focus on this page AND inside the game (same origin). */
+  var game = document.getElementById('game');
+  function onKey(e) {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var t = e.target;
+    if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;  /* never while typing (e.g. the nickname) */
+    var k = (e.key || '').toLowerCase();
+    if (k === 'f') {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
+    } else if (k === 'r') {
+      game.src = game.src;
+    }
+  }
+  window.addEventListener('keydown', onKey);
+  function bindGame() {
+    try {
+      game.contentWindow.addEventListener('keydown', onKey);
+      game.contentWindow.addEventListener('mousemove', showHint);
+    } catch (err) { /* cross-origin: shortcuts only work with focus on this page */ }
+  }
+  game.addEventListener('load', bindGame);
+  bindGame();
+})();
+</script>
+</body>
+</html>
