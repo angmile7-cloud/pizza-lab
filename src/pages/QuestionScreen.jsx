@@ -3,6 +3,7 @@ import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { useGame } from '../game/useGame'
 import { getLevel, MIN_CORRECT_TO_UNLOCK } from '../game/gameUtils'
 import LevelScene from '../components/LevelScene'
+import { playSound } from '../game/sound'
 
 export default function QuestionScreen() {
   const { levelId } = useParams()
@@ -41,6 +42,7 @@ export default function QuestionScreen() {
   function handleConfirm() {
     if (!selectedOptionId || feedback) return
     const result = recordAnswer(level.id, question, selectedOptionId)
+    playSound(result.correct ? 'bell' : 'oops')
     setFeedback(result)
   }
 
@@ -103,6 +105,7 @@ export default function QuestionScreen() {
               className="level-action level-action--confirm"
               type="button"
               onClick={handleConfirm}
+              data-sound="answer"
               disabled={!selectedOptionId}
             >
               Confirmar

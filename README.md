@@ -1,5 +1,24 @@
 # React + Vite
 
+## Game sound (in memory only)
+
+[`src/game/sound.js`](./src/game/sound.js) synthesizes short, low-volume Web Audio
+effects without audio assets or libraries. Sound starts enabled; the corner
+speaker button toggles mute and stops active/scheduled notes. The preference
+lasts only until reload and does not write to storage. Document gestures lazily
+create one context, resume it and play a one-sample silent buffer for mobile
+unlock; supported iPhones request the playback audio session.
+
+Answers and deliveries use bell/oops, ingredient changes use pop, and completed
+trivia/order levels use win/lose once when their animated banner appears (or
+immediately when skipped). Other buttons use one delegated tick listener;
+`data-sound` excludes buttons with their own effect and the mute control.
+When embedded, the game creates no audio context, plays no effects and hides
+its mute control, leaving `/presentacion/index.html` in charge of sound.
+Unavailable or blocked audio never interrupts gameplay.
+Run `node --test src/game/sound.test.js` for synthesized-note/envelope, mobile
+unlock, mute, delegated-click, iframe and failure-isolation regressions.
+
 ## Responsive layout
 
 Below 560 CSS pixels, the game fills the viewport without a bezel and reserves

@@ -333,6 +333,40 @@ label {
   padding: 1.25rem 1.35rem 1.75rem;
 }
 
+.sound-toggle {
+  position: absolute;
+  z-index: 9;
+  top: var(--safe-top);
+  right: var(--safe-right);
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid #67402c;
+  border-radius: 12px;
+  background: var(--yellow);
+  color: var(--ink);
+  font-family: 'Fredoka', var(--sans);
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.sound-toggle:focus-visible {
+  outline: 3px solid #321d13;
+  outline-offset: -4px;
+}
+
+#root:has(.sound-toggle) .level-header {
+  padding-right: 48px;
+}
+
+#root:has(.sound-toggle) .progress-map__header {
+  padding-top: 48px;
+}
+
+#root:has(.sound-toggle) .menu {
+  padding-top: max(48px, 2.4rem);
+}
+
 #root:has(.level-scene) {
   position: relative;
   overflow: hidden;

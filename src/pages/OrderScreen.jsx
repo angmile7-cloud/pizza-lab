@@ -6,6 +6,7 @@ import PizzaBuilderControls from '../components/PizzaBuilderControls'
 import { useGame } from '../game/useGame'
 import { createEmptySelection, getLevel } from '../game/gameUtils'
 import { getOrderRequirementItems } from '../game/orderResultLabels'
+import { playSound } from '../game/sound'
 
 const EMPTY_SLOTS = []
 
@@ -45,7 +46,9 @@ export default function OrderScreen() {
 
   function handleSubmit() {
     if (!ready || feedback) return
-    setFeedback(recordOrderResult(level.id, order, selection))
+    const result = recordOrderResult(level.id, order, selection)
+    playSound(result.satisfied ? 'bell' : 'oops')
+    setFeedback(result)
   }
 
   function handleNext() {
@@ -87,6 +90,7 @@ export default function OrderScreen() {
               className="btn-yellow level-action level-action--confirm"
               type="button"
               onClick={handleSubmit}
+              data-sound="order"
               disabled={!ready}
             >
               ENTREGAR PEDIDO

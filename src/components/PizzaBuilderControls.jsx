@@ -1,3 +1,5 @@
+import { playSound } from '../game/sound'
+
 export default function PizzaBuilderControls({
   slots,
   selection,
@@ -9,10 +11,15 @@ export default function PizzaBuilderControls({
   }
 
   function handleSingle(slotId, choiceId) {
+    if (selection[slotId] !== choiceId) playSound('pop')
     setSelection((current) => ({ ...current, [slotId]: choiceId }))
   }
 
   function handleMultiple(slot, choiceId) {
+    const selected = selection[slot.id] ?? []
+    if (selected.includes(choiceId) || !slot.maxSelections || selected.length < slot.maxSelections) {
+      playSound('pop')
+    }
     setSelection((current) => {
       const list = current[slot.id] ?? []
       const exists = list.includes(choiceId)

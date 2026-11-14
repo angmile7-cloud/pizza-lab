@@ -4,6 +4,7 @@ import { useGame } from './game/useGame'
 
 
 import StatusBar from './components/StatusBar'
+import SoundToggle from './components/SoundToggle'
 import WelcomeScreen from './pages/WelcomeScreen'
 import ChefProfileScreen from './pages/ChefProfileScreen'
 import GameHubScreen from './pages/GameHubScreen'
@@ -27,6 +28,7 @@ export default function App() {
     <GameProvider>
       <BrowserRouter>
         <StatusBar />
+        <SoundToggle />
         <div className="app-main">
           <Routes>
             <Route path="/" element={<WelcomeScreen />} />

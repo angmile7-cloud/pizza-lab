@@ -7,6 +7,7 @@ import PizzaPreview from '../components/PizzaPreview'
 import orderPaper from '../assets/papel_pedido.png'
 import { useGame } from '../game/useGame'
 import { getOrderRequirementItems } from '../game/orderResultLabels'
+import { playSound } from '../game/sound'
 import {
   createEmptySelection,
   evaluateOrder,
@@ -389,6 +390,7 @@ export default function OrdersModeScreen() {
         pointsAwarded,
       }
       recordShiftOrderResult(stage, result)
+      playSound(satisfied ? 'bell' : 'oops')
       setOrderResult(result)
       setRemainingMs(remaining)
       setAnnouncement(
@@ -826,6 +828,7 @@ export default function OrdersModeScreen() {
               className="level-action level-action--confirm"
               type="button"
               onClick={deliverOrder}
+              data-sound="order"
               disabled={!ready || Boolean(orderResult)}
             >
               ENTREGAR

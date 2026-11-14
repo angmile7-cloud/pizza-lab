@@ -10,6 +10,7 @@ import ResultSeal from '../components/ResultSeal'
 import { DodoBubble } from '../components/DodoTip'
 import { getOrderRequirementItems } from '../game/orderResultLabels'
 import { useGame } from '../game/useGame'
+import { playSound } from '../game/sound'
 import {
   correctCountFromAnswers,
   didPassOrderLevel,
@@ -236,6 +237,21 @@ function ResultLayout({
   const [jumped, setJumped] = useState(reduced)
   const [primaryTapped, setPrimaryTapped] = useState(false)
   const scheduleTimeout = useManagedTimeouts()
+  const soundPlayedRef = useRef(false)
+  useEffect(() => {
+    if (soundPlayedRef.current) return undefined
+    const playResult = () => {
+      if (soundPlayedRef.current) return
+      soundPlayedRef.current = true
+      playSound(passed ? 'win' : 'lose')
+    }
+    // Use the same delay as the banner; skipping reveals it immediately.
+    const delay = parseFloat(
+      getComputedStyle(document.documentElement).getPropertyValue('--result-delay-banner'),
+    )
+    const id = window.setTimeout(playResult, reduced || skipped ? 0 : delay)
+    return () => window.clearTimeout(id)
+  }, [passed, reduced, skipped])
   const pointsDisplay = useCountUp(
     0,
     appliedPoints,
@@ -318,6 +334,7 @@ function ResultLayout({
               className="result-oven__stage"
               type="button"
               onClick={skipAnimation}
+              data-sound="result"
               aria-label="Saltar animación y mostrar el resultado"
               title="Toca para saltar la animación"
             >
